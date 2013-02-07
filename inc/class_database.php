@@ -24,13 +24,13 @@
 		// CONSTANTS - - - - - - - - - - - - - - - - - - - - - -
 
 		// Debug mode
-		const DEBUG = 1;
+		const DEBUG = 0;
 
 		// Profiler toggle
 		const PROFILER = 0;
 
 		// Enable memcache
-		const MEMCACHE = 0;
+		const MEMCACHE = 1;
 
 		// Database configuration
 		// Database connection parameters
