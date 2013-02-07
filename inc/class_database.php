@@ -163,6 +163,7 @@
 				}
 
 				// Create and connect memcache instance
+				self::debug("memcache_open()");
 				$memcache = new Memcache;
 				$memcache->connect(self::CACHE_HOST);
 
@@ -191,7 +192,8 @@
 				profiler::step_start();
 			}
 
-			// Utilize singleton
+			// Utilize singleton, close cache connection
+			self::debug("memcache_close()");
 			$singleton = self::singleton(false);
 			$singleton->cache->close();
 
@@ -263,6 +265,7 @@
 					profiler::step_start();
 				}
 
+				self::debug("pdo_open()");
 				$conn = new PDO(sprintf("%s:host=%s;dbname=%s;", self::DB_SERVER, self::DB_HOST, self::DATABASE), self::DB_USER, self::DB_PASSWORD);
 				
 				if (self::PROFILER)
@@ -290,7 +293,8 @@
 				profiler::step_start();
 			}
 
-			// Utilize singleton
+			// Utilize singleton, close connection
+			self::debug("pdo_close()");
 			$singleton = self::singleton(false);
 			$singleton->db = null;
 
