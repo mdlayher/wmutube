@@ -24,13 +24,13 @@
 		// CONSTANTS - - - - - - - - - - - - - - - - - - - - - -
 
 		// Debug mode
-		const DEBUG = 0;
+		const DEBUG = 1;
 
 		// Profiler toggle
 		const PROFILER = 0;
 
 		// Enable memcache
-		const MEMCACHE = 1;
+		const MEMCACHE = 0;
 
 		// Database configuration
 		// Database connection parameters
@@ -49,7 +49,7 @@
 		const CACHE_FLAG = MEMCACHE_COMPRESSED;
 		const CACHE_EXPIRE = 300;
 		// Cache versioning
-		const VERSION_KEY = "version";
+		const VERSION_KEY = "db_version_";
 
 		// Allowed and disallowed query types (to prevent serious damage)
 		protected static $QUERIES = array(
@@ -243,7 +243,7 @@
 
 			// Increment key, store in cache
 			$singleton->version[$table]++;
-			$singleton->cache->set("version_" . $table, $singleton->version[$table], self::CACHE_FLAG, self::CACHE_EXPIRE);
+			$singleton->cache->set(self::VERSION_KEY . $table, $singleton->version[$table], self::CACHE_FLAG, self::CACHE_EXPIRE);
 
 			if (self::PROFILER)
 			{
@@ -425,14 +425,14 @@
 					$query_table = self::get_table($query);
 
 					// Load current versioning from cache
-					$singleton->version[$query_table] = $singleton->cache->get("version_" . $query_table);
+					$singleton->version[$query_table] = $singleton->cache->get(self::VERSION_KEY . $query_table);
 
 					// Initialize versioning array if empty, store version
 					if (!$singleton->version[$query_table])
 					{
 						self::debug("resetting version for " . $query_table);
 						$singleton->version[$query_table] = 1;
-						$singleton->cache->set("version_" . $query_table, $singleton->version[$query_table], self::CACHE_FLAG, self::CACHE_EXPIRE);
+						$singleton->cache->set(self::VERSION_KEY . $query_table, $singleton->version[$query_table], self::CACHE_FLAG, self::CACHE_EXPIRE);
 					}
 				}
 
