@@ -1,0 +1,130 @@
+@import url('http://fonts.googleapis.com/css?family=Lato:300,400');
+body {
+  margin: 0px;
+  padding: 0px;
+  background-image: url("..//img/paper_fibers.png");
+  background-repeat: repeat; }
+
+#header_container {
+  padding: 0px;
+  position: fixed;
+  top: 0px;
+  background-color: black;
+  margin: 0px;
+  width: 100%;
+  height: 35px;
+  z-index: 100; }
+
+#header {
+  width: 980px;
+  margin-left: auto;
+  margin-right: auto;
+  height: 35px;
+  margin: 0 auto;
+  padding: 0px;
+  line-height: 35px;
+  font-family: 'Lato', sans-serif; }
+  #header .left {
+    font-weight: 400;
+    color: white;
+    float: left; }
+  #header .right {
+    float: right;
+    font-weight: 300;
+    color: white; }
+
+#body_container {
+  position: relative;
+  margin-top: 70px;
+  width: 100%;
+  height: auto; }
+
+#media_area_container {
+  width: 980px;
+  border-radius: 2px 2px 0px 0px;
+  margin-left: auto;
+  margin-right: auto;
+  overflow: hidden; }
+
+#player_container {
+  float: left;
+  width: 712px;
+  background-color: black;
+  height: 400px;
+  position: relative;
+  z-index: 99;
+  box-shadow: 0px 0px 8px black; }
+
+#extra_info_container {
+  float: right;
+  width: 268px;
+  background-image: url("../img/blackorchid.png");
+  height: 400px; }
+
+#controls {
+  background-color: #000;
+  position: absolute;
+  bottom: 0px;
+  height: 35px;
+  width: 100%;
+  opacity: .7;
+  z-index: 100; }
+
+#description_container {
+  max-width: 100%;
+  width: 980px;
+  padding-top: 12px;
+  margin-right: auto;
+  margin-left: auto;
+  color: #333;
+  font-family: 'Lato', sans-serif;
+  font-size: 14pt;
+  height: auto; }
+  #description_container hr {
+    background-color: #888;
+    height: 1px;
+    border: 0;
+    margin-top: 5px;
+    margin-bottom: 5px; }
+  #description_container .padright {
+    margin: 0;
+    padding: 0;
+    height: auto;
+    width: 65%;
+    float: left;
+    display: block; }
+  #description_container .padleft {
+    float: right;
+    margin: 0;
+    padding: 0;
+    height: auto;
+    width: 35%;
+    display: block; }
+  #description_container .desc_body {
+    padding: 0;
+    margin: 0;
+    max-width: 100%;
+    font-size: 11pt;
+    height: auto;
+    margin-right: 20px; }
+    #description_container .desc_body .text {
+      margin: 0;
+      padding-right: 5px; }
+  #description_container .desc_more_videos {
+    max-width: 100%;
+    /*border-left: solid 1px #333*/
+    height: 150px;
+    margin-left: 20px; }
+    #description_container .desc_more_videos .inner {
+      clear: both;
+      background-color: #ccc;
+      margin: 0px;
+      /*padding: 5px*/
+      width: 100%;
+      height: 100%;
+      /*margin-left: 5px*/ }
+    #description_container .desc_more_videos .more_videos_header {
+      /*margin-left: 5px*/
+      /*padding: 5px*/
+      clear: both;
+      width: 100%; }
