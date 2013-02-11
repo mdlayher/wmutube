@@ -4,6 +4,9 @@
 	//
 	// changelog:
 	//
+	// 2/11/13 MDL:
+	//	- added database sanity checks to object methods
+	//	- added selftest() function for checking all class functionality
 	// 2/7/13 MDL:
 	//	- can now get_user() or fetch_users() by allowed unique keys, both return proper object or list
 	// 2/6/13 MDL:
@@ -18,6 +21,9 @@
 	class user
 	{
 		// CONSTANTS - - - - - - - - - - - - - - - - - - - - - -
+
+		// Debug mode, for selftest
+		const DEBUG = 1;
 
 		// Allowed and disallowed fields for query
 		protected static $FIELDS = array(
@@ -179,13 +185,29 @@
 				// Store user object by fields in database
 				$success = database::query("INSERT INTO users VALUES (null, ?, ?, ?, ?, ?, ?, ?);", $this->username, $this->email, $this->roleid, $this->password, $this->salt, $this->firstname, $this->lastname);
 
-				// Set user's ID from database return (last insert ID)
-				$this->id = $success;
+				// Check for success
+				if ($success)
+				{
+					// Set user's ID from database return (last insert ID)
+					$this->id = $success;
+				}
+				else
+				{
+					// On failure, trigger warning	
+					trigger_error("user->set_user() database insert failed with code: '" . $success . "'", E_USER_WARNING);
+				}
 			}
 			else
 			{
 				// Else, update this object
 				$success = database::query("UPDATE users SET username=?, email=?, roleid=?, password=?, salt=?, firstname=?, lastname=? WHERE id=?;", $this->username, $this->email, $this->roleid, $this->password, $this->salt, $this->firstname, $this->lastname, $this->id);
+
+				// Check for failure
+				if (!$success)
+				{
+					// On failure, trigger warning
+					trigger_error("user->set_user() database update failed with code: '" . $success . "'", E_USER_WARNING);
+				}
 			}
 
 			return $success;
@@ -196,6 +218,14 @@
 		{
 			// Remove user object by ID from database
 			$success = database::query("DELETE FROM users WHERE id=?;", $this->id);
+
+			// Check for failure
+			if (!$success)
+			{
+				// On failure, trigger warning
+				trigger_error("user->delete_user() database delete failed with code: '" . $success . "'", E_USER_WARNING);	
+			}
+
 			return $success;
 		}
 
@@ -297,5 +327,85 @@
 		public static function generate_salt()
 		{
 			return mcrypt_create_iv(64, MCRYPT_DEV_URANDOM);
+		}
+
+		// Selftest function for debugging
+		public static function selftest()
+		{
+			// Only runnable with DEBUG enabled
+			if (self::DEBUG)
+			{
+				// Test create_user()
+				$user = self::create_user("test", "test@test.com", 0, "test", "test", "test");
+				if (!$user)
+				{
+					trigger_error("user::selftest(): user::create_user() failed with status: '" . $user . "'", E_USER_WARNING);
+					return false;
+				}
+
+				// Test set_user()
+				$success = $user->set_user();
+				if (!$success)
+				{
+					trigger_error("user::selftest() user->set_user() insert failed with status: '" . $success . "'", E_USER_WARNING);
+					return false;
+				}
+
+				// Test set_email()
+				$success = $user->set_email("Test@test.com");
+				if (!$success)
+				{
+					trigger_error("user::selftest() user->set_email() failed with status: '" . $success . "'", E_USER_WARNING);
+					return false;
+				}
+
+				// Test set_roleid()
+				$success = $user->set_roleid(1);
+				if (!$success)
+				{
+					trigger_error("user::selftest() user->set_roleid() failed with status: '" . $success . "'", E_USER_WARNING);
+					return false;
+				}
+
+				// Test set_user()
+				$success = $user->set_user();
+				if (!$success)
+				{
+					trigger_error("user::selftest() user->set_user() update failed with status: '" . $success . "'", E_USER_WARNING);
+					return false;
+				}
+
+				// Re-fetch user
+				$id = $user->get_id();
+				unset($user);
+
+				// Test get_user()
+				$user = user::get_user($id);
+				if (!$user)
+				{
+					trigger_error("user::selftest(): user::get_user() failed with status: '" . $user . "'", E_USER_WARNING);
+					return false;
+				}
+
+				// Test delete_user()
+				$success = $user->delete_user();
+				if (!$success)
+				{
+					trigger_error("user::selftest() user->delete_user() update failed with status: '" . $success . "'", E_USER_WARNING);
+					return false;
+				}
+
+				// Test fetch_users()
+				$users = user::fetch_users();
+				if (!$users)
+				{
+					trigger_error("user::selftest(): user::fetch_users() failed with status: '" . $users . "'", E_USER_WARNING);
+					return false;
+				}
+
+				// If all tests pass, return true
+				printf("user::selftest(): all tests passed\n");
+				return true;
+			}
 		}
 	}
