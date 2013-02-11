@@ -86,7 +86,7 @@
 		{
 			return $this->filename;
 		}
-		public function set_roleid($filename)
+		public function set_filename($filename)
 		{
 			$this->filename = $filename; 
 			return true;
