@@ -36,7 +36,7 @@
 		// Database connection parameters
 		const DB_SERVER = "mysql";
 		const DB_HOST = "localhost";
-		const DATABASE = "khanacademy";
+		const DATABASE = "khan";
 		const DB_USER = "khan";
 		const DB_PASSWORD = "tJEbu66lTpNbY%1w,aRy1SmUl2PK4pIG";
 		// Default result fetch type
