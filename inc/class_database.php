@@ -4,6 +4,8 @@
 	//
 	// changelog:
 	//
+	// 2/12/13 MDL:
+	//	- removed deprecated $fetch singleton code
 	// 2/7/13 MDL:
 	//	- better argument and return handling for query()
 	//	- trigger_error() when really bad things happen
@@ -66,9 +68,6 @@
 
 		// Instance of PDO database connection
 		protected $db;
-
-		// Instance of database fetch type
-		protected $fetch = self::DB_FETCH;
 
 		// Instance of memcache connection
 		protected $cache;
@@ -372,22 +371,6 @@
 			return $sanitized;
 		}
 
-		// Override database fetch type
-		public static function set_fetch($type)
-		{
-			// Utilize singleton, change type
-			$singleton = self::singleton();
-
-			// Check for valid fetch types
-			if ($type === PDO::FETCH_ASSOC || $type === PDO::FETCH_BOTH)
-			{
-				$singleton->fetch = $type;
-				return true;
-			}
-
-			return false;
-		}
-
 		// Perform a database query (fetching associative array by default)
 		public static function query($query)
 		{
@@ -485,7 +468,7 @@
 						}
 
 						// Fetch results
-						$results = $prepared_query->fetchAll($singleton->fetch);
+						$results = $prepared_query->fetchAll(self::DB_FETCH);
 
 						// Store query result in memcache if applicable
 						if (self::MEMCACHE && isset($singleton->cache) && $results)
