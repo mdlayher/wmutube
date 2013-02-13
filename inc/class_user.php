@@ -43,6 +43,9 @@
 		private $firstname;
 		private $lastname;
 
+		// Login object
+		private $login;
+
 		// PUBLIC PROPERTIES - - - - - - - - - - - - - - - - - - 
 
 		// id:
@@ -155,6 +158,21 @@
 			return true;
 		}
 
+		// login:
+		//	- get: n/a, done by class
+		//	- set: login type (validated by is_object())
+		public function set_login($login)
+		{
+			// Validate using is_object()
+			if (is_object($login))
+			{
+				$this->login = $login;
+				return true;
+			}
+			
+			return false;
+		}
+
 		// CONSTRUCTOR/DESTRUCTOR - - - - - - - - - - - - - - - -
 
 		// Default blank constructor (helpful for filling fields)
@@ -227,6 +245,21 @@
 			}
 
 			return $success;
+		}
+
+		public function authenticate()
+		{
+			// Check to ensure login set
+			if (isset($this->login))
+			{
+				// Generate login strategy based upon passed object type
+				$login = new login($this->login);
+
+				// Attempt authentication via specified strategy
+				return $login->authenticate();
+			}
+
+			return null;
 		}
 
 		// STATIC METHODS - - - - - - - - - - - - - - - - - - - -
