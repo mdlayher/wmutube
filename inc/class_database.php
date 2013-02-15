@@ -4,6 +4,8 @@
 	//
 	// changelog:
 	//
+	// 2/14/13 MDL:
+	//	- added ability to flush memcache
 	// 2/12/13 MDL:
 	//	- removed deprecated $fetch singleton code
 	// 2/7/13 MDL:
@@ -29,7 +31,7 @@
 		const DEBUG = 0;
 
 		// Profiler toggle
-		const PROFILER = 0;
+		const PROFILER = 1;
 
 		// Enable memcache
 		const MEMCACHE = 1;
@@ -350,6 +352,28 @@
 		}
 
 		// PUBLIC METHODS - - - - - - - - - - - - - - - - - - - -
+
+		// Flush and invalidate all items in memcache
+		public static function flush()
+		{
+			if (self::PROFILER)
+			{
+				profiler::step_start();
+			}
+
+			// Grab singleton, flush cache
+			$singleton = self::singleton();
+			$singleton->cache->flush();
+
+			// Hold for 1 second to ensure cache integrity
+			$time = time() + 1;
+			while(time() > $time);
+			
+			if (self::PROFILER)
+			{
+				profiler::step_stop();
+			}
+		}
 
 		// Sanitize data not using with prepared queries
 		public static function sanitize($data)
