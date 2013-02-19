@@ -4,6 +4,8 @@
 	//
 	// changelog:
 	//
+	// 2/19/13 MDL:
+	//	- added year and term fields for finer granularity in courses
 	// 2/11/13 MDL:
 	//	- initial code - copied from class_course and tweaked
 
@@ -21,14 +23,14 @@
 		// Allowed and disallowed fields for query
 		protected static $FIELDS = array(
 			"id" => true,
-			// Composite field because of composite unique key
-			"subject,number" => true,
-			"number,subject" => true
+			// todo: composite field query (via array?)
 		);
 
 		// INSTANCE VARIABLES - - - - - - - - - - - - - - - - - -
 
 		private $id;
+		private $year;
+		private $term;
 		private $subject;
 		private $number;
 		private $title;
@@ -41,6 +43,38 @@
 		public function get_id()
 		{
 			return $this->id;
+		}
+
+		// year:
+		//	- get: year
+		//	- set: year (validated by is_int())
+		public function get_year()
+		{
+			return $this->year;
+		}
+		public function set_year($year)
+		{
+			// Validate using is_int()
+			if (is_int($year))
+			{
+				$this->year = $year;
+				return true;
+			}
+
+			return false;
+		}
+
+		// term
+		//	- get: term
+		//	- set: term
+		public function get_term()
+		{
+			return $this->term;
+		}
+		public function set_term($term)
+		{
+			$this->term = $term;
+			return true;
 		}
 
 		// subject
@@ -116,7 +150,7 @@
 			if (count($result) === 0)
 			{
 				// Store course object by fields in database
-				$success = database::query("INSERT INTO courses VALUES (null, ?, ?, ?);", $this->subject, $this->number, $this->title);
+				$success = database::query("INSERT INTO courses VALUES (null, ?, ?, ?, ?, ?);", $this->year, $this->term, $this->subject, $this->number, $this->title);
 
 				// Check for success
 				if ($success)
@@ -134,7 +168,7 @@
 			else
 			{
 				// Else, update this object
-				$success = database::query("UPDATE courses SET subject=?, number=?, title=? WHERE id=?;", $this->subject, $this->number, $this->title, $this->id);
+				$success = database::query("UPDATE courses SET year=?, term=?, subject=?, number=?, title=? WHERE id=?;", $this->year, $this->term, $this->subject, $this->number, $this->title, $this->id);
 
 				// Check for failure
 				if (!$success)
@@ -166,10 +200,12 @@
 		// STATIC METHODS - - - - - - - - - - - - - - - - - - - -
 
 		// Generate and fill a new course object using pseudo-constructor
-		public static function create_course($subject, $number, $title)
+		public static function create_course($year, $term, $subject, $number, $title)
 		{
 			$instance = new self();
 
+			$instance->set_year($year);
+			$instance->set_term($term);
 			$instance->set_subject($subject);
 			$instance->set_number($number);
 			$instance->set_title($title);
@@ -255,7 +291,7 @@
 			if (self::DEBUG)
 			{
 				// Test create_course()
-				$course = self::create_course("TEST", 1000, "Test Course");
+				$course = self::create_course(2013, "Spring", "TEST", 1000, "Test Course");
 				if (!$course)
 				{
 					trigger_error("course::selftest(): course::create_course() failed with status: '" . $course . "'", E_USER_WARNING);
