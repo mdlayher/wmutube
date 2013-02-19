@@ -13,7 +13,7 @@
 
 	error_reporting(E_ALL);
 
-	require_once "class_database.php";
+	require_once "../class_database.php";
 
 	class video
 	{

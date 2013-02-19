@@ -1,5 +1,5 @@
 <?php
-	// class_template.php - Khan Academy Workflow, 2/5/13
+	// class_user.php - Khan Academy Workflow, 2/5/13
 	// PHP class which contains storage and manipulation for user objects
 	//
 	// changelog:
@@ -16,7 +16,7 @@
 
 	error_reporting(E_ALL);
 
-	require_once "class_database.php";
+	require_once "../class_database.php";
 
 	class user
 	{
