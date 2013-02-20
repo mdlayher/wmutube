@@ -13,14 +13,12 @@
 
 	error_reporting(E_ALL);
 
-	require_once __DIR__ . "/../class_database.php";
+	require_once __DIR__ . "/../class_config.php";
+	config::load("database");
 
 	class video
 	{
 		// CONSTANTS - - - - - - - - - - - - - - - - - - - - - -
-		
-		// Debug mode, for selftest
-		const DEBUG = 1;
 		
 		// Allowed and disallowed fields for query
 		protected static $FIELDS = array(
@@ -291,7 +289,7 @@
 		public static function selftest()
 		{
 			// Only runnable with DEBUG enabled
-			if (self::DEBUG)
+			if (config::DEBUG)
 			{
 				// Test create_video()
 				$video = self::create_video(1, 1, "testvideo.mp4", "Test Video", "test video stuff");

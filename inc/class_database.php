@@ -21,20 +21,11 @@
 
 	error_reporting(E_ALL);
 
-	include_once "etc/class_profiler.php";
+	require_once __DIR__ . "/class_config.php";
 
 	class database
 	{
 		// CONSTANTS - - - - - - - - - - - - - - - - - - - - - -
-
-		// Debug mode
-		const DEBUG = 0;
-
-		// Profiler toggle
-		const PROFILER = 0;
-
-		// Enable memcache
-		const MEMCACHE = 1;
 
 		// Database configuration
 		// Database connection parameters
@@ -51,7 +42,7 @@
 		const CACHE_HOST = "localhost";
 		// Cache set parameters
 		const CACHE_FLAG = MEMCACHE_COMPRESSED;
-		const CACHE_EXPIRE = 300;
+		const CACHE_EXPIRE = 600;
 		// Cache versioning
 		const VERSION_KEY = "db_version_";
 
@@ -60,7 +51,7 @@
 			"SELECT" => true,
 			"INSERT" => true,
 			"UPDATE" => true,
-			"DELETE" => true,
+			"DELETE" => true
 		);
 
 		// INSTANCE VARIABLES - - - - - - - - - - - - - - - - -
@@ -82,7 +73,7 @@
 		// Destructor handles any necessary cleanup
 		function __destruct()
 		{
-			if (self::PROFILER)
+			if (config::PROFILER)
 			{
 				profiler::step_start();
 			}
@@ -102,7 +93,7 @@
 				self::memcache_close();
 			}
 
-			if (self::PROFILER)
+			if (config::PROFILER)
 			{
 				profiler::step_stop();
 			}
@@ -113,7 +104,7 @@
 		// Debug function
 		private static function debug($debug)
 		{
-			if (self::DEBUG)
+			if (config::DEBUG)
 			{
 				printf("%s\n", $debug);
 			}
@@ -124,7 +115,7 @@
 		// Singleton function which maintains a single instance of this class
 		private static function singleton($open_connections = true)
 		{
-			if (self::PROFILER)
+			if (config::PROFILER)
 			{
 				profiler::step_start();
 			}
@@ -139,13 +130,13 @@
 				{
 					self::$instance->db = self::pdo_open();
 				}
-				if (self::MEMCACHE && !self::$instance->cache)
+				if (config::MEMCACHE && !self::$instance->cache)
 				{
 					self::$instance->cache = self::memcache_open();
 				}
 			}
 
-			if (self::PROFILER)
+			if (config::PROFILER)
 			{
 				profiler::step_stop();
 			}
@@ -158,7 +149,7 @@
 		{
 			try
 			{
-				if (self::PROFILER)
+				if (config::PROFILER)
 				{
 					profiler::step_start();
 				}
@@ -168,7 +159,7 @@
 				$memcache = new Memcache;
 				$memcache->connect(self::CACHE_HOST);
 
-				if (self::PROFILER)
+				if (config::PROFILER)
 				{
 					profiler::step_stop();
 				}
@@ -188,7 +179,7 @@
 		// Perform cleanup and destroy memcache connection object
 		private static function memcache_close()
 		{
-			if (self::PROFILER)
+			if (config::PROFILER)
 			{
 				profiler::step_start();
 			}
@@ -198,7 +189,7 @@
 			$singleton = self::singleton(false);
 			$singleton->cache->close();
 
-			if (self::PROFILER)
+			if (config::PROFILER)
 			{
 				profiler::step_stop();
 			}
@@ -209,7 +200,7 @@
 		// Generate a common key used for caching query results
 		private static function memcache_key($query, $query_args)
 		{
-			if (self::PROFILER)
+			if (config::PROFILER)
 			{
 				profiler::step_start();
 			}
@@ -224,7 +215,7 @@
 			$key = sprintf("query_%s_%s_%s", $query_table, $singleton->version[$query_table], md5($query . serialize($query_args)));
 			self::debug("key: " . $key);
 
-			if (self::PROFILER)
+			if (config::PROFILER)
 			{
 				profiler::step_stop();
 			}
@@ -235,7 +226,7 @@
 		// Increment cache version on INSERT/UPDATE/DELETE
 		private static function memcache_inc($table)
 		{
-			if (self::PROFILER)
+			if (config::PROFILER)
 			{
 				profiler::step_start();
 			}
@@ -248,7 +239,7 @@
 			$singleton->version[$table]++;
 			$singleton->cache->set(self::VERSION_KEY . $table, $singleton->version[$table], self::CACHE_FLAG, self::CACHE_EXPIRE);
 
-			if (self::PROFILER)
+			if (config::PROFILER)
 			{
 				profiler::step_stop();
 			}
@@ -261,7 +252,7 @@
 		{
 			try
 			{
-				if (self::PROFILER)
+				if (config::PROFILER)
 				{
 					profiler::step_start();
 				}
@@ -269,7 +260,7 @@
 				self::debug("pdo_open()");
 				$conn = new PDO(sprintf("%s:host=%s;dbname=%s;", self::DB_SERVER, self::DB_HOST, self::DATABASE), self::DB_USER, self::DB_PASSWORD);
 				
-				if (self::PROFILER)
+				if (config::PROFILER)
 				{
 					profiler::step_stop();
 				}
@@ -289,7 +280,7 @@
 		// Perform cleanup and destroy PDO connection object
 		private static function pdo_close()
 		{
-			if (self::PROFILER)
+			if (config::PROFILER)
 			{
 				profiler::step_start();
 			}
@@ -299,7 +290,7 @@
 			$singleton = self::singleton(false);
 			$singleton->db = null;
 
-			if (self::PROFILER)
+			if (config::PROFILER)
 			{
 				profiler::step_stop();
 			}
@@ -310,7 +301,7 @@
 		// Capture the table from a query
 		private static function get_table($query)
 		{
-			if (self::PROFILER)
+			if (config::PROFILER)
 			{
 				profiler::step_start();
 			}
@@ -343,7 +334,7 @@
 			// Strip any non alphanumeric characters from table
 			$query_table = preg_replace("/[^A-Za-z0-9 ]/", '', $query_table);
 
-			if (self::PROFILER)
+			if (config::PROFILER)
 			{
 				profiler::step_stop();
 			}
@@ -356,7 +347,7 @@
 		// Flush and invalidate all items in memcache
 		public static function flush()
 		{
-			if (self::PROFILER)
+			if (config::PROFILER)
 			{
 				profiler::step_start();
 			}
@@ -369,7 +360,7 @@
 			$time = time() + 1;
 			while(time() > $time);
 			
-			if (self::PROFILER)
+			if (config::PROFILER)
 			{
 				profiler::step_stop();
 			}
@@ -378,7 +369,7 @@
 		// Sanitize data not using with prepared queries
 		public static function sanitize($data)
 		{
-			if (self::PROFILER)
+			if (config::PROFILER)
 			{
 				profiler::step_start();
 			}
@@ -387,7 +378,7 @@
 			$singleton = self::singleton();
 			$sanitized = trim($singleton->db->quote($data), "'");
 
-			if (self::PROFILER)
+			if (config::PROFILER)
 			{
 				profiler::step_stop();
 			}
@@ -398,7 +389,7 @@
 		// Perform a database query (fetching associative array by default)
 		public static function query($query)
 		{
-			if (self::PROFILER)
+			if (config::PROFILER)
 			{
 				profiler::step_start();
 			}
@@ -431,7 +422,7 @@
 				}
 
 				// If using memcache, capture query table and begin versioning
-				if (self::MEMCACHE && isset($singleton->cache))
+				if (config::MEMCACHE && isset($singleton->cache))
 				{
 					$query_table = self::get_table($query);
 
@@ -450,14 +441,14 @@
 				// Perform SELECT query and fetch results for this type
 				if ($query_type === "SELECT")
 				{
-					if (self::PROFILER)
+					if (config::PROFILER)
 					{
 						profiler::step_start("SELECT");
 					}
 
 					// Check if memcache is enabled and ready
 					$result_cached = false;
-					if (self::MEMCACHE && isset($singleton->cache))
+					if (config::MEMCACHE && isset($singleton->cache))
 					{
 						self::debug("checking memcache");
 						// Check if this query's results are cached
@@ -474,7 +465,7 @@
 					// If memcache disabled or result was not found in cache
 					if (!$result_cached)
 					{
-						if (self::MEMCACHE)
+						if (config::MEMCACHE)
 						{
 							self::debug("memcache: result not found!");
 						}
@@ -495,21 +486,21 @@
 						$results = $prepared_query->fetchAll(self::DB_FETCH);
 
 						// Store query result in memcache if applicable
-						if (self::MEMCACHE && isset($singleton->cache) && $results)
+						if (config::MEMCACHE && isset($singleton->cache) && $results)
 						{
 							// Store query result
 							$singleton->cache->set(self::memcache_key($query, $query_args), $results, self::CACHE_FLAG, self::CACHE_EXPIRE);
 						}
 					}
 
-					if (self::PROFILER)
+					if (config::PROFILER)
 					{
 						profiler::step_stop();
 					}
 				}
 				else
 				{
-					if (self::PROFILER)
+					if (config::PROFILER)
 					{
 						profiler::step_start("INSERT/UPDATE/DELETE");
 					}
@@ -552,17 +543,17 @@
 						$singleton->db->rollBack();
 					}
 
-					if (self::PROFILER)
+					if (config::PROFILER)
 					{
 						profiler::step_stop();
 					}
 				}
 
-				if (self::DEBUG)
+				if (config::DEBUG)
 				{
 					self::debug("query results:");
 					print_r($results);
-					if (self::MEMCACHE)
+					if (config::MEMCACHE)
 					{
 						self::debug("cache versioning:");
 						print_r($singleton->version);
@@ -570,7 +561,7 @@
 				}
 
 				// Return result set, or success of query
-				if (self::PROFILER)
+				if (config::PROFILER)
 				{
 					profiler::step_stop();
 				}

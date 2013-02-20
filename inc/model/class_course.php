@@ -11,14 +11,12 @@
 
 	error_reporting(E_ALL);
 
-	require_once __DIR__ . "/../class_database.php";
+	require_once __DIR__ . "/../class_config.php";
+	config::load("database");
 
 	class course
 	{
 		// CONSTANTS - - - - - - - - - - - - - - - - - - - - - -
-		
-		// Debug mode, for selftest
-		const DEBUG = 1;
 		
 		// Allowed and disallowed fields for query
 		protected static $FIELDS = array(
@@ -288,7 +286,7 @@
 		public static function selftest()
 		{
 			// Only runnable with DEBUG enabled
-			if (self::DEBUG)
+			if (config::DEBUG)
 			{
 				// Test create_course()
 				$course = self::create_course(2013, "Spring", "TEST", 1000, "Test Course");

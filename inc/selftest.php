@@ -7,12 +7,14 @@
 	// 2/11/13 MDL:
 	//	- initial code
 
-	require_once __DIR__ . "/model/class_user.php";
+	require_once __DIR__ . "/class_database.php";
+
+	config::load("user");
 	user::selftest();
 
-	require_once __DIR__ . "/model/class_video.php";
+	config::load("video");
 	video::selftest();
 
-	require_once __DIR__ . "/model/class_course.php";
+	config::load("course");
 	course::selftest();
 ?>

@@ -9,7 +9,8 @@
 
 	error_reporting(E_ALL);
 
-	require_once "interface_login.php";
+	require_once __DIR__ "/../class_config.php";
+	config::load("login");
 
 	class db_login extends login_strategy
 	{
