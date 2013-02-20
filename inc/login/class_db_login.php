@@ -4,12 +4,14 @@
 	//
 	// changelog:
 	//
+	// 2/19/13 MDL:
+	//	- initial stub code
 	// 2/12/13 MDL:
 	//	- initial code
 
 	error_reporting(E_ALL);
 
-	require_once __DIR__ "/../class_config.php";
+	require_once __DIR__ . "/../class_config.php";
 	config::load("login");
 
 	class db_login extends login_strategy

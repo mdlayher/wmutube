@@ -7,7 +7,8 @@
 	// 2/11/13 MDL:
 	//	- initial code
 
-	require_once __DIR__ . "/class_database.php";
+	require_once __DIR__ . "/class_config.php";
+	config::load("database");
 
 	config::load("user");
 	user::selftest();

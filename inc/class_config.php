@@ -14,7 +14,7 @@
 		// CONSTANTS - - - - - - - - - - - - - - - - - - - - - -
 
 		// Debug mode
-		const DEBUG = 1;
+		const DEBUG = 0;
 
 		// Memcache toggle
 		const MEMCACHE = 1;

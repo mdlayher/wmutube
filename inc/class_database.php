@@ -22,6 +22,7 @@
 	error_reporting(E_ALL);
 
 	require_once __DIR__ . "/class_config.php";
+	config::load("profiler");
 
 	class database
 	{
