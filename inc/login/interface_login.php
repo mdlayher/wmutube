@@ -13,7 +13,7 @@
 	interface i_login
 	{
 		// Ensure implementation of authenticate()
-		public function authenticate();
+		public function authenticate($username, $password, $salt = null);
 	}
 
 	// Abstract class which provides strategy selection for login
@@ -26,7 +26,7 @@
 		}
 
 		// Unimplemented authenticate due to abstract class
-		public function authenticate()
+		public function authenticate($username, $password, $salt = null)
 		{
 
 		}
@@ -52,9 +52,9 @@
 		}
 
 		// Perform authentication using specified method
-		public function authenticate()
+		public function authenticate($username, $password, $salt = null)
 		{
-			return $this->method->authenticate();
+			return $this->method->authenticate($username, $password, $salt);
 		}
 	}
 

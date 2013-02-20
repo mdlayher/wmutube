@@ -16,7 +16,7 @@
 
 	error_reporting(E_ALL);
 
-	require_once "../class_database.php";
+	require_once __DIR__ . "/../class_database.php";
 
 	class user
 	{
@@ -256,7 +256,7 @@
 				$login = new login($this->login);
 
 				// Attempt authentication via specified strategy
-				return $login->authenticate();
+				return $login->authenticate($this->username, $this->password, $this->salt);
 			}
 
 			return null;

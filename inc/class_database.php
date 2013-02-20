@@ -31,7 +31,7 @@
 		const DEBUG = 0;
 
 		// Profiler toggle
-		const PROFILER = 1;
+		const PROFILER = 0;
 
 		// Enable memcache
 		const MEMCACHE = 1;

@@ -26,9 +26,9 @@
 
 		// PUBLIC METHODS - - - - - - - - - - - - - - - - - - - -
 
-		public function authenticate()
+		public function authenticate($username, $password, $salt = null)
 		{		
-			return "db";
+			return hash("sha256", $password . $salt);
 		}
 
 		// STATIC METHODS - - - - - - - - - - - - - - - - - - - -
