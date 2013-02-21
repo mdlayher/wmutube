@@ -3,7 +3,7 @@
 <head>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
 	<script src="script/jquery.transit.min.js" type="text/javascript"></script>
-	<script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>
+	<!--<script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>-->
 	<title><?=$title_for_layout?></title>
 	<link rel="stylesheet" type="text/css" href="css/main.css">
 </head>
