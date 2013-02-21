@@ -1,36 +1,14 @@
-<!DOCTYPE html>
-
-<html>
-<head>
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
-	<script src='script/jquery.transit.min.js' type="text/javascript"></script>
-	<script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>
-	<title>Senior design prototype</title>
-	<link rel="stylesheet" type="text/css" href="css/main.css">
-</head>
-<body>
-	<div id='header_container'>
-		<div id='header'>
-			<div class='left'>
-				CourseraClone
-			</div>
-			<div class='right'>
-				Hello, Justin!
-			</div>
-		</div>
-	</div>
-
-	<div id='body_container'>
 		<div id='media_area_container'>
 			<div id='player_container'>
 				<img src="img/player_placeholder.png">
 				<div id='controls'></div>
 			</div>
 			<div id='extra_info_container'></div>
-		</div>
-		
+		</div>	
 		<div id='description_container'>
-			Finding your way around BASH
+			<?php
+				printf("%s %s!\n", $user->get_firstname(), $user->get_lastname());
+			?>
 			<hr />
 			<div class='padright'>
 				<div class='desc_body'>
@@ -50,7 +28,3 @@
 				</div>
 			</div>
 		</div>
-	</div>
-
-</body>
-</html>
