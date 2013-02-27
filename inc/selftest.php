@@ -21,4 +21,7 @@
 
 	config::load("question");
 	question::selftest();
+
+	config::load("answer");
+	answer::selftest();
 ?>

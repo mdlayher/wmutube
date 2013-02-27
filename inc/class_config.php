@@ -5,7 +5,7 @@
 	// changelog:
 	//
 	// 2/26/13 MDL:
-	//	- added question class
+	//	- added question and answer classes
 	// 2/19/13 MDL:
 	//	- initial code
 
@@ -26,6 +26,7 @@
 
 		// Array of source files to quickly load
 		protected static $SOURCE_FILES = array(
+			"answer" => "/model/class_answer.php",
 			"course" => "/model/class_course.php",
 			"database" => "/class_database.php",
 			"db_login" => "/login/class_db_login.php",

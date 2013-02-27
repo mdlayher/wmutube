@@ -11,6 +11,7 @@
 
 	require_once __DIR__ . "/../class_config.php";
 	config::load("database");
+	config::load("answer");
 
 	class question
 	{
@@ -18,10 +19,14 @@
 		
 		// INSTANCE VARIABLES - - - - - - - - - - - - - - - - - -
 
+		// Database columns
 		private $id;
 		private $videoid;
 		private $timestamp;
 		private $text;
+
+		// Helper objects
+		private $answers;
 
 		// PUBLIC PROPERTIES - - - - - - - - - - - - - - - - - - 
 
@@ -82,6 +87,21 @@
 		{
 			$this->text = $text;
 			return true;
+		}
+
+		// answers:
+		//	- get: answers (lazy-load, only fetch when needed)
+		//	- set: n/a, not handled by this class
+		public function get_answers()
+		{
+			// Check if answers already fetched
+			if (!isset($this->answers))
+			{
+				// Get answers associated with this question
+				$this->answers = answer::fetch_answers($this->id);
+			}
+
+			return $this->answers;
 		}
 
 		// CONSTRUCTOR/DESTRUCTOR - - - - - - - - - - - - - - - -
