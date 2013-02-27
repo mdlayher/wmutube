@@ -4,6 +4,8 @@
 	//
 	// changelog:
 	//
+	// 2/27/13 MDL:
+	//	- added filter_users(), enabled fetch_users() to accept values array for fine-grained output
 	// 2/26/13 MDL:
 	//	- set db_login() as default login method
 	// 2/11/13 MDL:
@@ -31,6 +33,18 @@
 			"id" => true,
 			"username" => true,
 			"email" => true
+		);
+
+		// Allowed and disallowed fields for filter
+		protected static $FILTERS = array(
+			"id" => true,
+			"username" => true,
+			"email" => true,
+			"roleid" => true,
+			"enabled" => true,
+			"expired" => true,
+			"firstname" => true,
+			"lastname" => true
 		);
 
 		// INSTANCE VARIABLES - - - - - - - - - - - - - - - - - -
@@ -371,7 +385,7 @@
 		}
 
 		// Create a list of user objects using specified parameters
-		public static function fetch_users($field = "id")
+		public static function fetch_users($field = "id", $values = null)
 		{
 			// Sanitize user's field input, as that won't be part of the prepared query
 			$field = database::sanitize($field);
@@ -384,8 +398,35 @@
 				return null;
 			}
 
-			// Query for a list of users using specified field
-			$results = database::query("SELECT $field FROM users ORDER BY $field ASC;");
+			// Check for specified values to fetch into list
+			if (isset($values) && is_array($values))
+			{
+				$query = "";
+				// Iterate values to build query with filtering
+				for ($i = 0; $i < count($values); $i++)
+				{
+					// Sanitize values
+					$v = database::sanitize($values[$i]);
+
+					// On last iteration, stop adding OR statements
+					if ($i === count($values) - 1)
+					{
+						$query .= "$field='$v'";
+					}
+					else
+					{
+						$query .= "$field='$v' OR ";
+					}
+				}
+
+				// Query for a list of users from values in array
+				$results = database::query("SELECT $field FROM users WHERE $query ORDER BY $field ASC;");
+			}
+			else
+			{
+				// Query for a list of users using specified field
+				$results = database::query("SELECT $field FROM users ORDER BY $field ASC;");
+			}
 
 			if ($results)
 			{	
@@ -399,6 +440,43 @@
 				}
 
 				return $users;
+			}
+			else
+			{
+				// Return null if no results
+				return null;
+			}
+		}
+
+		// Create a list of user objects using specified filter
+		public static function filter_users($filter, $value)
+		{
+			// Sanitize user filter input
+			$filter = database::sanitize($filter);
+
+			// Check for valid filter field
+			if (!in_array($filter, array_keys(self::$FILTERS)) || !self::$FILTERS[$filter])
+			{
+				// Return null and trigger error on bad filter
+				trigger_error("user::filter_users() cannot filter using invalid field '" . $filter . "'", E_USER_WARNING);
+				return null;
+			}
+
+			// Query for a filtered list of users matching the wildcard value for specified field
+			$results = database::query("SELECT id FROM users WHERE $filter LIKE ? ORDER BY id ASC;", '%' . $value . '%');
+
+			if ($results)
+			{	
+				// Generate list of user IDs
+				$id = array();
+				for ($i = 0; $i < count($results); $i++)
+				{
+					// Parse value from array
+					$id[] = $results[$i]["id"];
+				}
+
+				// Hand off array to fetch_users() to generate list of user objects
+				return self::fetch_users("id", $id);
 			}
 			else
 			{
@@ -487,6 +565,14 @@
 			if (!$users)
 			{
 				trigger_error("user::selftest(): user::fetch_users() failed with status: '" . $users . "'", E_USER_WARNING);
+				return false;
+			}
+
+			// Test filter_users()
+			$users = user::filter_users("username", "a");
+			if (!$users)
+			{
+				trigger_error("user::selftest(): user::filter_users() failed with status: '" . $users . "'", E_USER_WARNING);
 				return false;
 			}
 

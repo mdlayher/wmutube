@@ -4,6 +4,8 @@
 	//
 	// changelog:
 	//
+	// 2/26/13 MDL:
+	//	- added selftest for question and answer classes
 	// 2/11/13 MDL:
 	//	- initial code
 

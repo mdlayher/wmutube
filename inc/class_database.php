@@ -4,6 +4,8 @@
 	//
 	// changelog:
 	//
+	// 2/27/13 MDL:
+	//	- renamed flush() to cache_flush()
 	// 2/14/13 MDL:
 	//	- added ability to flush memcache
 	// 2/12/13 MDL:
@@ -346,7 +348,7 @@
 		// PUBLIC METHODS - - - - - - - - - - - - - - - - - - - -
 
 		// Flush and invalidate all items in memcache
-		public static function flush()
+		public static function cache_flush()
 		{
 			if (config::PROFILER)
 			{
