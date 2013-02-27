@@ -33,16 +33,19 @@
 
 		// INSTANCE VARIABLES - - - - - - - - - - - - - - - - - -
 
+		// Database columns
 		private $id;
 		private $username;
 		private $email;
 		private $roleid;
+		private $enabled;
 		private $password;
+		private $expired;
 		private $salt;
 		private $firstname;
 		private $lastname;
 
-		// Login object
+		// Helper objects
 		private $login;
 
 		// PUBLIC PROPERTIES - - - - - - - - - - - - - - - - - - 
@@ -106,6 +109,25 @@
 			return false;
 		}
 
+		// enabled:
+		//	- get: enabled
+		//	- set: enabled (validated by is_bool())
+		public function get_enabled()
+		{
+			return $this->enabled;
+		}
+		public function set_enabled($enabled)
+		{
+			// Validate using is_bool()
+			if (is_bool($enabled))
+			{
+				$this->enabled = $enabled;
+				return true;
+			}
+
+			return false;
+		}
+
 		// password:
 		//	- get: password (hash)
 		//	- set: password (hash), and salt for security
@@ -123,6 +145,25 @@
 			return true;
 		}
 		
+		// expired:
+		//	- get: expired
+		//	- set: expired (validated by is_bool())
+		public function get_expired()
+		{
+			return $this->expired;
+		}
+		public function set_expired($expired)
+		{
+			// Validate using is_bool()
+			if (is_bool($expired))
+			{
+				$this->expired = $expired;
+				return true;
+			}
+
+			return false;
+		}
+
 		// salt:
 		//	- get: salt
 		//	- set: n/a, done by set_password()
@@ -200,7 +241,7 @@
 			if (count($result) === 0)
 			{
 				// Store user object by fields in database
-				$success = database::query("INSERT INTO users VALUES (null, ?, ?, ?, ?, ?, ?, ?);", $this->username, $this->email, $this->roleid, $this->password, $this->salt, $this->firstname, $this->lastname);
+				$success = database::query("INSERT INTO users VALUES (null, ?, ?, ?, ?, ?, ?, ?, ?, ?);", $this->username, $this->email, $this->roleid, $this->enabled, $this->password, $this->expired, $this->salt, $this->firstname, $this->lastname);
 
 				// Check for success
 				if ($success)
@@ -217,7 +258,7 @@
 			else
 			{
 				// Else, update this object
-				$success = database::query("UPDATE users SET username=?, email=?, roleid=?, password=?, salt=?, firstname=?, lastname=? WHERE id=?;", $this->username, $this->email, $this->roleid, $this->password, $this->salt, $this->firstname, $this->lastname, $this->id);
+				$success = database::query("UPDATE users SET username=?, email=?, roleid=?, enabled=?, password=?, expired=?, salt=?, firstname=?, lastname=? WHERE id=?;", $this->username, $this->email, $this->roleid, $this->enabled, $this->password, $this->expired, $this->salt, $this->firstname, $this->lastname, $this->id);
 
 				// Check for failure
 				if (!$success)
@@ -265,14 +306,16 @@
 		// STATIC METHODS - - - - - - - - - - - - - - - - - - - -
 
 		// Generate and fill a new user object using pseudo-constructor
-		public static function create_user($username, $email, $roleid, $password, $firstname, $lastname)
+		public static function create_user($username, $email, $roleid, $enabled, $password, $firstname, $lastname)
 		{
 			$instance = new self();
 
 			$instance->set_username($username);
 			$instance->set_email($email);
 			$instance->set_roleid($roleid);
+			$instance->set_enabled($enabled);
 			$instance->set_password($password);
+			$instance->set_expired(false);
 			$instance->set_firstname($firstname);
 			$instance->set_lastname($lastname);
 
@@ -369,7 +412,7 @@
 			if (config::DEBUG)
 			{
 				// Test create_user()
-				$user = self::create_user("test", "test@test.com", 0, "test", "test", "test");
+				$user = self::create_user("test", "test@test.com", 0, false, "test", "test", "test");
 				if (!$user)
 				{
 					trigger_error("user::selftest(): user::create_user() failed with status: '" . $user . "'", E_USER_WARNING);
