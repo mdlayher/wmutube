@@ -246,73 +246,69 @@
 		// Selftest function for debugging
 		public static function selftest()
 		{
-			// Only runnable with DEBUG enabled
-			if (config::DEBUG)
+			// Test create_question()
+			$question = self::create_question(1, 1, "test");
+			if (!$question)
 			{
-				// Test create_question()
-				$question = self::create_question(1, 1, "test");
-				if (!$question)
-				{
-					trigger_error("question::selftest(): question::create_question() failed with status: '" . $question . "'", E_USER_WARNING);
-					return false;
-				}
-
-				// Test set_question()
-				$success = $question->set_question();
-				if (!$success)
-				{
-					trigger_error("question::selftest() question->set_question() insert failed with status: '" . $success . "'", E_USER_WARNING);
-					return false;
-				}
-
-				// Test set_videoid()
-				$success = $question->set_videoid(2);
-				if (!$success)
-				{
-					trigger_error("question::selftest() question->set_videoid() failed with status: '" . $success . "'", E_USER_WARNING);
-					return false;
-				}
-
-				// Test set_question()
-				$success = $question->set_question();
-				if (!$success)
-				{
-					trigger_error("question::selftest() question->set_question() update failed with status: '" . $success . "'", E_USER_WARNING);
-					return false;
-				}
-
-				// Re-fetch question
-				$id = $question->get_id();
-				unset($question);
-
-				// Test get_question()
-				$question = question::get_question($id);
-				if (!$question)
-				{
-					trigger_error("question::selftest(): question::get_question() failed with status: '" . $question . "'", E_USER_WARNING);
-					return false;
-				}
-
-				// Test delete_question()
-				$success = $question->delete_question();
-				if (!$success)
-				{
-					trigger_error("question::selftest() question->delete_question() update failed with status: '" . $success . "'", E_USER_WARNING);
-					return false;
-				}
-
-				// Test fetch_questions()
-				$questions = question::fetch_questions(1);
-				if (!$questions)
-				{
-					trigger_error("question::selftest(): question::fetch_questions() failed with status: '" . $questions . "'", E_USER_WARNING);
-					return false;
-				}
-
-				// If all tests pass, return true
-				printf("question::selftest(): all tests passed\n");
-				return true;
+				trigger_error("question::selftest(): question::create_question() failed with status: '" . $question . "'", E_USER_WARNING);
+				return false;
 			}
+
+			// Test set_question()
+			$success = $question->set_question();
+			if (!$success)
+			{
+				trigger_error("question::selftest() question->set_question() insert failed with status: '" . $success . "'", E_USER_WARNING);
+				return false;
+			}
+
+			// Test set_videoid()
+			$success = $question->set_videoid(2);
+			if (!$success)
+			{
+				trigger_error("question::selftest() question->set_videoid() failed with status: '" . $success . "'", E_USER_WARNING);
+				return false;
+			}
+
+			// Test set_question()
+			$success = $question->set_question();
+			if (!$success)
+			{
+				trigger_error("question::selftest() question->set_question() update failed with status: '" . $success . "'", E_USER_WARNING);
+				return false;
+			}
+
+			// Re-fetch question
+			$id = $question->get_id();
+			unset($question);
+
+			// Test get_question()
+			$question = question::get_question($id);
+			if (!$question)
+			{
+				trigger_error("question::selftest(): question::get_question() failed with status: '" . $question . "'", E_USER_WARNING);
+				return false;
+			}
+
+			// Test delete_question()
+			$success = $question->delete_question();
+			if (!$success)
+			{
+				trigger_error("question::selftest() question->delete_question() update failed with status: '" . $success . "'", E_USER_WARNING);
+				return false;
+			}
+
+			// Test fetch_questions()
+			$questions = question::fetch_questions(1);
+			if (!$questions)
+			{
+				trigger_error("question::selftest(): question::fetch_questions() failed with status: '" . $questions . "'", E_USER_WARNING);
+				return false;
+			}
+
+			// If all tests pass, return true
+			printf("question::selftest(): all tests passed\n");
+			return true;
 		}
 	}
 ?>

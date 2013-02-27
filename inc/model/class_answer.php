@@ -241,73 +241,69 @@
 		// Selftest function for debugging
 		public static function selftest()
 		{
-			// Only runnable with DEBUG enabled
-			if (config::DEBUG)
+			// Test create_answer()
+			$answer = self::create_answer(1, "test text", "test hint", false);
+			if (!$answer)
 			{
-				// Test create_answer()
-				$answer = self::create_answer(1, "test text", "test hint", false);
-				if (!$answer)
-				{
-					trigger_error("answer::selftest(): answer::create_answer() failed with status: '" . $answer . "'", E_USER_WARNING);
-					return false;
-				}
-
-				// Test set_answer()
-				$success = $answer->set_answer();
-				if (!$success)
-				{
-					trigger_error("answer::selftest() answer->set_answer() insert failed with status: '" . $success . "'", E_USER_WARNING);
-					return false;
-				}
-
-				// Test set_questionid()
-				$success = $answer->set_questionid(2);
-				if (!$success)
-				{
-					trigger_error("answer::selftest() answer->set_videoid() failed with status: '" . $success . "'", E_USER_WARNING);
-					return false;
-				}
-
-				// Test set_answer()
-				$success = $answer->set_answer();
-				if (!$success)
-				{
-					trigger_error("answer::selftest() answer->set_answer() update failed with status: '" . $success . "'", E_USER_WARNING);
-					return false;
-				}
-
-				// Re-fetch answer
-				$id = $answer->get_id();
-				unset($answer);
-
-				// Test get_answer()
-				$answer = answer::get_answer($id);
-				if (!$answer)
-				{
-					trigger_error("answer::selftest(): answer::get_answer() failed with status: '" . $answer . "'", E_USER_WARNING);
-					return false;
-				}
-
-				// Test delete_answer()
-				$success = $answer->delete_answer();
-				if (!$success)
-				{
-					trigger_error("answer::selftest() answer->delete_answer() update failed with status: '" . $success . "'", E_USER_WARNING);
-					return false;
-				}
-
-				// Test fetch_answers()
-				$answers = answer::fetch_answers(1);
-				if (!$answers)
-				{
-					trigger_error("answer::selftest(): answer::fetch_answers() failed with status: '" . $answers . "'", E_USER_WARNING);
-					return false;
-				}
-
-				// If all tests pass, return true
-				printf("answer::selftest(): all tests passed\n");
-				return true;
+				trigger_error("answer::selftest(): answer::create_answer() failed with status: '" . $answer . "'", E_USER_WARNING);
+				return false;
 			}
+
+			// Test set_answer()
+			$success = $answer->set_answer();
+			if (!$success)
+			{
+				trigger_error("answer::selftest() answer->set_answer() insert failed with status: '" . $success . "'", E_USER_WARNING);
+				return false;
+			}
+
+			// Test set_questionid()
+			$success = $answer->set_questionid(2);
+			if (!$success)
+			{
+				trigger_error("answer::selftest() answer->set_videoid() failed with status: '" . $success . "'", E_USER_WARNING);
+				return false;
+			}
+
+			// Test set_answer()
+			$success = $answer->set_answer();
+			if (!$success)
+			{
+				trigger_error("answer::selftest() answer->set_answer() update failed with status: '" . $success . "'", E_USER_WARNING);
+				return false;
+			}
+
+			// Re-fetch answer
+			$id = $answer->get_id();
+			unset($answer);
+
+			// Test get_answer()
+			$answer = answer::get_answer($id);
+			if (!$answer)
+			{
+				trigger_error("answer::selftest(): answer::get_answer() failed with status: '" . $answer . "'", E_USER_WARNING);
+				return false;
+			}
+
+			// Test delete_answer()
+			$success = $answer->delete_answer();
+			if (!$success)
+			{
+				trigger_error("answer::selftest() answer->delete_answer() update failed with status: '" . $success . "'", E_USER_WARNING);
+				return false;
+			}
+
+			// Test fetch_answers()
+			$answers = answer::fetch_answers(1);
+			if (!$answers)
+			{
+				trigger_error("answer::selftest(): answer::fetch_answers() failed with status: '" . $answers . "'", E_USER_WARNING);
+				return false;
+			}
+
+			// If all tests pass, return true
+			printf("answer::selftest(): all tests passed\n");
+			return true;
 		}
 	}
 ?>

@@ -310,81 +310,77 @@
 		// Selftest function for debugging
 		public static function selftest()
 		{
-			// Only runnable with DEBUG enabled
-			if (config::DEBUG)
+			// Test create_video()
+			$video = self::create_video(1, 1, "testvideo.mp4", "Test Video", "test video stuff");
+			if (!$video)
 			{
-				// Test create_video()
-				$video = self::create_video(1, 1, "testvideo.mp4", "Test Video", "test video stuff");
-				if (!$video)
-				{
-					trigger_error("video::selftest(): video::create_video() failed with status: '" . $video . "'", E_USER_WARNING);
-					return false;
-				}
-
-				// Test set_video()
-				$success = $video->set_video();
-				if (!$success)
-				{
-					trigger_error("video::selftest() video->set_video() insert failed with status: '" . $success . "'", E_USER_WARNING);
-					return false;
-				}
-
-				// Test set_userid()
-				$success = $video->set_userid(2);
-				if (!$success)
-				{
-					trigger_error("video::selftest() video->set_userid() failed with status: '" . $success . "'", E_USER_WARNING);
-					return false;
-				}
-
-				// Test set_courseid()
-				$success = $video->set_courseid(2);
-				if (!$success)
-				{
-					trigger_error("video::selftest() video->set_courseid() failed with status: '" . $success . "'", E_USER_WARNING);
-					return false;
-				}
-
-				// Test set_video()
-				$success = $video->set_video();
-				if (!$success)
-				{
-					trigger_error("video::selftest() video->set_video() update failed with status: '" . $success . "'", E_USER_WARNING);
-					return false;
-				}
-
-				// Re-fetch video
-				$id = $video->get_id();
-				unset($video);
-
-				// Test get_video()
-				$video = video::get_video($id);
-				if (!$video)
-				{
-					trigger_error("video::selftest(): video::get_video() failed with status: '" . $video . "'", E_USER_WARNING);
-					return false;
-				}
-
-				// Test delete_video()
-				$success = $video->delete_video();
-				if (!$success)
-				{
-					trigger_error("video::selftest() video->delete_video() update failed with status: '" . $success . "'", E_USER_WARNING);
-					return false;
-				}
-
-				// Test fetch_videos()
-				$videos = video::fetch_videos();
-				if (!$videos)
-				{
-					trigger_error("video::selftest(): video::fetch_videos() failed with status: '" . $videos . "'", E_USER_WARNING);
-					return false;
-				}
-
-				// If all tests pass, return true
-				printf("video::selftest(): all tests passed\n");
-				return true;
+				trigger_error("video::selftest(): video::create_video() failed with status: '" . $video . "'", E_USER_WARNING);
+				return false;
 			}
+
+			// Test set_video()
+			$success = $video->set_video();
+			if (!$success)
+			{
+				trigger_error("video::selftest() video->set_video() insert failed with status: '" . $success . "'", E_USER_WARNING);
+				return false;
+			}
+
+			// Test set_userid()
+			$success = $video->set_userid(2);
+			if (!$success)
+			{
+				trigger_error("video::selftest() video->set_userid() failed with status: '" . $success . "'", E_USER_WARNING);
+				return false;
+			}
+
+			// Test set_courseid()
+			$success = $video->set_courseid(2);
+			if (!$success)
+			{
+				trigger_error("video::selftest() video->set_courseid() failed with status: '" . $success . "'", E_USER_WARNING);
+				return false;
+			}
+
+			// Test set_video()
+			$success = $video->set_video();
+			if (!$success)
+			{
+				trigger_error("video::selftest() video->set_video() update failed with status: '" . $success . "'", E_USER_WARNING);
+				return false;
+			}
+
+			// Re-fetch video
+			$id = $video->get_id();
+			unset($video);
+
+			// Test get_video()
+			$video = video::get_video($id);
+			if (!$video)
+			{
+				trigger_error("video::selftest(): video::get_video() failed with status: '" . $video . "'", E_USER_WARNING);
+				return false;
+			}
+
+			// Test delete_video()
+			$success = $video->delete_video();
+			if (!$success)
+			{
+				trigger_error("video::selftest() video->delete_video() update failed with status: '" . $success . "'", E_USER_WARNING);
+				return false;
+			}
+
+			// Test fetch_videos()
+			$videos = video::fetch_videos();
+			if (!$videos)
+			{
+				trigger_error("video::selftest(): video::fetch_videos() failed with status: '" . $videos . "'", E_USER_WARNING);
+				return false;
+			}
+
+			// If all tests pass, return true
+			printf("video::selftest(): all tests passed\n");
+			return true;
 		}
 	}
 ?>

@@ -285,73 +285,69 @@
 		// Selftest function for debugging
 		public static function selftest()
 		{
-			// Only runnable with DEBUG enabled
-			if (config::DEBUG)
+			// Test create_course()
+			$course = self::create_course(2013, "Spring", "TEST", 1000, "Test Course");
+			if (!$course)
 			{
-				// Test create_course()
-				$course = self::create_course(2013, "Spring", "TEST", 1000, "Test Course");
-				if (!$course)
-				{
-					trigger_error("course::selftest(): course::create_course() failed with status: '" . $course . "'", E_USER_WARNING);
-					return false;
-				}
-
-				// Test set_course()
-				$success = $course->set_course();
-				if (!$success)
-				{
-					trigger_error("course::selftest() course->set_course() insert failed with status: '" . $success . "'", E_USER_WARNING);
-					return false;
-				}
-
-				// Test set_number()
-				$success = $course->set_number(1001);
-				if (!$success)
-				{
-					trigger_error("course::selftest() course->set_number() failed with status: '" . $success . "'", E_USER_WARNING);
-					return false;
-				}
-
-				// Test set_course()
-				$success = $course->set_course();
-				if (!$success)
-				{
-					trigger_error("course::selftest() course->set_course() update failed with status: '" . $success . "'", E_USER_WARNING);
-					return false;
-				}
-
-				// Re-fetch course
-				$id = $course->get_id();
-				unset($course);
-
-				// Test get_course()
-				$course = course::get_course($id);
-				if (!$course)
-				{
-					trigger_error("course::selftest(): course::get_course() failed with status: '" . $course . "'", E_USER_WARNING);
-					return false;
-				}
-
-				// Test delete_course()
-				$success = $course->delete_course();
-				if (!$success)
-				{
-					trigger_error("course::selftest() course->delete_course() update failed with status: '" . $success . "'", E_USER_WARNING);
-					return false;
-				}
-
-				// Test fetch_courses()
-				$courses = course::fetch_courses();
-				if (!$courses)
-				{
-					trigger_error("course::selftest(): course::fetch_courses() failed with status: '" . $courses . "'", E_USER_WARNING);
-					return false;
-				}
-
-				// If all tests pass, return true
-				printf("course::selftest(): all tests passed\n");
-				return true;
+				trigger_error("course::selftest(): course::create_course() failed with status: '" . $course . "'", E_USER_WARNING);
+				return false;
 			}
+
+			// Test set_course()
+			$success = $course->set_course();
+			if (!$success)
+			{
+				trigger_error("course::selftest() course->set_course() insert failed with status: '" . $success . "'", E_USER_WARNING);
+				return false;
+			}
+
+			// Test set_number()
+			$success = $course->set_number(1001);
+			if (!$success)
+			{
+				trigger_error("course::selftest() course->set_number() failed with status: '" . $success . "'", E_USER_WARNING);
+				return false;
+			}
+
+			// Test set_course()
+			$success = $course->set_course();
+			if (!$success)
+			{
+				trigger_error("course::selftest() course->set_course() update failed with status: '" . $success . "'", E_USER_WARNING);
+				return false;
+			}
+
+			// Re-fetch course
+			$id = $course->get_id();
+			unset($course);
+
+			// Test get_course()
+			$course = course::get_course($id);
+			if (!$course)
+			{
+				trigger_error("course::selftest(): course::get_course() failed with status: '" . $course . "'", E_USER_WARNING);
+				return false;
+			}
+
+			// Test delete_course()
+			$success = $course->delete_course();
+			if (!$success)
+			{
+				trigger_error("course::selftest() course->delete_course() update failed with status: '" . $success . "'", E_USER_WARNING);
+				return false;
+			}
+
+			// Test fetch_courses()
+			$courses = course::fetch_courses();
+			if (!$courses)
+			{
+				trigger_error("course::selftest(): course::fetch_courses() failed with status: '" . $courses . "'", E_USER_WARNING);
+				return false;
+			}
+
+			// If all tests pass, return true
+			printf("course::selftest(): all tests passed\n");
+			return true;
 		}
 	}
 ?>

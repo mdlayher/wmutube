@@ -410,81 +410,77 @@
 		// Selftest function for debugging
 		public static function selftest()
 		{
-			// Only runnable with DEBUG enabled
-			if (config::DEBUG)
+			// Test create_user()
+			$user = self::create_user("test", "test@test.com", 0, false, "test", "test", "test");
+			if (!$user)
 			{
-				// Test create_user()
-				$user = self::create_user("test", "test@test.com", 0, false, "test", "test", "test");
-				if (!$user)
-				{
-					trigger_error("user::selftest(): user::create_user() failed with status: '" . $user . "'", E_USER_WARNING);
-					return false;
-				}
-
-				// Test set_user()
-				$success = $user->set_user();
-				if (!$success)
-				{
-					trigger_error("user::selftest() user->set_user() insert failed with status: '" . $success . "'", E_USER_WARNING);
-					return false;
-				}
-
-				// Test set_email()
-				$success = $user->set_email("Test@test.com");
-				if (!$success)
-				{
-					trigger_error("user::selftest() user->set_email() failed with status: '" . $success . "'", E_USER_WARNING);
-					return false;
-				}
-
-				// Test set_roleid()
-				$success = $user->set_roleid(1);
-				if (!$success)
-				{
-					trigger_error("user::selftest() user->set_roleid() failed with status: '" . $success . "'", E_USER_WARNING);
-					return false;
-				}
-
-				// Test set_user()
-				$success = $user->set_user();
-				if (!$success)
-				{
-					trigger_error("user::selftest() user->set_user() update failed with status: '" . $success . "'", E_USER_WARNING);
-					return false;
-				}
-
-				// Re-fetch user
-				$id = $user->get_id();
-				unset($user);
-
-				// Test get_user()
-				$user = user::get_user($id);
-				if (!$user)
-				{
-					trigger_error("user::selftest(): user::get_user() failed with status: '" . $user . "'", E_USER_WARNING);
-					return false;
-				}
-
-				// Test delete_user()
-				$success = $user->delete_user();
-				if (!$success)
-				{
-					trigger_error("user::selftest() user->delete_user() update failed with status: '" . $success . "'", E_USER_WARNING);
-					return false;
-				}
-
-				// Test fetch_users()
-				$users = user::fetch_users();
-				if (!$users)
-				{
-					trigger_error("user::selftest(): user::fetch_users() failed with status: '" . $users . "'", E_USER_WARNING);
-					return false;
-				}
-
-				// If all tests pass, return true
-				printf("user::selftest(): all tests passed\n");
-				return true;
+				trigger_error("user::selftest(): user::create_user() failed with status: '" . $user . "'", E_USER_WARNING);
+				return false;
 			}
+
+			// Test set_user()
+			$success = $user->set_user();
+			if (!$success)
+			{
+				trigger_error("user::selftest() user->set_user() insert failed with status: '" . $success . "'", E_USER_WARNING);
+				return false;
+			}
+
+			// Test set_email()
+			$success = $user->set_email("Test@test.com");
+			if (!$success)
+			{
+				trigger_error("user::selftest() user->set_email() failed with status: '" . $success . "'", E_USER_WARNING);
+				return false;
+			}
+
+			// Test set_roleid()
+			$success = $user->set_roleid(1);
+			if (!$success)
+			{
+				trigger_error("user::selftest() user->set_roleid() failed with status: '" . $success . "'", E_USER_WARNING);
+				return false;
+			}
+
+			// Test set_user()
+			$success = $user->set_user();
+			if (!$success)
+			{
+				trigger_error("user::selftest() user->set_user() update failed with status: '" . $success . "'", E_USER_WARNING);
+				return false;
+			}
+
+			// Re-fetch user
+			$id = $user->get_id();
+			unset($user);
+
+			// Test get_user()
+			$user = user::get_user($id);
+			if (!$user)
+			{
+				trigger_error("user::selftest(): user::get_user() failed with status: '" . $user . "'", E_USER_WARNING);
+				return false;
+			}
+
+			// Test delete_user()
+			$success = $user->delete_user();
+			if (!$success)
+			{
+				trigger_error("user::selftest() user->delete_user() update failed with status: '" . $success . "'", E_USER_WARNING);
+				return false;
+			}
+
+			// Test fetch_users()
+			$users = user::fetch_users();
+			if (!$users)
+			{
+				trigger_error("user::selftest(): user::fetch_users() failed with status: '" . $users . "'", E_USER_WARNING);
+				return false;
+			}
+
+			// If all tests pass, return true
+			printf("user::selftest(): all tests passed\n");
+			return true;
 		}
 	}
 ?>
