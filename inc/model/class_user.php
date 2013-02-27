@@ -4,6 +4,8 @@
 	//
 	// changelog:
 	//
+	// 2/26/13 MDL:
+	//	- set db_login() as default login method
 	// 2/11/13 MDL:
 	//	- added database sanity checks to object methods
 	//	- added selftest() function for checking all class functionality

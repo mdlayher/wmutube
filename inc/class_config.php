@@ -4,6 +4,8 @@
 	//
 	// changelog:
 	//
+	// 2/26/13 MDL:
+	//	- added question class
 	// 2/19/13 MDL:
 	//	- initial code
 
@@ -29,6 +31,7 @@
 			"db_login" => "/login/class_db_login.php",
 			"login" => "/login/interface_login.php",
 			"profiler" => "/etc/class_profiler.php",
+			"question" => "/model/class_question.php",
 			"user" => "/model/class_user.php",
 			"video" => "/model/class_video.php"
 		);

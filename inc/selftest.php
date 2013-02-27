@@ -18,4 +18,7 @@
 
 	config::load("course");
 	course::selftest();
+
+	config::load("question");
+	question::selftest();
 ?>

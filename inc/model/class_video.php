@@ -4,6 +4,8 @@
 	//
 	// changelog:
 	//
+	// 2/26/13 MDL:
+	//	- added question fetching ability
 	// 2/11/13 MDL:
 	//	- ported database sanity checks from class_user
 	//	- added selftest() for checking all class functionality
@@ -15,6 +17,7 @@
 
 	require_once __DIR__ . "/../class_config.php";
 	config::load("database");
+	config::load("question");
 
 	class video
 	{
@@ -29,12 +32,16 @@
 
 		// INSTANCE VARIABLES - - - - - - - - - - - - - - - - - -
 
+		// Database columns
 		private $id;
 		private $userid;
 		private $courseid;
 		private $filename;
 		private $title;
 		private $keywords;
+
+		// Helper objects
+		private $questions;
 
 		// PUBLIC PROPERTIES - - - - - - - - - - - - - - - - - - 
 
@@ -121,6 +128,21 @@
 		{
 			$this->keywords = $keywords;
 			return true;
+		}
+
+		// questions:
+		//	- get: questions (lazy-load, only fetch when needed)
+		//	- set: n/a, not handled by this class
+		public function get_questions()
+		{
+			// Check if questions already fetched
+			if (!isset($this->questions))
+			{
+				// Get questions associated with this video
+				$this->questions = question::fetch_questions($this->id);
+			}
+
+			return $this->questions;
 		}
 
 		// CONSTRUCTOR/DESTRUCTOR - - - - - - - - - - - - - - - -
