@@ -120,6 +120,12 @@
 		}
 		public function set_enabled($enabled)
 		{
+			// Convert integer input into bool
+			if (is_int($enabled))
+			{
+				$enabled = $enabled === 1 ? true : false;
+			}
+
 			// Validate using is_bool()
 			if (is_bool($enabled))
 			{
@@ -156,6 +162,12 @@
 		}
 		public function set_expired($expired)
 		{
+			// Convert integer input into bool
+			if (is_int($expired))
+			{
+				$expired = $expired === 1 ? true : false;
+			}
+
 			// Validate using is_bool()
 			if (is_bool($expired))
 			{

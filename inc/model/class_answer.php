@@ -88,6 +88,12 @@
 		}
 		public function set_correct($correct)
 		{
+			// Convert integer input into bool
+			if (is_int($correct))
+			{
+				$correct = $correct === 1 ? true : false;
+			}
+
 			// Validate using is_bool()
 			if (is_bool($correct))
 			{
