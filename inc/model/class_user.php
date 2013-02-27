@@ -18,6 +18,7 @@
 
 	require_once __DIR__ . "/../class_config.php";
 	config::load("database");
+	config::load("db_login");
 
 	class user
 	{
@@ -248,16 +249,17 @@
 		public function authenticate()
 		{
 			// Check to ensure login set
-			if (isset($this->login))
+			if (!isset($this->login))
 			{
-				// Generate login strategy based upon passed object type
-				$login = new login($this->login);
-
-				// Attempt authentication via specified strategy
-				return $login->authenticate($this->username, $this->password, $this->salt);
+				// If it isn't, default to db_login
+				$this->set_login(new db_login());
 			}
+			
+			// Generate login strategy based upon passed object type
+			$login = new login($this->login);
 
-			return null;
+			// Attempt authentication via specified strategy
+			return $login->authenticate($this->username, $this->password, $this->salt);
 		}
 
 		// STATIC METHODS - - - - - - - - - - - - - - - - - - - -
