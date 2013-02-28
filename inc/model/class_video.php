@@ -6,6 +6,7 @@
 	//
 	// 2/27/13 MDL:
 	//	- added filter_videos(), enabled fetch_videos() to accept values array for fine-grained output
+	//	- added associated course and user object fetching for videos
 	// 2/26/13 MDL:
 	//	- added question fetching ability
 	// 2/11/13 MDL:

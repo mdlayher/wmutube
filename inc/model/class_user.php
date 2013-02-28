@@ -6,6 +6,7 @@
 	//
 	// 2/27/13 MDL:
 	//	- added filter_users(), enabled fetch_users() to accept values array for fine-grained output
+	//	- added fetching of associated videos for a user
 	// 2/26/13 MDL:
 	//	- set db_login() as default login method
 	// 2/11/13 MDL:
@@ -21,7 +22,7 @@
 	error_reporting(E_ALL);
 
 	require_once __DIR__ . "/../class_config.php";
-	config::load(array("database", "db_login"));
+	config::load(array("database", "db_login", "video"));
 
 	class user
 	{
@@ -62,6 +63,7 @@
 
 		// Helper objects
 		private $login;
+		private $videos;
 
 		// PUBLIC PROPERTIES - - - - - - - - - - - - - - - - - - 
 
@@ -238,6 +240,21 @@
 			}
 			
 			return false;
+		}
+
+		// videos:
+		//	- get: videos (lazy-load, only fetch when needed)
+		//	- set: n/a, not handled by this class
+		public function get_videos()
+		{
+			// Check if videos already fetched
+			if (!isset($this->videos))
+			{
+				// Get videos associated with this user
+				$this->videos = video::fetch_videos("userid", $this->id);
+			}
+
+			return $this->videos;
 		}
 
 		// CONSTRUCTOR/DESTRUCTOR - - - - - - - - - - - - - - - -

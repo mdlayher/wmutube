@@ -10,20 +10,11 @@
 	//	- initial code
 
 	require_once __DIR__ . "/class_config.php";
-	config::load("database");
+	config::load(array("database", "answer", "course", "question", "user", "video"));
 
-	config::load("user");
 	user::selftest();
-
-	config::load("video");
 	video::selftest();
-
-	config::load("course");
 	course::selftest();
-
-	config::load("question");
 	question::selftest();
-
-	config::load("answer");
 	answer::selftest();
 ?>
