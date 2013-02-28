@@ -4,6 +4,8 @@
 	//
 	// changelog:
 	//
+	// 2/27/13 MDL:
+	//	- changed input to array
 	// 2/12/13 MDL:
 	//	- initial code
 
@@ -13,7 +15,7 @@
 	interface i_login
 	{
 		// Ensure implementation of authenticate()
-		public function authenticate($username, $password, $salt = null);
+		public function authenticate($input);
 	}
 
 	// Abstract class which provides strategy selection for login
@@ -26,7 +28,7 @@
 		}
 
 		// Unimplemented authenticate due to abstract class
-		public function authenticate($username, $password, $salt = null)
+		public function authenticate($input)
 		{
 
 		}
@@ -52,9 +54,9 @@
 		}
 
 		// Perform authentication using specified method
-		public function authenticate($username, $password, $salt = null)
+		public function authenticate($input)
 		{
-			return $this->method->authenticate($username, $password, $salt);
+			return $this->method->authenticate($input);
 		}
 	}
 

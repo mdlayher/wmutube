@@ -8,7 +8,7 @@
 	//	- added filter_users(), enabled fetch_users() to accept values array for fine-grained output
 	//	- added fetching of associated videos for a user
 	// 2/26/13 MDL:
-	//	- set db_login() as default login method
+	//	- set login_db() as default login method
 	// 2/11/13 MDL:
 	//	- added database sanity checks to object methods
 	//	- added selftest() function for checking all class functionality
@@ -22,7 +22,7 @@
 	error_reporting(E_ALL);
 
 	require_once __DIR__ . "/../class_config.php";
-	config::load(array("database", "db_login", "video"));
+	config::load(array("database", "login_db", "login_ssh", "video"));
 
 	class user
 	{
@@ -336,8 +336,8 @@
 			// Check to ensure login set
 			if (!isset($this->login))
 			{
-				// If it isn't, default to db_login
-				$this->set_login(new db_login());
+				// If it isn't, default to login_db
+				$this->set_login(new login_db());
 			}
 			
 			// Generate login strategy based upon passed object type

@@ -1,20 +1,18 @@
 <?php
-	// class_db_login.php - Khan Academy Workflow, 2/12/13
-	// PHP class which provides database driven login for strategy pattern authentication
+	// class_login_ssh.php - Khan Academy Workflow, 2/12/13
+	// PHP class which provides SSH key login for strategy pattern authentication
 	//
 	// changelog:
 	//
-	// 2/19/13 MDL:
+	// 2/27/13 MDL:
 	//	- initial stub code
-	// 2/12/13 MDL:
-	//	- initial code
 
 	error_reporting(E_ALL);
 
 	require_once __DIR__ . "/../class_config.php";
 	config::load("login");
 
-	class db_login extends login_strategy
+	class login_ssh extends login_strategy
 	{
 		// CONSTANTS - - - - - - - - - - - - - - - - - - - - - -
 
@@ -29,9 +27,9 @@
 
 		// PUBLIC METHODS - - - - - - - - - - - - - - - - - - - -
 
-		public function authenticate($username, $password, $salt = null)
+		public function authenticate($input)
 		{		
-			return hash("sha256", $password . $salt);
+			return "ssh_login()";
 		}
 
 		// STATIC METHODS - - - - - - - - - - - - - - - - - - - -
