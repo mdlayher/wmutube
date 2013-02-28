@@ -39,6 +39,12 @@
 				$username = database::sanitize($input['username']);
 				$keyfile = database::sanitize($input['keyfile']);
 
+				// Check for passphrase, sanitize if found
+				if (isset($input['passphrase']))
+				{
+					$passphrase = database::sanitize($input['passphrase']);
+				}
+
 				// Validate host against hosts array
 				if (!in_array($host, array_keys(self::$HOSTS)))
 				{
@@ -64,8 +70,17 @@
 					return false;
 				}
 
-				// Attempt pubkey authentication via SSH
-				return ssh2_auth_pubkey_file($ssh, $username, self::$HOSTS[$host]["pubkey"], $keyfile);
+				// Attempt pubkey authentication via SSH, with passphrase if provided
+				if (isset($passphrase))
+				{
+					$success = ssh2_auth_pubkey_file($ssh, $username, self::$HOSTS[$host]["pubkey"], $keyfile, $passphrase);
+				}
+				else
+				{
+					$success = ssh2_auth_pubkey_file($ssh, $username, self::$HOSTS[$host]["pubkey"], $keyfile);
+				}
+
+				return $success;
 			}
 			else
 			{
