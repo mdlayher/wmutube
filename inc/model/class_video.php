@@ -4,6 +4,8 @@
 	//
 	// changelog:
 	//
+	// 2/27/13 MDL:
+	//	- added filter_videos(), enabled fetch_videos() to accept values array for fine-grained output
 	// 2/26/13 MDL:
 	//	- added question fetching ability
 	// 2/11/13 MDL:
@@ -28,6 +30,16 @@
 			"id" => true,
 			"userid" => true,
 			"courseid" => true
+		);
+
+		// Allowed and disallowed fields for filter
+		protected static $FILTERS = array(
+			"id" => true,
+			"userid" => true,
+			"courseid" => true,
+			"filename" => true,
+			"title" => true,
+			"keywords" => true
 		);
 
 		// INSTANCE VARIABLES - - - - - - - - - - - - - - - - - -
@@ -271,7 +283,7 @@
 		}
 
 		// Create a list of video objects using specified parameters
-		public static function fetch_videos($field = "id")
+		public static function fetch_videos($field = "id", $values = null)
 		{
 			// Sanitize video's field input, as that won't be part of the prepared query
 			$field = database::sanitize($field);
@@ -284,8 +296,35 @@
 				return null;
 			}
 
-			// Query for a list of videos using specified field
-			$results = database::query("SELECT $field FROM videos ORDER BY $field ASC;");
+			// Check for specified values to fetch into list
+			if (isset($values) && is_array($values))
+			{
+				$query = "";
+				// Iterate values to build query with filtering
+				for ($i = 0; $i < count($values); $i++)
+				{
+					// Sanitize values
+					$v = database::sanitize($values[$i]);
+
+					// On last iteration, stop adding OR statements
+					if ($i === count($values) - 1)
+					{
+						$query .= "$field='$v'";
+					}
+					else
+					{
+						$query .= "$field='$v' OR ";
+					}
+				}
+
+				// uery for a list of videos from values in array
+				$results = database::query("SELECT $field FROM videos WHERE $query ORDER BY $field ASC;");
+			}
+			else
+			{
+				// Query for a list of videos using specified field
+				$results = database::query("SELECT $field FROM videos ORDER BY $field ASC;");
+			}
 
 			if ($results)
 			{	
@@ -299,6 +338,43 @@
 				}
 
 				return $videos;
+			}
+			else
+			{
+				// Return null if no results
+				return null;
+			}
+		}
+
+		// Create a list of video objects using specified filter
+		public static function filter_videos($filter, $value)
+		{
+			// Sanitize video filter input
+			$filter = database::sanitize($filter);
+
+			// Check for valid filter field
+			if (!in_array($filter, array_keys(self::$FILTERS)) || !self::$FILTERS[$filter])
+			{
+				// Return null and trigger error on bad filter
+				trigger_error("video::filter_videos() cannot filter using invalid field '" . $filter . "'", E_USER_WARNING);
+				return null;
+			}
+
+			// Query for a filtered list of s matching the wildcard value for specified field
+			$results = database::query("SELECT id FROM videos WHERE $filter LIKE ? ORDER BY id ASC;", '%' . $value . '%');
+
+			if ($results)
+			{	
+				// Generate list of video IDs
+				$id = array();
+				for ($i = 0; $i < count($results); $i++)
+				{
+					// Parse value from array
+					$id[] = $results[$i]["id"];
+				}
+
+				// Hand off array to fetch_videos() to generate list of video objects
+				return self::fetch_videos("id", $id);
 			}
 			else
 			{
@@ -375,6 +451,14 @@
 			if (!$videos)
 			{
 				trigger_error("video::selftest(): video::fetch_videos() failed with status: '" . $videos . "'", E_USER_WARNING);
+				return false;
+			}
+			
+			// Test filter_videos()
+			$videos = video::filter_videos("title", "a");
+			if (!$videos)
+			{
+				trigger_error("video::selftest(): video::filter_videos() failed with status: '" . $videos . "'", E_USER_WARNING);
 				return false;
 			}
 
