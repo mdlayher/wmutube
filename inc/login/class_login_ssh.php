@@ -22,7 +22,7 @@
 			"localhost" => array(
 				"port" => 22,
 				"fingerprint" => "fingerprint",
-				"pubkey" => "/path/to/pubkey"
+				"pubkey" => "/home/%s/.ssh/authorized_keys"
 			),
 		);
 
@@ -70,14 +70,17 @@
 					return false;
 				}
 
+				// Insert username into pubkey path
+				$pubkey = sprintf(self::$HOSTS[$host]["pubkey"], $username);
+
 				// Attempt pubkey authentication via SSH, with passphrase if provided
 				if (isset($passphrase))
 				{
-					$success = ssh2_auth_pubkey_file($ssh, $username, self::$HOSTS[$host]["pubkey"], $keyfile, $passphrase);
+					$success = ssh2_auth_pubkey_file($ssh, $username, $pubkey, $keyfile, $passphrase);
 				}
 				else
 				{
-					$success = ssh2_auth_pubkey_file($ssh, $username, self::$HOSTS[$host]["pubkey"], $keyfile);
+					$success = ssh2_auth_pubkey_file($ssh, $username, $pubkey, $keyfile);
 				}
 
 				return $success;
