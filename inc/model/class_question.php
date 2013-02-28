@@ -10,8 +10,7 @@
 	error_reporting(E_ALL);
 
 	require_once __DIR__ . "/../class_config.php";
-	config::load("database");
-	config::load("answer");
+	config::load(array("database", "answer"));
 
 	class question
 	{

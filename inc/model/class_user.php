@@ -21,8 +21,7 @@
 	error_reporting(E_ALL);
 
 	require_once __DIR__ . "/../class_config.php";
-	config::load("database");
-	config::load("db_login");
+	config::load(array("database", "db_login"));
 
 	class user
 	{

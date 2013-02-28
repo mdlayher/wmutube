@@ -4,6 +4,8 @@
 	//
 	// changelog:
 	//
+	// 2/27/13 MDL:
+	//	- added ability to load array of source files
 	// 2/26/13 MDL:
 	//	- added question and answer classes
 	// 2/19/13 MDL:
@@ -39,18 +41,32 @@
 
 		// STATIC METHODS - - - - - - - - - - - - - - - - - - - -
 
-		// Load a source file such as a class or interface
-		public static function load($file)
+		// Load one or more source files such as classes or interfaces
+		public static function load($files)
 		{
-			// Check for existence of source file
-			if (in_array($file, array_keys(self::$SOURCE_FILES)))
+			// Ensure files are an array
+			if (!is_array($files))
 			{
-				// If exists, require it!
-				require_once __DIR__ . self::$SOURCE_FILES[$file];
-				return true;
+				$files = array($files);
 			}
 
-			return false;
+			// Check for existence of source files
+			foreach ($files as $f)
+			{
+				if (in_array($f, array_keys(self::$SOURCE_FILES)))
+				{
+					// If exists, require it!
+					require_once __DIR__ . self::$SOURCE_FILES[$f];
+				}
+				else
+				{
+					// Trigger error on non-existant file
+					trigger_error("config::load() could not load invalid source file '" . $f . "'", E_USER_WARNING);
+					return false;
+				}
+			}
+
+			return true;
 		}
 	}
 ?>

@@ -18,8 +18,7 @@
 	error_reporting(E_ALL);
 
 	require_once __DIR__ . "/../class_config.php";
-	config::load("database");
-	config::load("question");
+	config::load(array("database", "course", "question", "user"));
 
 	class video
 	{
@@ -53,6 +52,8 @@
 		private $keywords;
 
 		// Helper objects
+		private $user;
+		private $course;
 		private $questions;
 
 		// PUBLIC PROPERTIES - - - - - - - - - - - - - - - - - - 
@@ -140,6 +141,36 @@
 		{
 			$this->keywords = $keywords;
 			return true;
+		}
+
+		// user:
+		//	- get: user (lazy-load, only fetch when needed)
+		//	- set: n/a, not handled by this class
+		public function get_user()
+		{
+			// Check if user already fetched
+			if (!isset($this->user))
+			{
+				// Get user associated with this video
+				$this->user = user::get_user($this->userid);
+			}
+
+			return $this->user;
+		}
+
+		// course:
+		//	- get: course (lazy-load, only fetch when needed)
+		//	- set: n/a, not handled by this class
+		public function get_course()
+		{
+			// Check if course already fetched
+			if (!isset($this->course))
+			{
+				// Get course associated with this video
+				$this->course = course::get_course($this->courseid);
+			}
+
+			return $this->course;
 		}
 
 		// questions:
