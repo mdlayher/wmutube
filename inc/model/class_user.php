@@ -331,7 +331,7 @@
 			return $success;
 		}
 
-		public function authenticate()
+		public function authenticate($input = null)
 		{
 			// Check to ensure login set
 			if (!isset($this->login))
@@ -343,8 +343,14 @@
 			// Generate login strategy based upon passed object type
 			$login = new login($this->login);
 
+			// Check for input array
+			if (!is_array($input))
+			{
+				$input = array();
+			}
+
 			// Attempt authentication via specified strategy
-			return $login->authenticate($this->username, $this->password, $this->salt);
+			return $login->authenticate($input);
 		}
 
 		// STATIC METHODS - - - - - - - - - - - - - - - - - - - -
