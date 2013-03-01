@@ -13,6 +13,8 @@
 
 	error_reporting(E_ALL);
 
+	require_once __DIR__ . "/login/password.php";
+
 	class config
 	{
 		// CONSTANTS - - - - - - - - - - - - - - - - - - - - - -
@@ -26,6 +28,12 @@
 		// Profiler toggle
 		const PROFILER = 0;
 
+		// Password hash algorithm
+		const HASH_ALGORITHM = PASSWORD_DEFAULT;
+
+		// Password hash cost
+		const HASH_COST = 14;
+
 		// Array of source files to quickly load
 		protected static $SOURCE_FILES = array(
 			"answer" => "/model/class_answer.php",
@@ -34,6 +42,7 @@
 			"login" => "/login/interface_login.php",
 			"login_db" => "/login/class_login_db.php",
 			"login_ssh" => "/login/class_login_ssh.php",
+			"password" => "/login/password.php",
 			"profiler" => "/etc/class_profiler.php",
 			"question" => "/model/class_question.php",
 			"user" => "/model/class_user.php",

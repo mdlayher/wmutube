@@ -22,7 +22,7 @@
 	error_reporting(E_ALL);
 
 	require_once __DIR__ . "/../class_config.php";
-	config::load(array("database", "login_db", "login_ssh", "video"));
+	config::load(array("database", "login_db", "login_ssh", "password", "video"));
 
 	class user
 	{
@@ -163,8 +163,14 @@
 			// Generate new salt using mcrypt
 			$this->salt = self::generate_salt();
 
-			// Perform hash function with salt and store new hashed password
-			$this->password = self::password_hash($this->salt . $password);
+			// Set options array
+			$options = array(
+				"cost" => config::HASH_COST,
+				"salt" => $this->salt
+			);
+
+			// Use PHP password API to generate new password
+			$this->password = password_hash($password, config::HASH_ALGORITHM, $options);
 			return true;
 		}
 		
@@ -331,23 +337,29 @@
 			return $success;
 		}
 
-		public function authenticate($input = null)
+		// Authenticate user using strategy pattern authentication
+		public function authenticate($input)
 		{
+			// Ensure input is an array
+			if (!is_array($input))
+			{
+				$input = array($input);
+			}
+
 			// Check to ensure login set
 			if (!isset($this->login))
 			{
 				// If it isn't, default to login_db
 				$this->set_login(new login_db());
+
+				// Set options for login_db
+				$input["username"] = $this->username;
+				$input["password_hash"] = $this->password;
+				$input["salt"] = $this->salt;
 			}
 			
 			// Generate login strategy based upon passed object type
 			$login = new login($this->login);
-
-			// Check for input array
-			if (!is_array($input))
-			{
-				$input = array();
-			}
 
 			// Attempt authentication via specified strategy
 			return $login->authenticate($input);
@@ -505,12 +517,6 @@
 				// Return null if no results
 				return null;
 			}
-		}
-
-		// Generate appropriate hash for password from input
-		public static function password_hash($input)
-		{
-			return hash("sha256", $input);
 		}
 
 		// Generate random salt for password hashing
