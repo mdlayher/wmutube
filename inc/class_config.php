@@ -37,6 +37,7 @@
 		// Array of source files to quickly load
 		protected static $SOURCE_FILES = array(
 			"answer" => "/model/class_answer.php",
+			"cache" => "/class_cache.php",
 			"course" => "/model/class_course.php",
 			"database" => "/class_database.php",
 			"login" => "/login/interface_login.php",
