@@ -4,6 +4,8 @@
 	//
 	// changelog:
 	//
+	// 3/2/13 MDL:
+	//	- improvements to password hashing, resistance to timing attacks, rehash if needed
 	// 2/28/13 MDL:
 	//	- initial impementation of bcrypt password hash verification!
 	// 2/27/13 MDL:
@@ -39,11 +41,23 @@
 					"salt" => $salt
 				);
 
-				// Perform password hash
-				$hash = password_hash($password, config::HASH_ALGORITHM, $options);
+				// Verify password hash, return false on failure
+				if (!password_verify($password, $password_hash))
+				{
+					return false;
+				}
 
-				// Attempt to match hashes for authentication
-				return $success = ($hash === $password_hash) ? true : false;
+				// Determine if password needs to be rehashed in database due to updated algorithm
+				if (password_needs_rehash($password_hash, PASSWORD_DEFAULT, $options))
+				{
+					// Retrieve user object, update password, save state
+					$user = user::get_user($username, "username");
+					$user->set_password($password);
+					$user->set_user();
+				}
+
+				// Return true on successful login
+				return true;
 			}
 			else
 			{
