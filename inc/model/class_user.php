@@ -340,29 +340,38 @@
 		// Authenticate user using strategy pattern authentication
 		public function authenticate($input)
 		{
-			// Ensure input is an array
-			if (!is_array($input))
+			// Ensure login is enabled
+			if ($this->enabled)
 			{
-				$input = array($input);
-			}
+				// Ensure input is an array
+				if (!is_array($input))
+				{
+					$input = array($input);
+				}
 
-			// Check to ensure login set
-			if (!isset($this->login))
+				// Check to ensure login set
+				if (!isset($this->login))
+				{
+					// If it isn't, default to login_db
+					$this->set_login(new login_db());
+
+					// Set options for login_db
+					$input["username"] = $this->username;
+					$input["password_hash"] = $this->password;
+					$input["salt"] = $this->salt;
+				}
+				
+				// Generate login strategy based upon passed object type
+				$login = new login($this->login);
+
+				// Attempt authentication via specified strategy
+				return $login->authenticate($input);
+			}
+			else
 			{
-				// If it isn't, default to login_db
-				$this->set_login(new login_db());
-
-				// Set options for login_db
-				$input["username"] = $this->username;
-				$input["password_hash"] = $this->password;
-				$input["salt"] = $this->salt;
+				// Prevent authentication for disabled users
+				return false;
 			}
-			
-			// Generate login strategy based upon passed object type
-			$login = new login($this->login);
-
-			// Attempt authentication via specified strategy
-			return $login->authenticate($input);
 		}
 
 		// STATIC METHODS - - - - - - - - - - - - - - - - - - - -
