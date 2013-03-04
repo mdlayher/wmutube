@@ -24,6 +24,7 @@
 	{
 		// PUBLIC METHODS - - - - - - - - - - - - - - - - - - - -
 
+		// Perform authentication against application's database
 		public function authenticate($input)
 		{
 			// Check to ensure all necessary parameters are set

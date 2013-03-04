@@ -26,7 +26,7 @@
 
 		// PUBLIC METHODS - - - - - - - - - - - - - - - - - - - -
 
-		// Perform authentication against IMAP server
+		// Perform authentication against LDAP server
 		public function authenticate($input)
 		{
 			// Check for required parameters
