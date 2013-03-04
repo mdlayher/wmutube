@@ -73,6 +73,13 @@
 					return false;
 				}
 
+				// Check to ensure SSH2 extension is loaded
+				if (!function_exists("ssh2_connect"))
+				{
+					trigger_error("login_ssh->authenticate() cannot authenticate, SSH2 extension not loaded", E_USER_WARNING);
+					return false;
+				}
+
 				// Attempt to create SSH connection for authentication
 				$ssh = ssh2_connect($host, self::$HOSTS[$host]["port"]);
 				if (!$ssh)

@@ -44,6 +44,13 @@
 					return false;
 				}
 
+				// Check to ensure LDAP extension is loaded
+				if (!function_exists("ldap_connect"))
+				{
+					trigger_error("login_ldap->authenticate() cannot authenticate, LDAP extension not loaded", E_USER_WARNING);
+					return false;
+				}
+
 				// Attempt to connect to LDAP server
 				$ldap = ldap_connect($host, self::$HOSTS[$host]["port"]);
 				if (!$ldap)

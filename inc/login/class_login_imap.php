@@ -48,6 +48,13 @@
 					return false;
 				}
 
+				// Check to ensure IMAP extension is loaded
+				if (!function_exists("imap_open"))
+				{
+					trigger_error("login_imap->authenticate() cannot authenticate, IMAP extension not loaded", E_USER_WARNING);
+					return false;
+				}
+
 				// Generate IMAP mailbox string using input parameters
 				$mailbox = sprintf("{%s:%d/imap%s}%s", $host, self::$HOSTS[$host]["port"], self::$HOSTS[$host]["path"], self::$HOSTS[$host]["folder"]);
 
