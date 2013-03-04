@@ -59,5 +59,3 @@
 			return $this->method->authenticate($input);
 		}
 	}
-
-?>

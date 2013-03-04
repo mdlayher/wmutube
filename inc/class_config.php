@@ -49,7 +49,7 @@
 			"profiler" => "/etc/class_profiler.php",
 			"question" => "/model/class_question.php",
 			"user" => "/model/class_user.php",
-			"video" => "/model/class_video.php"
+			"video" => "/model/class_video.php",
 		);
 
 		// STATIC METHODS - - - - - - - - - - - - - - - - - - - -
@@ -82,4 +82,3 @@
 			return true;
 		}
 	}
-?>

@@ -29,7 +29,7 @@
 		protected static $FIELDS = array(
 			"id" => true,
 			"userid" => true,
-			"courseid" => true
+			"courseid" => true,
 		);
 
 		// Allowed and disallowed fields for filter
@@ -39,7 +39,7 @@
 			"courseid" => true,
 			"filename" => true,
 			"title" => true,
-			"keywords" => true
+			"keywords" => true,
 		);
 
 		// INSTANCE VARIABLES - - - - - - - - - - - - - - - - - -
@@ -499,4 +499,3 @@
 			return true;
 		}
 	}
-?>

@@ -32,7 +32,7 @@
 		protected static $FIELDS = array(
 			"id" => true,
 			"username" => true,
-			"email" => true
+			"email" => true,
 		);
 
 		// Allowed and disallowed fields for filter
@@ -44,7 +44,7 @@
 			"enabled" => true,
 			"expired" => true,
 			"firstname" => true,
-			"lastname" => true
+			"lastname" => true,
 		);
 
 		// INSTANCE VARIABLES - - - - - - - - - - - - - - - - - -
@@ -618,4 +618,3 @@
 			return true;
 		}
 	}
-?>

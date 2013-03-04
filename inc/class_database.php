@@ -47,7 +47,7 @@
 			"SELECT" => true,
 			"INSERT" => true,
 			"UPDATE" => true,
-			"DELETE" => true
+			"DELETE" => true,
 		);
 
 		// INSTANCE VARIABLES - - - - - - - - - - - - - - - - -
@@ -443,4 +443,3 @@
 			}
 		}
 	}
-?>

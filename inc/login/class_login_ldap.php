@@ -1,5 +1,5 @@
 <?php
-	// class_login_imap.php - Khan Academy Workflow, 3/3/13
+	// class_login_ldap.php - Khan Academy Workflow, 3/3/13
 	// PHP class which provides experimental LDAP login for strategy pattern authentication
 	//
 	// changelog:
@@ -16,7 +16,7 @@
 	{
 		// CONSTANTS - - - - - - - - - - - - - - - - - - - - - -
 
-		// Allowed IMAP hosts with necessary data
+		// Allowed LDAP hosts with necessary data
 		protected static $HOSTS = array(
 			"ldap.wmich.edu" => array(
 				"port" => 389,
@@ -70,4 +70,3 @@
 			}
 		}
 	}
-?>

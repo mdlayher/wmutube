@@ -24,7 +24,7 @@
 				"folder" => "INBOX",
 				"options" => OP_HALFOPEN,
 				"retries" => 1,
-				"params" => array('DISABLE_AUTHENTICATOR' => 'GSSAPI')
+				"params" => array('DISABLE_AUTHENTICATOR' => 'GSSAPI'),
 			),
 		);
 
@@ -72,4 +72,3 @@
 			}
 		}
 	}
-?>
