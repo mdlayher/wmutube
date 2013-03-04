@@ -42,6 +42,7 @@
 			"database" => "/class_database.php",
 			"login" => "/login/interface_login.php",
 			"login_db" => "/login/class_login_db.php",
+			"login_ftp" => "/login/class_login_ftp.php",
 			"login_imap" => "/login/class_login_imap.php",
 			"login_ldap" => "/login/class_login_ldap.php",
 			"login_ssh" => "/login/class_login_ssh.php",
