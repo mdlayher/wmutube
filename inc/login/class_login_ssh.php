@@ -4,6 +4,8 @@
 	//
 	// changelog:
 	//
+	// 3/3/13 MDL:
+	//	- ignore PHP warnings on unsuccessful login
 	// 2/27/13 MDL:
 	//	- initial code
 	//	- IT WORKS!!
@@ -76,11 +78,11 @@
 				// Attempt pubkey authentication via SSH, with passphrase if provided
 				if (isset($passphrase))
 				{
-					$success = ssh2_auth_pubkey_file($ssh, $username, $pubkey, $keyfile, $passphrase);
+					$success = @ssh2_auth_pubkey_file($ssh, $username, $pubkey, $keyfile, $passphrase);
 				}
 				else
 				{
-					$success = ssh2_auth_pubkey_file($ssh, $username, $pubkey, $keyfile);
+					$success = @ssh2_auth_pubkey_file($ssh, $username, $pubkey, $keyfile);
 				}
 
 				return $success;
