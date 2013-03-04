@@ -6,6 +6,7 @@
 	//
 	// 3/3/13 MDL:
 	//	- ignore PHP warnings on unsuccessful login
+	//	- added password login, can be enabled on a per-host basis
 	// 2/27/13 MDL:
 	//	- initial code
 	//	- IT WORKS!!
@@ -19,12 +20,20 @@
 	{
 		// CONSTANTS - - - - - - - - - - - - - - - - - - - - - -
 
+		// Authentication methods
+		const AUTH_PASSWORD = "password";
+		const AUTH_KEY = "key";
+
 		// Allowed SSH hosts with necessary data
 		protected static $HOSTS = array(
 			"localhost" => array(
 				"port" => 22,
 				"fingerprint" => "fingerprint",
-				"pubkey" => "/home/%s/.ssh/authorized_keys"
+				"pubkey" => "/home/%s/.ssh/authorized_keys",
+				"method" => array(
+					self::AUTH_PASSWORD => false,
+					self::AUTH_KEY => true,
+				),
 			),
 		);
 
@@ -34,17 +43,20 @@
 		public function authenticate($input)
 		{
 			// Check for required parameters
-			if (isset($input['host'], $input['username'], $input['keyfile']))
+			if (isset($input['host'], $input['username']))
 			{
 				// Sanitize input for safety
 				$host = database::sanitize($input['host']);
 				$username = database::sanitize($input['username']);
-				$keyfile = database::sanitize($input['keyfile']);
 
-				// Check for passphrase, sanitize if found
-				if (isset($input['passphrase']))
+				// Check if a method was set, but default to "key" if not
+				if (isset($input['method']))
 				{
-					$passphrase = database::sanitize($input['passphrase']);
+					$method = database::sanitize($input['method']);
+				}
+				else
+				{
+					$method = self::AUTH_KEY;
 				}
 
 				// Validate host against hosts array
@@ -54,11 +66,17 @@
 					return false;
 				}
 
+				// Validate authentication method is valid and allowed
+				if (!in_array($method, array_keys(self::$HOSTS[$host]["method"])) || !self::$HOSTS[$host]["method"][$method])
+				{
+					trigger_error("login_ssh->authenticate() attempted to authenticate using disallowed method '" . $method . "'", E_USER_WARNING);
+					return false;
+				}
+
 				// Attempt to create SSH connection for authentication
 				$ssh = ssh2_connect($host, self::$HOSTS[$host]["port"]);
 				if (!$ssh)
 				{
-					// Trigger error on failure
 					trigger_error("login_ssh->authenticate() failed to connect to host '" . $host . "'", E_USER_WARNING);
 					return false;
 				}
@@ -67,25 +85,63 @@
 				$fingerprint = ssh2_fingerprint($ssh);
 				if ($fingerprint !== self::$HOSTS[$host]["fingerprint"])
 				{
-					// Trigger error on failure
 					trigger_error("login_ssh->authenticate() CRITICAL: failed to verify host fingerprint for host '" . $host . "'!!", E_USER_ERROR);
 					return false;
 				}
 
-				// Insert username into pubkey path
-				$pubkey = sprintf(self::$HOSTS[$host]["pubkey"], $username);
-
-				// Attempt pubkey authentication via SSH, with passphrase if provided
-				if (isset($passphrase))
+				// Determine login method
+				// Key file authentication
+				if ($method === self::AUTH_KEY)
 				{
-					$success = @ssh2_auth_pubkey_file($ssh, $username, $pubkey, $keyfile, $passphrase);
+					// Check to ensure keyfile parameter passed
+					if (!isset($input['keyfile']))
+					{
+						trigger_error("login_ssh->authenticate() missing keyfile parameter for key-based authentication", E_USER_WARNING);
+						return false;
+					}
+					$keyfile = database::sanitize($input['keyfile']);
+
+					// Check for passphrase, sanitize if found
+					if (isset($input['passphrase']))
+					{
+						$passphrase = database::sanitize($input['passphrase']);
+					}
+
+					// Insert username into pubkey path
+					$pubkey = sprintf(self::$HOSTS[$host]["pubkey"], $username);
+
+					// Attempt pubkey authentication via SSH, with passphrase if provided
+					if (isset($passphrase))
+					{
+						$success = @ssh2_auth_pubkey_file($ssh, $username, $pubkey, $keyfile, $passphrase);
+					}
+					else
+					{
+						$success = @ssh2_auth_pubkey_file($ssh, $username, $pubkey, $keyfile);
+					}
+
+					return $success;
 				}
+				// Password authentication
+				else if ($method === self::AUTH_PASSWORD)
+				{
+					// Check to ensure password parameter passsed
+					if (!isset($input['password']))
+					{
+						trigger_error("login_ssh->authenticate() missing password parameter for password-based authentication", E_USER_WARNING);
+						return false;
+					}
+					$password = database::sanitize($input['password']);
+
+					// Attempt password authentication via SSH
+					return @ssh2_auth_password($ssh, $username, $password);
+				}
+				// Invalid login scheme (should never happen)
 				else
 				{
-					$success = @ssh2_auth_pubkey_file($ssh, $username, $pubkey, $keyfile);
+					trigger_error("login_ssh->authenticate() invalid SSH login method specified: '" . $method . "'", E_USER_WARNING);
+					return false;
 				}
-
-				return $success;
 			}
 			else
 			{
