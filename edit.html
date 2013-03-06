@@ -7,13 +7,14 @@
 	<script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>
 	<script src="http://vjs.zencdn.net/c/video.js"></script>
 	<script src='script/main.js' type="text/javascript"></script>
+	<script src='script/edit.js' type="text/javascript"></script>
 	<title>Senior design prototype</title>
 	<link rel="stylesheet" type="text/css" href="css/main.css">
 	<link href="http://vjs.zencdn.net/c/video-js.css" rel="stylesheet">
 </head>
 <body>
 	<div id='header_container'>
-		<div id='header'>
+		<div id='header' class='centered_on_page'>
 			<div class='left'>
 				CourseraClone
 			</div>
@@ -30,19 +31,23 @@
 	</div>
 
 	<div id='body_container'>
-		<div id='media_area_container'>
-			<div id='player_container'>
-						<!-- <img src="img/player_placeholder.png"> -->
-					  <!--<div id='controls'></div> -->
+		<div id='media_area_container' class='centered_on_page'>
+			<div class='player_container is-editor'>
 			<video id="video_player" class="video-js vjs-default-skin" controls preload="auto" poster="img/player_placeholder.png" data-setup="{}">
-  				<!-- <source src="my_video.mp4" type='video/mp4'> -->
-  				<source src="file:///Users/justinhill/Downloads/big_buck_bunny_480p.webm" type='video/webm'>
+  				<source src="file:///Users/justinhill/Desktop/Chrome_ImF.webm" type='video/webm'>
 			</video>
 			</div>
-			<div id='extra_info_container'></div>
+			<div id='extra_info_container'>
+				<div class='edit_button'></div>
+			</div>
+		</div>
+
+		<div class='editing_scrubber centered_on_page'>
+			<hr />
+			<div class='editing_question_anchor'></div>
 		</div>
 		
-		<div id='description_container'>
+		<div id='description_container' class='centered_on_page'>
 			Finding your way around BASH
 			<hr />
 			<div class='padright'>

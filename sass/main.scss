@@ -22,14 +22,20 @@ body
 
 #header
 {
-	width: 980px;
-	margin-left: auto;
-	margin-right: auto;
 	height: 35px;
 	margin:0 auto;
 	padding: 0px;
 	line-height: 35px;
 	font-family: 'Lato', sans-serif;
+
+	a:link
+	{
+		color: #fff;
+		text-decoration: none;
+		font-weight: 300;
+		font-size: 12px;
+	}
+
 
 	.left
 	{
@@ -40,7 +46,8 @@ body
 
 	.leftish
 	{
-
+		margin-left: 10px;
+		float: left;
 	}
 
 	.right
@@ -51,6 +58,29 @@ body
 	}
 }
 
+#browse_drawer
+{
+	position: fixed;
+	top: 35px;
+	height: 0px;
+	width: 100%;
+	z-index: 100;
+	background-color: #000;
+	// display: none;
+	overflow: hidden;
+
+	.shadow
+	{
+		box-shadow: 0px 0px 0px 8px #000;
+	}
+}
+
+.centered_on_page
+{
+	width: 980px;
+	margin-left: auto;
+	margin-right: auto;
+}
 #body_container
 {
 	position: relative;
@@ -61,22 +91,61 @@ body
 
 #media_area_container
 {
-	width: 980px;
-	border-radius: 2px 2px 0px 0px;
-	margin-left: auto;
-	margin-right: auto;
+	border-radius: 2px 2px 2px 2px;
 	overflow: hidden;
 }
 
-#player_container
+.player_container
 {
 	float: left;
-	width: 712px;
+	width: 980px;
 	background-color: black;
-	height: 400px;
+	height: 551px;
 	position: relative;
 	z-index: 99;
-	box-shadow: 0px 0px 8px #000
+	box-shadow: 0px 0px 8px #000;
+}
+
+.is-editor
+{
+	width: 712px;
+	height: 400px;
+}
+
+.editing_scrubber
+{
+	position: relative;
+	margin-top: 10px;
+	height: 13px;
+}
+
+.editing_question_anchor
+{
+	position: absolute;
+	height: 7px;
+	width: 7px;
+	border-radius: 2px;
+	background-color: #000;
+	z-index: 100;
+	left: 50px;
+	top: 3px;
+}
+
+.editing_question_anchor
+{
+	cursor: pointer;
+}
+
+.editing_scrubber>hr
+{
+	position: absolute;
+	top: 5px;
+	z-index: 99;
+	width: 100%;
+	margin: 0;
+	height: 3px;
+	border: 0;
+	background-color: #888;
 }
 
 #extra_info_container
@@ -101,10 +170,7 @@ body
 #description_container
 {
 	max-width: 100%;
-	width: 980px;
 	padding-top: 12px;
-	margin-right: auto;
-	margin-left: auto;
 	color: #333;
 	font-family: 'Lato', sans-serif;
 	font-size: 14pt;
