@@ -1,2 +1,3 @@
 # Remove kata lib
-lib/**/*
+lib
+inc/test
