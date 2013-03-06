@@ -35,6 +35,30 @@
 		const ADMINISTRATOR = 8;
 		const DEVELOPER = 16;
 
+		// Names and descriptions of roles
+		protected static $ROLES = array(
+			self::GUEST => array(
+				"title" => "Guest",
+				"description" => "Guest user",
+			),
+			self::USER => array(
+				"title" => "User",
+				"description" => "Standard user",
+			),
+			self::INSTRUCTOR => array(
+				"title" => "Instructor",
+				"description" => "Instructor",
+			),
+			self::ADMINISTRATOR => array(
+				"title" => "Administrator",
+				"description" => "Administrator",
+			),
+			self::DEVELOPER => array(
+				"title" => "Developer",
+				"description" => "Developers have full access to all aspects of the system",
+			),
+		);
+
 		// Allowed and disallowed fields for query
 		protected static $FIELDS = array(
 			"id" => true,
@@ -69,6 +93,7 @@
 		private $lastname;
 
 		// Helper objects
+		private $role;
 		private $login;
 		private $videos;
 
@@ -116,15 +141,15 @@
 
 		// roleid:
 		//	- get: roleid
-		//	- set: roleid (validated by is_int())
+		//	- set: roleid (validated by is_int() and against roles array)
 		public function get_roleid()
 		{
 			return $this->roleid;
 		}
 		public function set_roleid($roleid)
 		{
-			// Validate using is_int()
-			if (is_int($roleid))
+			// Validate using is_int(), make sure role ID is valid
+			if (is_int($roleid) && in_array($roleid, array_keys(self::$ROLES[$roleid])))
 			{
 				$this->roleid = $roleid;
 				return true;
@@ -238,6 +263,14 @@
 		{
 			$this->lastname = $lastname;
 			return true;
+		}
+
+		// role:
+		//	- get: role array pertaining to this user
+		//	- set: n/a, done using roleid
+		public function get_role()
+		{
+			return self::$ROLES[$this->roleid];
 		}
 
 		// login:
@@ -379,6 +412,13 @@
 				// Prevent authentication for disabled users
 				return false;
 			}
+		}
+
+		// Check user's permissions using their specified role
+		public function has_permission($roleid)
+		{
+			// Verify user's current role ID vs the parameterized role constant (e.g. user::ADMINISTRATOR)
+			return ($this->roleid >= $roleid) ? true : false;
 		}
 
 		// STATIC METHODS - - - - - - - - - - - - - - - - - - - -
@@ -539,6 +579,12 @@
 		public static function generate_salt()
 		{
 			return mcrypt_create_iv(64, MCRYPT_DEV_URANDOM);
+		}
+
+		// Return the list containing all roles
+		public static function fetch_roles()
+		{
+			return self::$ROLES;
 		}
 
 		// Selftest function for debugging
