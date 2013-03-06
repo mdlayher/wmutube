@@ -1,49 +1,14 @@
-<!DOCTYPE html>
-
-<html>
-<head>
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
-	<script src='script/jquery.transit.min.js' type="text/javascript"></script>
-	<script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>
-	<script src="http://vjs.zencdn.net/c/video.js"></script>
-	<script src='script/main.js' type="text/javascript"></script>
-	<title>Senior design prototype</title>
-	<link rel="stylesheet" type="text/css" href="css/main.css">
-	<link href="http://vjs.zencdn.net/c/video-js.css" rel="stylesheet">
-</head>
-<body>
-	<div id='header_container'>
-		<div id='header'>
-			<div class='left'>
-				CourseraClone
-			</div>
-			<div class='leftish'>
-				<a href='#' id='videos_link'>Videos</a>
-			</div>
-			<div class='right'>
-				Hello, Justin!
-			</div>
-		</div>
-	</div>
-
-	<div id='browse_drawer'>
-	</div>
-
-	<div id='body_container'>
 		<div id='media_area_container'>
 			<div id='player_container'>
-						<!-- <img src="img/player_placeholder.png"> -->
-					  <!--<div id='controls'></div> -->
-			<video id="video_player" class="video-js vjs-default-skin" controls preload="auto" poster="img/player_placeholder.png" data-setup="{}">
-  				<!-- <source src="my_video.mp4" type='video/mp4'> -->
-  				<source src="file:///Users/justinhill/Downloads/big_buck_bunny_480p.webm" type='video/webm'>
-			</video>
+				<img src="img/player_placeholder.png">
+				<div id='controls'></div>
 			</div>
 			<div id='extra_info_container'></div>
-		</div>
-		
+		</div>	
 		<div id='description_container'>
-			Finding your way around BASH
+			<?php
+				printf("%s %s!\n", $user->get_firstname(), $user->get_lastname());
+			?>
 			<hr />
 			<div class='padright'>
 				<div class='desc_body'>
@@ -63,7 +28,3 @@
 				</div>
 			</div>
 		</div>
-	</div>
-
-</body>
-</html>
