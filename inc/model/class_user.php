@@ -28,6 +28,13 @@
 	{
 		// CONSTANTS - - - - - - - - - - - - - - - - - - - - - -
 
+		// Application roles
+		const GUEST = 1;
+		const USER = 2;
+		const INSTRUCTOR = 4;
+		const ADMINISTRATOR = 8;
+		const DEVELOPER = 16;
+
 		// Allowed and disallowed fields for query
 		protected static $FIELDS = array(
 			"id" => true,
