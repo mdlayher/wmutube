@@ -46,6 +46,7 @@
 			"login_imap" => "/login/class_login_imap.php",
 			"login_ldap" => "/login/class_login_ldap.php",
 			"login_ssh" => "/login/class_login_ssh.php",
+			"login_wavebox" => "/login/class_login_wavebox.php",
 			"password" => "/login/password.php",
 			"profiler" => "/etc/class_profiler.php",
 			"question" => "/model/class_question.php",
