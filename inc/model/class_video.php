@@ -299,7 +299,7 @@
 			if ($results)
 			{
 				// Generate video object populated with fields from database
-				$video = new video();
+				$video = new self();
 				foreach($results[0] as $key => $val)
 				{
 					$video->{$key} = $val;

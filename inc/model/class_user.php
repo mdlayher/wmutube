@@ -22,42 +22,11 @@
 	error_reporting(E_ALL);
 
 	require_once __DIR__ . "/../class_config.php";
-	config::load(array("database", "login_db", "login_ssh", "password", "video"));
+	config::load(array("database", "login_db", "password", "role", "video"));
 
 	class user
 	{
 		// CONSTANTS - - - - - - - - - - - - - - - - - - - - - -
-
-		// Application roles
-		const GUEST = 1;
-		const USER = 2;
-		const INSTRUCTOR = 4;
-		const ADMINISTRATOR = 8;
-		const DEVELOPER = 16;
-
-		// Names and descriptions of roles
-		protected static $ROLES = array(
-			self::GUEST => array(
-				"title" => "Guest",
-				"description" => "Guest user",
-			),
-			self::USER => array(
-				"title" => "User",
-				"description" => "Standard user",
-			),
-			self::INSTRUCTOR => array(
-				"title" => "Instructor",
-				"description" => "Instructor",
-			),
-			self::ADMINISTRATOR => array(
-				"title" => "Administrator",
-				"description" => "Administrator",
-			),
-			self::DEVELOPER => array(
-				"title" => "Developer",
-				"description" => "Developers have full access to all aspects of the system",
-			),
-		);
 
 		// Allowed and disallowed fields for query
 		protected static $FIELDS = array(
@@ -149,7 +118,7 @@
 		public function set_roleid($roleid)
 		{
 			// Validate using is_int(), make sure role ID is valid
-			if (is_int($roleid) && in_array($roleid, array_keys(self::$ROLES[$roleid])))
+			if (is_int($roleid))
 			{
 				$this->roleid = $roleid;
 				return true;
@@ -266,11 +235,18 @@
 		}
 
 		// role:
-		//	- get: role array pertaining to this user
-		//	- set: n/a, done using roleid
+		//	- get: role object (lazy-load, only fetch when needed)
+		//	- set: n/a, handled by roleid
 		public function get_role()
 		{
-			return self::$ROLES[$this->roleid];
+			// Check if role already fetched
+			if (!isset($this->role))
+			{
+				// Fetch user's role by ID
+				$this->role = role::get_role($this->roleid);
+			}
+
+			return $this->role;
 		}
 
 		// login:
@@ -417,8 +393,27 @@
 		// Check user's permissions using their specified role
 		public function has_permission($roleid)
 		{
-			// Verify user's current role ID vs the parameterized role constant (e.g. user::ADMINISTRATOR)
-			return ($this->roleid >= $roleid) ? true : false;
+			// Check for integer input -> compare to roleid
+			if (is_int($roleid))
+			{
+				// Verify user's current role ID permission level >= the parameterized role constant (e.g. role::ADMINISTRATOR)
+				return ($this->roleid >= $roleid) ? true : false;
+			}
+
+			return false;
+		}
+
+		// Check if user ABSOLUTELY is role (no cascading permissions)
+		public function is_role($roleid)
+		{
+			// Check for integer input -> compare to roleid
+			if (is_int($roleid))
+			{
+				// Verify user's current role ID permission level === parameterized role constant (e.g. role::ADMINISTRATOR)
+				return ($this->roleid === $roleid) ? true : false;
+			}
+
+			return false;
 		}
 
 		// STATIC METHODS - - - - - - - - - - - - - - - - - - - -
@@ -459,7 +454,7 @@
 			if ($results)
 			{
 				// Generate user object populated with fields from database
-				$user = new user();
+				$user = new self();
 				foreach($results[0] as $key => $val)
 				{
 					$user->{$key} = $val;
@@ -579,12 +574,6 @@
 		public static function generate_salt()
 		{
 			return mcrypt_create_iv(64, MCRYPT_DEV_URANDOM);
-		}
-
-		// Return the list containing all roles
-		public static function fetch_roles()
-		{
-			return self::$ROLES;
 		}
 
 		// Selftest function for debugging

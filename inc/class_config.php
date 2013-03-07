@@ -49,6 +49,7 @@
 			"login_wavebox" => "/login/class_login_wavebox.php",
 			"password" => "/login/password.php",
 			"profiler" => "/etc/class_profiler.php",
+			"role" => "/model/class_role.php",
 			"question" => "/model/class_question.php",
 			"user" => "/model/class_user.php",
 			"video" => "/model/class_video.php",

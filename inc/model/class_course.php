@@ -230,7 +230,7 @@
 			if ($results)
 			{
 				// Generate course object populated with fields from database
-				$course = new course();
+				$course = new self();
 				foreach($results[0] as $key => $val)
 				{
 					$course->{$key} = $val;
