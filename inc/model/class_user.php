@@ -22,7 +22,7 @@
 	error_reporting(E_ALL);
 
 	require_once __DIR__ . "/../class_config.php";
-	config::load(array("database", "login_db", "login_ssh", "password", "role", "video"));
+	config::load(array("database", "login*", "password", "role", "video"));
 
 	class user
 	{
