@@ -4,6 +4,8 @@
 	//
 	// changelog:
 	//
+	// 3/7/13 MDL:
+	//	- query optimizations
 	// 2/27/13 MDL:
 	//	- added filter_users(), enabled fetch_users() to accept values array for fine-grained output
 	//	- added fetching of associated videos for a user
@@ -501,26 +503,15 @@
 			// Check for specified values to fetch into list
 			if (isset($values) && is_array($values))
 			{
-				$query = "";
-				// Iterate values to build query with filtering
-				for ($i = 0; $i < count($values); $i++)
+				// Sanitize all values in array, implode into comma-separated list
+				$values = array_map(function($v)
 				{
-					// Sanitize values
-					$v = database::sanitize($values[$i]);
+					return database::sanitize($v);
+				}, $values);
+				$query = implode(", ", $values);
 
-					// On last iteration, stop adding OR statements
-					if ($i === count($values) - 1)
-					{
-						$query .= "$field='$v'";
-					}
-					else
-					{
-						$query .= "$field='$v' OR ";
-					}
-				}
-
-				// Query for a list of users from values in array
-				$results = database::query("SELECT $field FROM users WHERE $query ORDER BY $field ASC;");
+				// Query for a list of users matching values in array
+				$results = database::query("SELECT $field FROM users WHERE $field IN ($query) ORDER BY $field ASC;");
 			}
 			else
 			{
