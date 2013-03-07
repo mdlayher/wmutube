@@ -218,7 +218,7 @@
 			$field = database::sanitize($field);
 
 			// Check for valid, unique field
-			if (!in_array($field, array_keys(self::$FIELDS)) || !self::$FIELDS[$field])
+			if (!array_key_exists($field, self::$FIELDS) || !self::$FIELDS[$field])
 			{
 				// Return null on bad field
 				trigger_error("course::get_course() cannot get using invalid field '" . $field . "'", E_USER_WARNING);
@@ -252,7 +252,7 @@
 			$field = database::sanitize($field);
 
 			// Check for valid, unique field
-			if (!in_array($field, array_keys(self::$FIELDS)) || !self::$FIELDS[$field])
+			if (!array_key_exists($field, self::$FIELDS) || !self::$FIELDS[$field])
 			{
 				// Return null and trigger error on bad field
 				trigger_error("course::fetch_courses() cannot fetch using invalid field '" . $field . "'", E_USER_WARNING);

@@ -69,7 +69,7 @@
 			// Check for existence of source files
 			foreach ($files as $f)
 			{
-				if (in_array($f, array_keys(self::$SOURCE_FILES)))
+				if (array_key_exists($f, self::$SOURCE_FILES))
 				{
 					// If exists, require it!
 					require_once __DIR__ . self::$SOURCE_FILES[$f];

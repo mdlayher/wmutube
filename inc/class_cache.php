@@ -148,7 +148,7 @@
 			$singleton = self::singleton();
 
 			// Attempt to fetch subkey version if it doesn't exist
-			if (!in_array($subkey, array_keys($singleton->version)))
+			if (!array_key_exists($subkey, $singleton->version))
 			{
 				// Try to fetch from cache
 				$version = self::get(self::VERSION_KEY . $subkey);

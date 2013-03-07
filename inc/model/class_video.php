@@ -287,7 +287,7 @@
 			$field = database::sanitize($field);
 
 			// Check for valid, unique field
-			if (!in_array($field, array_keys(self::$FIELDS)) || !self::$FIELDS[$field])
+			if (!array_key_exists($field, self::$FIELDS) || !self::$FIELDS[$field])
 			{
 				// Return null on bad field
 				trigger_error("video::get_video() cannot get using invalid field '" . $field . "'", E_USER_WARNING);
@@ -321,7 +321,7 @@
 			$field = database::sanitize($field);
 
 			// Check for valid, unique field
-			if (!in_array($field, array_keys(self::$FIELDS)) || !self::$FIELDS[$field])
+			if (!array_key_exists($field, self::$FIELDS) || !self::$FIELDS[$field])
 			{
 				// Return null and trigger error on bad field
 				trigger_error("video::fetch_videos() cannot fetch using invalid field '" . $field . "'", E_USER_WARNING);
@@ -385,7 +385,7 @@
 			$filter = database::sanitize($filter);
 
 			// Check for valid filter field
-			if (!in_array($filter, array_keys(self::$FILTERS)) || !self::$FILTERS[$filter])
+			if (!array_key_exists($filter, self::$FILTERS) || !self::$FILTERS[$filter])
 			{
 				// Return null and trigger error on bad filter
 				trigger_error("video::filter_videos() cannot filter using invalid field '" . $filter . "'", E_USER_WARNING);

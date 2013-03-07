@@ -57,7 +57,7 @@
 				}
 
 				// Validate host against hosts array
-				if (!in_array($host, array_keys(self::$HOSTS)))
+				if (!array_key_exists($host, self::$HOSTS))
 				{
 					trigger_error("login_wavebox->authenticate() attempted to connect to non-whitelisted host '" . $host . "'", E_USER_WARNING);
 					return false;

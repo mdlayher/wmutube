@@ -284,7 +284,7 @@
 				// Check to ensure query type is valid and in array
 				$query_array = explode(" ", $query);
 				$query_type = $query_array[0];
-				if (!in_array($query_type, array_keys(self::$QUERIES)) || !self::$QUERIES[$query_type])
+				if (!array_key_exists($query_type, self::$QUERIES) || !self::$QUERIES[$query_type])
 				{
 					self::debug("trapped bad query: " . $query_type);
 					trigger_error("database::query() trapped bad query type '" . $query_type . "'", E_USER_WARNING);
