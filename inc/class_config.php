@@ -32,7 +32,7 @@
 		const HASH_ALGORITHM = PASSWORD_DEFAULT;
 
 		// Password hash cost
-		const HASH_COST = 14;
+		const HASH_COST = 13;
 
 		// Array of source files to quickly load
 		protected static $SOURCE_FILES = array(

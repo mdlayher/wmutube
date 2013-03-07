@@ -27,10 +27,18 @@
 		const AUTH_KEY = "key";
 
 		// Default SSH host when none specified
-		const DEFAULT_HOST = "localhost";
+		const DEFAULT_HOST = "bronco.wmich.edu";
 
 		// Allowed SSH hosts with necessary data
 		protected static $HOSTS = array(
+			"bronco.wmich.edu" => array(
+				"port" => 22,
+				"fingerprint" => "4E062F6B4EF8FA0586054EF91ACB8E56",
+				"method" => array(
+					self::AUTH_PASSWORD => true,
+					self::AUTH_KEY => false,
+				),
+			),
 			"localhost" => array(
 				"port" => 22,
 				"fingerprint" => "fingerprint",
@@ -43,6 +51,12 @@
 		);
 
 		// PUBLIC METHODS - - - - - - - - - - - - - - - - - - - -
+
+		// Return login method
+		public function __toString()
+		{
+			return "SSH";
+		}
 
 		// Authenticate to a server using SSH public key authentication
 		public function authenticate($input)

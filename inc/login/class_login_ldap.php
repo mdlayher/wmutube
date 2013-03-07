@@ -31,6 +31,12 @@
 
 		// PUBLIC METHODS - - - - - - - - - - - - - - - - - - - -
 
+		// Return login method
+		public function __toString()
+		{
+			return "LDAP";
+		}
+
 		// Perform authentication against LDAP server
 		public function authenticate($input)
 		{

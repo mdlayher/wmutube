@@ -31,6 +31,12 @@
 
 		// PUBLIC METHODS - - - - - - - - - - - - - - - - - - - -
 
+		// Return login method
+		public function __toString()
+		{
+			return "FTP";
+		}
+
 		// Perform authentication against FTP server
 		public function authenticate($input)
 		{

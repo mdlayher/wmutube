@@ -30,6 +30,12 @@
 
 		// PUBLIC METHODS - - - - - - - - - - - - - - - - - - - -
 
+		// Return login method
+		public function __toString()
+		{
+			return "WaveBox";
+		}
+
 		// Perform authentication against WaveBox server
 		public function authenticate($input)
 		{

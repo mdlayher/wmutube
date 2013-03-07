@@ -22,7 +22,7 @@
 	error_reporting(E_ALL);
 
 	require_once __DIR__ . "/../class_config.php";
-	config::load(array("database", "login_db", "password", "role", "video"));
+	config::load(array("database", "login_db", "login_ssh", "password", "role", "video"));
 
 	class user
 	{
@@ -354,25 +354,40 @@
 		}
 
 		// Authenticate user using strategy pattern authentication
+		// Note: If input is not an array, it is assumed the string passed is a password, and other parameters
+		// are added accordingly to the input array
 		public function authenticate($input)
 		{
 			// Ensure login is enabled
 			if ($this->enabled)
 			{
-				// Ensure input is an array
-				if (!is_array($input))
-				{
-					$input = array($input);
-				}
-
 				// Check to ensure login set
 				if (!isset($this->login))
 				{
 					// If it isn't, default to login_db
 					$this->set_login(new login_db());
+				}
 
+				// Ensure input is an array
+				if (!is_array($input))
+				{
+					// Populate required parameters
+					$input = array(
+						"username" => $this->username,
+						"password" => $input,
+					);
+
+					// If using login_ssh and only password was sent in, try password authentication
+					if ($this->login instanceof login_ssh)
+					{
+						$input["method"] = login_ssh::AUTH_PASSWORD;
+					}
+				}
+
+				// Check for options to pass with login_db
+				if ($this->login instanceof login_db)
+				{
 					// Set options for login_db
-					$input["username"] = $this->username;
 					$input["password_hash"] = $this->password;
 					$input["salt"] = $this->salt;
 				}

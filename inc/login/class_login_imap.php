@@ -37,6 +37,12 @@
 
 		// PUBLIC METHODS - - - - - - - - - - - - - - - - - - - -
 
+		// Return login method
+		public function __toString()
+		{
+			return "IMAP";
+		}
+
 		// Perform authentication against IMAP server
 		public function authenticate($input)
 		{
