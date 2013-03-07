@@ -54,6 +54,13 @@
 		// Singleton function which maintains a single instance of this class
 		private static function singleton($open_connections = true)
 		{
+			// Ensure memcache enabled
+			if (!config::MEMCACHE)
+			{
+				trigger_error("cache::singleton() memcache disabled in configuration!", E_USER_ERROR);
+				return null;
+			}
+
 			// If instance is null, generate a new one
 			self::$instance || self::$instance = new self();
 
@@ -142,10 +149,16 @@
 		}
 
 		// Retrieve version number for data stored under specified subkey
-		public static function version($subkey)
+		public static function version($subkey = null)
 		{
 			// Fetch subkey version
 			$singleton = self::singleton();
+
+			// If subkey null (not specified, return array)
+			if (empty($subkey))
+			{
+				return $singleton->version;
+			}
 
 			// Attempt to fetch subkey version if it doesn't exist
 			if (!array_key_exists($subkey, $singleton->version))

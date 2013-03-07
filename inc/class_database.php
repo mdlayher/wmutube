@@ -132,8 +132,12 @@
 				profiler::step_start();
 			}
 
-			// Utilize singleton
-			$singleton = self::singleton();
+			// Check for memcache
+			if (!config::MEMCACHE)
+			{
+				trigger_error("database::memcache_key() memcache disabled in configuration", E_USER_WARNING);
+				return null;
+			}
 
 			// Capture query table
 			$query_table = self::get_table($query);
@@ -274,6 +278,7 @@
 			{
 				profiler::step_start();
 			}
+
 			// Utilize singleton
 			$singleton = self::singleton();
 
@@ -405,7 +410,10 @@
 						$singleton->db->commit();
 
 						// Invalidate caches on this table
-						cache::invalidate(self::get_table($query));
+						if (config::MEMCACHE)
+						{
+							cache::invalidate(self::get_table($query));
+						}
 					}
 					else
 					{
