@@ -132,8 +132,12 @@
 				profiler::step_start();
 			}
 
-			// Utilize singleton
-			$singleton = self::singleton();
+			// Check for memcache
+			if (!config::MEMCACHE)
+			{
+				trigger_error("database::memcache_key() memcache disabled in configuration", E_USER_WARNING);
+				return null;
+			}
 
 			// Capture query table
 			$query_table = self::get_table($query);
@@ -274,6 +278,7 @@
 			{
 				profiler::step_start();
 			}
+
 			// Utilize singleton
 			$singleton = self::singleton();
 
@@ -284,7 +289,7 @@
 				// Check to ensure query type is valid and in array
 				$query_array = explode(" ", $query);
 				$query_type = $query_array[0];
-				if (!in_array($query_type, array_keys(self::$QUERIES)) || !self::$QUERIES[$query_type])
+				if (!array_key_exists($query_type, self::$QUERIES) || !self::$QUERIES[$query_type])
 				{
 					self::debug("trapped bad query: " . $query_type);
 					trigger_error("database::query() trapped bad query type '" . $query_type . "'", E_USER_WARNING);
@@ -405,7 +410,10 @@
 						$singleton->db->commit();
 
 						// Invalidate caches on this table
-						cache::invalidate(self::get_table($query));
+						if (config::MEMCACHE)
+						{
+							cache::invalidate(self::get_table($query));
+						}
 					}
 					else
 					{

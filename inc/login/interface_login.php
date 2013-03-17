@@ -4,6 +4,8 @@
 	//
 	// changelog:
 	//
+	// 3/6/13 MDL:
+	//	- added __toString() to identify login strategies
 	// 2/27/13 MDL:
 	//	- changed input to array
 	// 2/12/13 MDL:
@@ -11,9 +13,12 @@
 
 	error_reporting(E_ALL);
 
-	// Interface which enforces implementation of authenticate() method
+	// Interface which enforces implementation of login method
 	interface i_login
 	{
+		// Ensure implementation of __toString()
+		public function __toString();
+
 		// Ensure implementation of authenticate()
 		public function authenticate($input);
 	}
@@ -23,6 +28,12 @@
 	{
 		// Default blank constructor
 		public function __construct()
+		{
+
+		}
+
+		// Unimplemented __toString due to abstract class
+		public function __toString()
 		{
 
 		}
@@ -51,6 +62,12 @@
 			{
 				trigger_error("login->__construct(): invalid login strategy specified: '" . (string)$method . "'", E_USER_WARNING);
 			}
+		}
+
+		// Return type of login method
+		public function __toString()
+		{
+			return "login";
 		}
 
 		// Perform authentication using specified method

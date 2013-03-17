@@ -201,7 +201,7 @@
 			if ($results)
 			{
 				// Generate question object populated with fields from database
-				$question = new question();
+				$question = new self();
 				foreach($results[0] as $key => $val)
 				{
 					$question->{$key} = $val;

@@ -4,6 +4,8 @@
 	//
 	// changelog:
 	//
+	// 3/6/13 MDL:
+	//	- typo fix
 	// 2/26/13 MDL:
 	//	- initial code
 
@@ -203,7 +205,7 @@
 			if ($results)
 			{
 				// Generate answer object populated with fields from database
-				$answer = new answer();
+				$answer = new self();
 				foreach($results[0] as $key => $val)
 				{
 					$answer->{$key} = $val;
@@ -267,7 +269,7 @@
 			$success = $answer->set_questionid(2);
 			if (!$success)
 			{
-				trigger_error("answer::selftest() answer->set_videoid() failed with status: '" . $success . "'", E_USER_WARNING);
+				trigger_error("answer::selftest() answer->set_questionid() failed with status: '" . $success . "'", E_USER_WARNING);
 				return false;
 			}
 

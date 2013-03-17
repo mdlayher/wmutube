@@ -18,11 +18,16 @@
 		// Memcache configuration
 		// Connection parameters
 		const CACHE_HOST = "localhost";
-		// Cache set parameters
-		const CACHE_FLAG = MEMCACHE_COMPRESSED;
+		// Cache expire parameter
+		const CACHE_COMPRESSION = true;
 		const CACHE_EXPIRE = 600;
 		// Array key versioning
 		const VERSION_KEY = "version_";
+
+		// Pool of memcached servers to which we can connect
+		protected static $SERVERS = array(
+			"localhost" => 11211,
+		);
 
 		// INSTANCE VARIABLES - - - - - - - - - - - - - -
 
@@ -54,6 +59,13 @@
 		// Singleton function which maintains a single instance of this class
 		private static function singleton($open_connections = true)
 		{
+			// Ensure memcache enabled
+			if (!config::MEMCACHE)
+			{
+				trigger_error("cache::singleton() memcache disabled in configuration!", E_USER_ERROR);
+				return null;
+			}
+
 			// If instance is null, generate a new one
 			self::$instance || self::$instance = new self();
 
@@ -74,9 +86,16 @@
 		{
 			try
 			{
-				// Create and connect memcache instance
-				$memcache = new Memcache;
-				$memcache->connect(self::CACHE_HOST);
+				// Create Memcached instance, add all servers in pool
+				$memcache = new Memcached();
+				foreach (self::$SERVERS as $key => $value)
+				{
+					// Add server by host, port
+					$memcache->addServer($key, $value);
+				}
+
+				// Set Memcached options
+				$memcache->setOption(Memcached::OPT_COMPRESSION, self::CACHE_COMPRESSION);
 
 				return $memcache;
 			}
@@ -93,7 +112,7 @@
 		{
 			// Close cache connection
 			$singleton = self::singleton(false);
-			$singleton->cache->close();
+			$singleton->cache = null;
 
 			return true;
 		}
@@ -122,12 +141,12 @@
 			return $singleton->cache->get($key);
 		}
 
-		// Set specified data into cache with given key
-		public static function set($key, $value)
+		// Set specified data into cache with given key, and optionally, expiration in seconds
+		public static function set($key, $value, $expire = self::CACHE_EXPIRE)
 		{
 			// Set data into cache
 			$singleton = self::singleton();
-			return $singleton->cache->set($key, $value, self::CACHE_FLAG, self::CACHE_EXPIRE);
+			return $singleton->cache->set($key, $value, $expire);
 		}
 
 		// Invalidate cache data stored under specified subkey
@@ -142,13 +161,19 @@
 		}
 
 		// Retrieve version number for data stored under specified subkey
-		public static function version($subkey)
+		public static function version($subkey = null)
 		{
 			// Fetch subkey version
 			$singleton = self::singleton();
 
+			// If subkey null (not specified, return array)
+			if (empty($subkey))
+			{
+				return $singleton->version;
+			}
+
 			// Attempt to fetch subkey version if it doesn't exist
-			if (!in_array($subkey, array_keys($singleton->version)))
+			if (!array_key_exists($subkey, $singleton->version))
 			{
 				// Try to fetch from cache
 				$version = self::get(self::VERSION_KEY . $subkey);

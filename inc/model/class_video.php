@@ -4,6 +4,8 @@
 	//
 	// changelog:
 	//
+	// 3/7/13 MDL:
+	//	- query optimizations
 	// 2/27/13 MDL:
 	//	- added filter_videos(), enabled fetch_videos() to accept values array for fine-grained output
 	//	- added associated course and user object fetching for videos
@@ -287,7 +289,7 @@
 			$field = database::sanitize($field);
 
 			// Check for valid, unique field
-			if (!in_array($field, array_keys(self::$FIELDS)) || !self::$FIELDS[$field])
+			if (!array_key_exists($field, self::$FIELDS) || !self::$FIELDS[$field])
 			{
 				// Return null on bad field
 				trigger_error("video::get_video() cannot get using invalid field '" . $field . "'", E_USER_WARNING);
@@ -299,7 +301,7 @@
 			if ($results)
 			{
 				// Generate video object populated with fields from database
-				$video = new video();
+				$video = new self();
 				foreach($results[0] as $key => $val)
 				{
 					$video->{$key} = $val;
@@ -321,7 +323,7 @@
 			$field = database::sanitize($field);
 
 			// Check for valid, unique field
-			if (!in_array($field, array_keys(self::$FIELDS)) || !self::$FIELDS[$field])
+			if (!array_key_exists($field, self::$FIELDS) || !self::$FIELDS[$field])
 			{
 				// Return null and trigger error on bad field
 				trigger_error("video::fetch_videos() cannot fetch using invalid field '" . $field . "'", E_USER_WARNING);
@@ -331,26 +333,15 @@
 			// Check for specified values to fetch into list
 			if (isset($values) && is_array($values))
 			{
-				$query = "";
-				// Iterate values to build query with filtering
-				for ($i = 0; $i < count($values); $i++)
+				// Sanitize all values to fetch into list
+				$values = array_map(function($v)
 				{
-					// Sanitize values
-					$v = database::sanitize($values[$i]);
+					return database::sanitize($v);
+				}, $values);
+				$query = implode(", ", $values);
 
-					// On last iteration, stop adding OR statements
-					if ($i === count($values) - 1)
-					{
-						$query .= "$field='$v'";
-					}
-					else
-					{
-						$query .= "$field='$v' OR ";
-					}
-				}
-
-				// uery for a list of videos from values in array
-				$results = database::query("SELECT $field FROM videos WHERE $query ORDER BY $field ASC;");
+				// Query for a list of videos matching values in array
+				$results = database::query("SELECT $field FROM videos WHERE $field IN ($query) ORDER BY $field ASC;");
 			}
 			else
 			{
@@ -385,7 +376,7 @@
 			$filter = database::sanitize($filter);
 
 			// Check for valid filter field
-			if (!in_array($filter, array_keys(self::$FILTERS)) || !self::$FILTERS[$filter])
+			if (!array_key_exists($filter, self::$FILTERS) || !self::$FILTERS[$filter])
 			{
 				// Return null and trigger error on bad filter
 				trigger_error("video::filter_videos() cannot filter using invalid field '" . $filter . "'", E_USER_WARNING);

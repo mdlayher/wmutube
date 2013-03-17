@@ -4,6 +4,8 @@
 	//
 	// changelog:
 	//
+	// 3/7/13 MDL:
+	//	- added wildcard match (e.g. login* for login subsystem)
 	// 2/27/13 MDL:
 	//	- added ability to load array of source files
 	// 2/26/13 MDL:
@@ -32,7 +34,7 @@
 		const HASH_ALGORITHM = PASSWORD_DEFAULT;
 
 		// Password hash cost
-		const HASH_COST = 14;
+		const HASH_COST = 13;
 
 		// Array of source files to quickly load
 		protected static $SOURCE_FILES = array(
@@ -50,6 +52,8 @@
 			"password" => "/login/password.php",
 			"profiler" => "/etc/class_profiler.php",
 			"question" => "/model/class_question.php",
+			"role" => "/model/class_role.php",
+			"session" => "/class_session.php",
 			"user" => "/model/class_user.php",
 			"video" => "/model/class_video.php",
 		);
@@ -68,10 +72,23 @@
 			// Check for existence of source files
 			foreach ($files as $f)
 			{
-				if (in_array($f, array_keys(self::$SOURCE_FILES)))
+				// Check for exact match
+				if (array_key_exists($f, self::$SOURCE_FILES))
 				{
 					// If exists, require it!
 					require_once __DIR__ . self::$SOURCE_FILES[$f];
+				}
+				// Check for wildcard match
+				else if (strpos($f, '*'))
+				{
+					// Load files matching pattern (e.g. login*)
+					$filter = array_filter(array_keys(self::$SOURCE_FILES), function($value) use ($f)
+					{
+						return fnmatch($f, $value);
+					});
+
+					// Recursively load matching modules
+					self::load($filter);
 				}
 				else
 				{

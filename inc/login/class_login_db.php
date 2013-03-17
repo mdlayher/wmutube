@@ -24,6 +24,12 @@
 	{
 		// PUBLIC METHODS - - - - - - - - - - - - - - - - - - - -
 
+		// Return login method
+		public function __toString()
+		{
+			return "database";
+		}
+
 		// Perform authentication against application's database
 		public function authenticate($input)
 		{

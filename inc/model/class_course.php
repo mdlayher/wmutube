@@ -218,7 +218,7 @@
 			$field = database::sanitize($field);
 
 			// Check for valid, unique field
-			if (!in_array($field, array_keys(self::$FIELDS)) || !self::$FIELDS[$field])
+			if (!array_key_exists($field, self::$FIELDS) || !self::$FIELDS[$field])
 			{
 				// Return null on bad field
 				trigger_error("course::get_course() cannot get using invalid field '" . $field . "'", E_USER_WARNING);
@@ -230,7 +230,7 @@
 			if ($results)
 			{
 				// Generate course object populated with fields from database
-				$course = new course();
+				$course = new self();
 				foreach($results[0] as $key => $val)
 				{
 					$course->{$key} = $val;
@@ -252,7 +252,7 @@
 			$field = database::sanitize($field);
 
 			// Check for valid, unique field
-			if (!in_array($field, array_keys(self::$FIELDS)) || !self::$FIELDS[$field])
+			if (!array_key_exists($field, self::$FIELDS) || !self::$FIELDS[$field])
 			{
 				// Return null and trigger error on bad field
 				trigger_error("course::fetch_courses() cannot fetch using invalid field '" . $field . "'", E_USER_WARNING);

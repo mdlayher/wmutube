@@ -4,6 +4,8 @@
 	//
 	// changelog:
 	//
+	// 3/7/13 MDL:
+	//	- query optimizations
 	// 2/27/13 MDL:
 	//	- added filter_users(), enabled fetch_users() to accept values array for fine-grained output
 	//	- added fetching of associated videos for a user
@@ -22,7 +24,7 @@
 	error_reporting(E_ALL);
 
 	require_once __DIR__ . "/../class_config.php";
-	config::load(array("database", "login_db", "login_ssh", "password", "video"));
+	config::load(array("database", "login*", "password", "role", "video"));
 
 	class user
 	{
@@ -62,6 +64,7 @@
 		private $lastname;
 
 		// Helper objects
+		private $role;
 		private $login;
 		private $videos;
 
@@ -109,14 +112,14 @@
 
 		// roleid:
 		//	- get: roleid
-		//	- set: roleid (validated by is_int())
+		//	- set: roleid (validated by is_int() and against roles array)
 		public function get_roleid()
 		{
 			return $this->roleid;
 		}
 		public function set_roleid($roleid)
 		{
-			// Validate using is_int()
+			// Validate using is_int(), make sure role ID is valid
 			if (is_int($roleid))
 			{
 				$this->roleid = $roleid;
@@ -233,6 +236,21 @@
 			return true;
 		}
 
+		// role:
+		//	- get: role object (lazy-load, only fetch when needed)
+		//	- set: n/a, handled by roleid
+		public function get_role()
+		{
+			// Check if role already fetched
+			if (!isset($this->role))
+			{
+				// Fetch user's role by ID
+				$this->role = role::get_role($this->roleid);
+			}
+
+			return $this->role;
+		}
+
 		// login:
 		//	- get: n/a, done by class
 		//	- set: login type (validated by is_object())
@@ -338,25 +356,40 @@
 		}
 
 		// Authenticate user using strategy pattern authentication
+		// Note: If input is not an array, it is assumed the string passed is a password, and other parameters
+		// are added accordingly to the input array
 		public function authenticate($input)
 		{
 			// Ensure login is enabled
 			if ($this->enabled)
 			{
-				// Ensure input is an array
-				if (!is_array($input))
-				{
-					$input = array($input);
-				}
-
 				// Check to ensure login set
 				if (!isset($this->login))
 				{
 					// If it isn't, default to login_db
 					$this->set_login(new login_db());
+				}
 
+				// Ensure input is an array
+				if (!is_array($input))
+				{
+					// Populate required parameters
+					$input = array(
+						"username" => $this->username,
+						"password" => $input,
+					);
+
+					// If using login_ssh and only password was sent in, try password authentication
+					if ($this->login instanceof login_ssh)
+					{
+						$input["method"] = login_ssh::AUTH_PASSWORD;
+					}
+				}
+
+				// Check for options to pass with login_db
+				if ($this->login instanceof login_db)
+				{
 					// Set options for login_db
-					$input["username"] = $this->username;
 					$input["password_hash"] = $this->password;
 					$input["salt"] = $this->salt;
 				}
@@ -372,6 +405,32 @@
 				// Prevent authentication for disabled users
 				return false;
 			}
+		}
+
+		// Check user's permissions using their specified role
+		public function has_permission($roleid)
+		{
+			// Check for integer input -> compare to roleid
+			if (is_int($roleid))
+			{
+				// Verify user's current role ID permission level >= the parameterized role constant (e.g. role::ADMINISTRATOR)
+				return ($this->roleid >= $roleid) ? true : false;
+			}
+
+			return false;
+		}
+
+		// Check if user ABSOLUTELY is role (no cascading permissions)
+		public function is_role($roleid)
+		{
+			// Check for integer input -> compare to roleid
+			if (is_int($roleid))
+			{
+				// Verify user's current role ID permission level === parameterized role constant (e.g. role::ADMINISTRATOR)
+				return ($this->roleid === $roleid) ? true : false;
+			}
+
+			return false;
 		}
 
 		// STATIC METHODS - - - - - - - - - - - - - - - - - - - -
@@ -400,7 +459,7 @@
 			$field = database::sanitize($field);
 
 			// Check for valid, unique field
-			if (!in_array($field, array_keys(self::$FIELDS)) || !self::$FIELDS[$field])
+			if (!array_key_exists($field, self::$FIELDS) || !self::$FIELDS[$field])
 			{
 				// Return null on bad field
 				trigger_error("user::get_user() cannot get using invalid field '" . $field . "'", E_USER_WARNING);
@@ -412,7 +471,7 @@
 			if ($results)
 			{
 				// Generate user object populated with fields from database
-				$user = new user();
+				$user = new self();
 				foreach($results[0] as $key => $val)
 				{
 					$user->{$key} = $val;
@@ -434,7 +493,7 @@
 			$field = database::sanitize($field);
 
 			// Check for valid, unique field
-			if (!in_array($field, array_keys(self::$FIELDS)) || !self::$FIELDS[$field])
+			if (!array_key_exists($field, self::$FIELDS) || !self::$FIELDS[$field])
 			{
 				// Return null and trigger error on bad field
 				trigger_error("user::fetch_users() cannot fetch using invalid field '" . $field . "'", E_USER_WARNING);
@@ -444,26 +503,15 @@
 			// Check for specified values to fetch into list
 			if (isset($values) && is_array($values))
 			{
-				$query = "";
-				// Iterate values to build query with filtering
-				for ($i = 0; $i < count($values); $i++)
+				// Sanitize all values in array, implode into comma-separated list
+				$values = array_map(function($v)
 				{
-					// Sanitize values
-					$v = database::sanitize($values[$i]);
+					return database::sanitize($v);
+				}, $values);
+				$query = implode(", ", $values);
 
-					// On last iteration, stop adding OR statements
-					if ($i === count($values) - 1)
-					{
-						$query .= "$field='$v'";
-					}
-					else
-					{
-						$query .= "$field='$v' OR ";
-					}
-				}
-
-				// Query for a list of users from values in array
-				$results = database::query("SELECT $field FROM users WHERE $query ORDER BY $field ASC;");
+				// Query for a list of users matching values in array
+				$results = database::query("SELECT $field FROM users WHERE $field IN ($query) ORDER BY $field ASC;");
 			}
 			else
 			{
@@ -498,7 +546,7 @@
 			$filter = database::sanitize($filter);
 
 			// Check for valid filter field
-			if (!in_array($filter, array_keys(self::$FILTERS)) || !self::$FILTERS[$filter])
+			if (!array_key_exists($filter, self::$FILTERS) || !self::$FILTERS[$filter])
 			{
 				// Return null and trigger error on bad filter
 				trigger_error("user::filter_users() cannot filter using invalid field '" . $filter . "'", E_USER_WARNING);
@@ -606,7 +654,7 @@
 			}
 
 			// Test filter_users()
-			$users = user::filter_users("username", "a");
+			$users = user::filter_users("username", "i");
 			if (!$users)
 			{
 				trigger_error("user::selftest(): user::filter_users() failed with status: '" . $users . "'", E_USER_WARNING);

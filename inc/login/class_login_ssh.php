@@ -4,6 +4,8 @@
 	//
 	// changelog:
 	//
+	// 3/6/13 MDL:
+	//	- set default host constant
 	// 3/3/13 MDL:
 	//	- ignore PHP warnings on unsuccessful login
 	//	- added password login, can be enabled on a per-host basis
@@ -24,8 +26,19 @@
 		const AUTH_PASSWORD = "password";
 		const AUTH_KEY = "key";
 
+		// Default SSH host when none specified
+		const DEFAULT_HOST = "bronco.wmich.edu";
+
 		// Allowed SSH hosts with necessary data
 		protected static $HOSTS = array(
+			"bronco.wmich.edu" => array(
+				"port" => 22,
+				"fingerprint" => "4E062F6B4EF8FA0586054EF91ACB8E56",
+				"method" => array(
+					self::AUTH_PASSWORD => true,
+					self::AUTH_KEY => false,
+				),
+			),
 			"localhost" => array(
 				"port" => 22,
 				"fingerprint" => "fingerprint",
@@ -39,35 +52,50 @@
 
 		// PUBLIC METHODS - - - - - - - - - - - - - - - - - - - -
 
+		// Return login method
+		public function __toString()
+		{
+			return "SSH";
+		}
+
 		// Authenticate to a server using SSH public key authentication
 		public function authenticate($input)
 		{
 			// Check for required parameters
-			if (isset($input['host'], $input['username']))
+			if (isset($input['username']))
 			{
 				// Sanitize input for safety
-				$host = database::sanitize($input['host']);
 				$username = database::sanitize($input['username']);
 
-				// Check if a method was set, but default to "key" if not
-				if (isset($input['method']))
+				// Check for a set host, use default if not set
+				if (!isset($input['host']))
 				{
-					$method = database::sanitize($input['method']);
+					$host = self::DEFAULT_HOST;
 				}
 				else
 				{
+					$host = database::sanitize($input['host']);
+				}
+
+				// Check if a method was set, but default to "key" if not
+				if (!isset($input['method']))
+				{
 					$method = self::AUTH_KEY;
+				}
+				else
+				{
+					$method = database::sanitize($input['method']);
 				}
 
 				// Validate host against hosts array
-				if (!in_array($host, array_keys(self::$HOSTS)))
+				if (!array_key_exists($host, self::$HOSTS))
 				{
 					trigger_error("login_ssh->authenticate() attempted to connect to non-whitelisted host '" . $host . "'", E_USER_WARNING);
 					return false;
 				}
 
 				// Validate authentication method is valid and allowed
-				if (!in_array($method, array_keys(self::$HOSTS[$host]["method"])) || !self::$HOSTS[$host]["method"][$method])
+				if (!array_key_exists($method, self::$HOSTS[$host]["method"]) || !self::$HOSTS[$host]["method"][$method])
 				{
 					trigger_error("login_ssh->authenticate() attempted to authenticate using disallowed method '" . $method . "'", E_USER_WARNING);
 					return false;
@@ -153,7 +181,7 @@
 			else
 			{
 				// Trigger error if missing parameters
-				trigger_error("login_ssh->authenticate() missing parameters to use SSH authentication", E_USER_WARNING);
+				trigger_error("login_ssh->authenticate() missing parameters (username) to use SSH authentication", E_USER_WARNING);
 				return false;
 			}
 		}

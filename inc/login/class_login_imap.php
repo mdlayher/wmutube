@@ -1,9 +1,13 @@
 <?php
 	// class_login_imap.php - Khan Academy Workflow, 3/3/13
 	// PHP class which provides experimental IMAP login for strategy pattern authentication
+	// Note: IMAP login is terribly slow on password failure.  Need to research this.
 	//
 	// changelog:
 	//
+	// 3/6/13 MDL:
+	//	- set default host constant
+	//	- added slow login on password failure warning
 	// 3/3/13 MDL:
 	//	- initial code
 
@@ -15,6 +19,9 @@
 	class login_imap extends login_strategy
 	{
 		// CONSTANTS - - - - - - - - - - - - - - - - - - - - - -
+
+		// Default IMAP host when none specified
+		const DEFAULT_HOST = "imap.wmich.edu";
 
 		// Allowed IMAP hosts with necessary data
 		protected static $HOSTS = array(
@@ -30,19 +37,34 @@
 
 		// PUBLIC METHODS - - - - - - - - - - - - - - - - - - - -
 
+		// Return login method
+		public function __toString()
+		{
+			return "IMAP";
+		}
+
 		// Perform authentication against IMAP server
 		public function authenticate($input)
 		{
 			// Check for required parameters
-			if (isset($input['host'], $input['username'], $input['password']))
+			if (isset($input['username'], $input['password']))
 			{
 				// Sanitize input for safety
-				$host = database::sanitize($input['host']);
 				$username = database::sanitize($input['username']);
 				$password = database::sanitize($input['password']);
 
+				// Check for a set host, use default if not set
+				if (!isset($input['host']))
+				{
+					$host = self::DEFAULT_HOST;
+				}
+				else
+				{
+					$host = database::sanitize($input['host']);
+				}
+
 				// Validate host against hosts array
-				if (!in_array($host, array_keys(self::$HOSTS)))
+				if (!array_key_exists($host, self::$HOSTS))
 				{
 					trigger_error("login_imap->authenticate() attempted to connect to non-whitelisted host '" . $host . "'", E_USER_WARNING);
 					return false;
@@ -74,7 +96,7 @@
 			else
 			{
 				// Trigger error if missing parameters
-				trigger_error("login_imap->authenticate() missing parameters to use IMAP authentication", E_USER_WARNING);
+				trigger_error("login_imap->authenticate() missing parameters (username, password) to use IMAP authentication", E_USER_WARNING);
 				return false;
 			}
 		}
