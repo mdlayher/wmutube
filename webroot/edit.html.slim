@@ -27,7 +27,7 @@ html
     #browse_drawer
     #body_container
       div#step1.centered_on_page.section
-        a.nextButton
+        a.button.topRight.nextButton
           | Next step
         div.stepbody
           div.inner
@@ -49,11 +49,24 @@ html
           .editing_scrubber_buffer
           /.editing_question_anchor
 
-        #step2_editor.section_step2
-          a.nextButton
-            | Go to next
+        #step2_editor
+          .section_step2.question
+            a.button.topRight.nextButton
+              | Next step
+            a.button.topRight.addAnother
+              | Add another
+            ul.clear.defaultPaddingMargins
+              li.step2_listitem
+                label for='step2q1title'
+                  | Question body
+                input#step2q1title.textbox type='text' placeholder='Video title'
+              li.step2_listitem
+                label for='step2q1a1'
+                  | Answer A
+                input#step2q1a1.textbox type='text' placeholder='Hello'
+
       div#step3.centered_on_page.section.initiallyHidden
-        a.nextButton
+        a.button.topRight.nextButton
           | Go to next
     #footer_container
       #footer.centered_on_page.headerfooter
