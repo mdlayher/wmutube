@@ -34,10 +34,12 @@ var khan_academy = (function () {
 			},
 			generateGuid: function () {
 				// courtesy of http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
-				'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+				var retVal = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
 				    var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
 				    return v.toString(16);
 				});
+
+				return retVal;
 			}
 		};
 
@@ -47,31 +49,86 @@ var khan_academy = (function () {
 	var editor_step2 = (function () {
 
 		// private members
-		var negMarginHeight = 0;
+		var qSelectors = [];
+		var currentQ = null;
+		var animating = false;
 
 		// self refers to the element, not this object.
-		function addAnother(self)
-		{
+		function addAnother(self) {
+
+			if (animating === true) {
+				console.log("Animation in progress, not adding.");
+				return;
+			} else {
+				console.log("Not animating.  Continuing... animating: " + animating);
+			}
+			animating = true;
+			console.log("just to check... animating: " + animating);
+
 			var newId = util.generateGuid();
 			var oldQ = $('.question:last');
 			var newQ = oldQ.clone(false);
-			newQ.id = newId;
+			$(newQ).attr("id", newId);
 			$(newQ).css("margin-top", -($(oldQ).outerHeight()));
 
-			$('.question').each(function () {
+			$('.question').each(function (index) {
 				$(this).transition({x: -($(this).width() + 15), "opacity": .3}, 100, function () {
-					var m = $(this).css("margin-left");
-					console.log("m: " + m );
-					console.log("m-width+15: " + (parseInt(m) - $(this).width() + 15));
+					var l = $(this).css("left") === 'auto' ? 0 : parseInt($(this).css("left"));
+					console.log("l: " + l);
+
+					// there must be a better way to do this...
 					$(this).removeAttr('style');
 					$(this).css('opacity', .3)
-					$(this).css("left", -($(this).width() + 15));
+					$(this).css("left", l - ($(this).width() + 15));
+
+					if (index > 0) {
+						$(this).css('margin-top', -($(this).outerHeight()));
+					}
+					animating = false;
+					console.log(l - ($(this).width() + 15));
 					console.log('callback!');
 				});
 				console.log(this.id + ": " + $(this).css("left"));
 			});
 
+			qSelectors.push("#" + newId);
+			currentQ = qSelectors.indexOf("#" + newId);
 			$('#step2_editor').append(newQ);
+		}
+
+		function move (direction) {
+
+			// -1 is next, 1 is previous
+
+			if (currentQ == 0 && direction === 1 || currentQ + 1 == qSelectors.length && direction === -1) {
+				return;
+			}
+
+			var movesLeft = $('.question').length;
+
+			$('.question').each(function (index) {
+				$(this).transition({x: direction * ($(this).width() + 15), "opacity": .3}, 100, function () {
+					var l = $(this).css("left") === 'auto' ? 0 : parseInt($(this).css("left"));
+
+					// there must be a better way to do this...
+					$(this).removeAttr('style');
+					$(this).css('opacity', .3)
+					$(this).css("left", l + direction * ($(this).width() + 15));
+
+					if (index > 0) {
+						$(this).css('margin-top', -($(this).outerHeight()));
+					}
+
+					movesLeft--;
+					if (movesLeft === 0) {
+						currentQ = currentQ - direction;
+						$(qSelectors[currentQ]).css("opacity", "1");
+					}
+				});
+			});
+
+			console.log(qSelectors);
+			console.log(currentQ);
 		}
 
 		// public functions
@@ -87,8 +144,20 @@ var khan_academy = (function () {
 				console.log("called");
 			});
 
+			$("#previous").on('click', function (e) {
+				e.preventDefault();
+				move(1);
+			});
+
+			$("#next").on('click', function (e) {
+				e.preventDefault();
+				move(-1);
+			});
+
 			var guid = util.generateGuid();
 			$('.section_step2').attr('id', guid);
+			qSelectors.push("#" + guid);
+			currentQ = "#" + guid;
 		});
 	})();
 

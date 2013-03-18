@@ -16,12 +16,17 @@ html
       	
       	
   body
+    a#previous href="#"
+      | Previous
+    a#next href="#"
+      | Next
     #header_container
       #header.centered_on_page.headerfooter
         .left
           | CourseraClone
         .leftish
           a#videos_link href="#"
+            | Videos
         .right
           | Hello, Justin!
     #browse_drawer
@@ -57,11 +62,11 @@ html
               | Add another
             ul.clear.defaultPaddingMargins
               li.step2_listitem
-                label for='step2q1title'
+                label.step2_listitem_label for='step2q1title'
                   | Question body
                 input#step2q1title.textbox type='text' placeholder='Video title'
               li.step2_listitem
-                label for='step2q1a1'
+                label.step2_listitem_label for='step2q1a1'
                   | Answer A
                 input#step2q1a1.textbox type='text' placeholder='Hello'
 

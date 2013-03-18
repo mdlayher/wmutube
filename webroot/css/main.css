@@ -1,4 +1,14 @@
 @import url("http://fonts.googleapis.com/css?family=Lato:300,400");
+#previous {
+  position: fixed;
+  z-index: 100;
+  top: 150px; }
+
+#next {
+  position: fixed;
+  z-index: 100;
+  top: 100px; }
+
 body {
   height: 100%;
   margin: 0px;
@@ -22,6 +32,9 @@ ul.clear {
   font-size: 12px;
   font-weight: 400;
   padding-bottom: 15px; }
+
+.step2_listitem_label {
+  padding-right: 5px; }
 
 .textbox {
   height: 30px; }
@@ -74,10 +87,12 @@ ul.clear {
   line-height: 35px;
   font-family: 'Lato', sans-serif;
   color: white; }
-  .headerfooter a:link, .headerfooter a:visited, .headerfooter a:active {
+  .headerfooter a:link, .headerfooter a:visited, .headerfooter a:active, .headerfooter a:hover {
     text-decoration: none;
     font-weight: 300;
-    font-size: 12px; }
+    font-size: 12px;
+    color: #fff;
+    line-height: 40px; }
   .headerfooter .left {
     font-weight: 400;
     float: left; }
@@ -246,6 +261,7 @@ ul.clear {
   margin-right: auto;
   margin-bottom: 0px;
   margin-top: 0px;
+  overflow: auto;
   width: 650px;
   height: 30%;
   box-sizing: border-box; }
