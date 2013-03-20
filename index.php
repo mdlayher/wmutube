@@ -14,6 +14,7 @@
 
 	// Data model configuration
 	require_once "inc/class_config.php";
+	config::load(array("cache", "login*", "user", "video"));
 
 	// CONFIGURATION - - - - - - - - - - - - - - - - - - - 
 
@@ -25,14 +26,70 @@
 		// Define path to render templates
 		"templates.path" => "./views",
 	));
+
 	// Set application's name
 	$app->setName("khan");
 
+	// Set up Slim session cookie store, implicit session_start()
+	$app->add(new \Slim\Middleware\SessionCookie(array(
+		"expires" => config::SESSION_EXPIRE,
+		"secret" => config::SESSION_SALT,
+		"name" => config::SESSION_NAME,
+	)));
+
 	// FUNCTIONS - - - - - - - - - - - - - - - - - - - - - -
 
+	// Return a JSON status message
 	function json_status($status)
 	{
 		return json_encode(array("status" => $status));
+	}
+
+	// Set this user's session to logged in, or return its status
+	function logged_in($set = false)
+	{
+		// Set if needed
+		if ($set)
+		{
+			$_SESSION['login'] = true;
+		}
+
+		// Check for valid login
+		if (!isset($_SESSION['login']))
+		{
+			return false;
+		}
+
+		return $_SESSION['login'];
+	}
+
+	// Generate, cache, and return this session's user object
+	function session_user()
+	{
+		// Ensure session user ID set
+		if (!isset($_SESSION['user']['id']))
+		{
+			return null;
+		}
+
+		// Check cache
+		$user = cache::get(config::SESSION_NAME . '_' . $_SESSION['user']['id']);
+
+		// If user cached, unserialize and return
+		if ($user)
+		{
+			return unserialize($user);
+		}
+		else
+		{
+			// Else, pull user from database
+			$user = user::get_user($_SESSION['user']['id']);
+
+			// Serialize and store in cache
+			cache::set(config::SESSION_NAME . '_' . $_SESSION['user']['id'], serialize($user));
+
+			return $user;
+		}
 	}
 
 	// ROUTING - - - - - - - - - - - - - - - - - - - - - - -
@@ -42,7 +99,7 @@
 	// Application root
 	$app->get("/", function() use ($app)
 	{
-		echo "Hello world!\n";
+		echo print_r($_SESSION, true);
 	});
 
 	// Video upload page
@@ -54,19 +111,18 @@
 	// LOGIN - - - - - - - - - - - - - - - - - - - - - - - -
 
 	// Login using specified method
-	$app->post("/login", function() use ($app)
+	$app->map("/login", function() use ($app)
 	{
 		// Parse username and password from request
 		$req = $app->request();
-		$username = $req->post("username");
-		$password = $req->post("password");
-		$method = $req->post("method");
+		$username = $req->params("username");
+		$password = $req->params("password");
+		$method = $req->params("method");
 
 		// Check for required parameters
 		if (isset($username, $password))
 		{
 			// Pull user object
-			config::load("user");
 			$user = user::get_user($username, "username");
 
 			// Check for valid username
@@ -79,7 +135,6 @@
 			// Check if a method was specified, use it if available
 			if (isset($method))
 			{
-				config::load("login*");
 				switch ($method)
 				{
 					case login::DB:
@@ -114,6 +169,10 @@
 				if ($user->authenticate($password))
 				{
 					echo json_status("success");
+
+					// On success, store user array, log in user
+					$_SESSION['user'] = $user->to_array();
+					logged_in(true);
 				}
 				else
 				{
@@ -134,26 +193,81 @@
 		}
 
 		return;
-	});
+	})->via("GET", "POST");
+
+	// Logout, destroy current session
+	$app->map("/logout", function() use ($app)
+	{
+		// Expire session cookie
+		$app->response()->setCookie(config::SESSION_NAME, "0", time() - 10, "/", null);
+		echo json_status("success");
+	})->via("GET", "POST");
 
 	// AJAX - - - - - - - - - - - - - - - - - - - - - - - -
 
-	// Fetch user by ID
-	$app->get("/ajax/user/id/:id", function($id) use ($app)
+	// Fetch user information by field and value
+	$app->get("/ajax/user/:field(/:value)", function($field, $value = null) use ($app)
 	{
-		// Temporary: work out way to implement session security for these
-		if ($app->request()->get("s") !== "tempdev")
+		// Ensure user is logged in
+		if (!logged_in())
 		{
-			$app->notFound();
+			$app->forbidden();
 			return;
 		}
 
-		config::load("user");
-		$user = user::get_user($id);
+		// Get session user and check permissions
+		$session_user = session_user();
 
+		// Check if trying to query all users (Administrator+), or a single user (User+)
+		if ((empty($value) && !$session_user->has_permission(role::ADMINISTRATOR)) || !$session_user->has_permission(role::USER))
+		{
+			echo json_status("bad permissions");
+			return;
+		}
+
+		// If no value specified, fetch list
+		if (empty($value))
+		{
+			try
+			{
+				$user = user::fetch_users($field);
+			}
+			catch (\Exception $e)
+			{
+				$user = null;
+			}
+		}
+		else
+		{
+			// Else, fetch single user
+			// Grab user from database using field and value combination
+			try
+			{
+				$user = user::get_user($value, $field);
+			}
+			catch (\Exception $e)
+			{
+				$user = null;
+			}
+		}
+
+		// If found, return
 		if ($user)
 		{
-			echo $user->to_json();
+			// For single user, convert to JSON and send
+			if (!is_array($user))
+			{
+				echo $user->to_json();
+				return;
+			}
+
+			// For multiple users, turn them into arrays, encode and send
+			$users = array();
+			foreach ($user as $u)
+			{
+				$users[] = $u->to_array();
+			}
+			echo json_encode($users);
 			return;
 		}
 		else
@@ -166,16 +280,15 @@
 	// Fetch video by ID
 	$app->get("/ajax/video/id/:id", function($id) use ($app)
 	{
-		// Temporary: work out way to implement session security for these
-		if ($app->request()->get("s") !== "tempdev")
+		// Ensure user is logged in
+		if (!logged_in())
 		{
 			$app->notFound();
 			return;
 		}
 
-		config::load("video");
+		// Grab video from database
 		$video = video::get_video($id);
-
 		if ($video)
 		{
 			printf("%s - %s\n", $video->get_title(), $video->get_filename());
