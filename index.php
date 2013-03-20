@@ -103,9 +103,9 @@
 	});
 
 	// Video upload page
-	$app->get("/upload", function() use ($app)
+	$app->get("/create", function() use ($app)
 	{
-		return $app->render("upload.php");
+		return $app->render("create.php");
 	});
 
 	// LOGIN - - - - - - - - - - - - - - - - - - - - - - - -
@@ -203,6 +203,19 @@
 		echo json_status("success");
 	})->via("GET", "POST");
 
+	// VIDEO UPLOAD - - - - - - - - - - - - - - - - - - - -
+
+	// Video upload via POST
+	$app->post("/upload", function() use ($app)
+	{
+		// Parse video metadata from request
+		$req = $app->request();
+
+		// Dump all POST data
+		echo print_r($rep->post(), true);
+		return;
+	});
+
 	// AJAX - - - - - - - - - - - - - - - - - - - - - - - -
 
 	// Fetch user information by field and value
@@ -277,25 +290,75 @@
 		}
 	});
 
-	// Fetch video by ID
-	$app->get("/ajax/video/id/:id", function($id) use ($app)
+	// Fetch video information by field and value
+	$app->get("/ajax/video/:field(/:value)", function($field, $value = null) use ($app)
 	{
 		// Ensure user is logged in
 		if (!logged_in())
 		{
-			$app->notFound();
+			$app->forbidden();
 			return;
 		}
 
-		// Grab video from database
-		$video = video::get_video($id);
+		// Get session user and check permissions
+		$session_user = session_user();
+
+		// Check if trying to query all users (Administrator+), or a single user (User+)
+		if ((empty($value) && !$session_user->has_permission(role::ADMINISTRATOR)) || !$session_user->has_permission(role::USER))
+		{
+			echo json_status("bad permissions");
+			return;
+		}
+
+		// If no value specified, fetch list
+		if (empty($value))
+		{
+			try
+			{
+				$video = video::fetch_videos($field);
+			}
+			catch (\Exception $e)
+			{
+				$video = null;
+			}
+		}
+		else
+		{
+			// Else, fetch single video
+			// Grab video from database using field and value combination
+			try
+			{
+				$video = video::get_video($value, $field);
+			}
+			catch (\Exception $e)
+			{
+				$video = null;
+			}
+		}
+
+		// If found, return
 		if ($video)
 		{
-			printf("%s - %s\n", $video->get_title(), $video->get_filename());
+			// For single video, convert to JSON and send
+			if (!is_array($video))
+			{
+				echo $video->to_json();
+				return;
+			}
+
+			// For multiple videos, turn them into arrays, encode and send
+			$videos = array();
+			foreach ($video as $v)
+			{
+				$videos[] = $v->to_array();
+			}
+			echo json_encode($videos);
+			return;
 		}
 		else
 		{
 			$app->notFound();
+			return;
 		}
 	});
 

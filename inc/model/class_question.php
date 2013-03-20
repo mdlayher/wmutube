@@ -4,6 +4,8 @@
 	//
 	// changelog:
 	//
+	// 3/20/13 MDL:
+	//	- added to_array(), to_json()
 	// 2/26/13 MDL:
 	//	- initial code
 
@@ -176,6 +178,33 @@
 			}
 
 			return $success;
+		}
+
+		// Flatten relevant information fields of question from object to array
+		public function to_array()
+		{
+			// Gather basic data
+			$data = array(
+				"id" => $this->id,
+				"timestamp" => $this->timestamp,
+				"text" => $this->text,
+			);
+
+			// Fetch answers associated with this question
+			$answers = array();
+			foreach (answer::fetch_answers($this->id) as $a)
+			{
+				$answers[] = $a->to_array();
+			}
+			$data["answers"] = $answers;
+
+			return $data;
+		}
+
+		// Export question to_array() data as JSON
+		public function to_json()
+		{
+			return json_encode($this->to_array());
 		}
 
 		// STATIC METHODS - - - - - - - - - - - - - - - - - - - -

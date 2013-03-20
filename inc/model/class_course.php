@@ -4,6 +4,8 @@
 	//
 	// changelog:
 	//
+	// 3/20/13 MDL:
+	//	- added to_array(), to_json()
 	// 2/19/13 MDL:
 	//	- added year and term fields for finer granularity in courses
 	// 2/11/13 MDL:
@@ -193,6 +195,25 @@
 			}
 
 			return $success;
+		}
+
+		// Flatten relevant information fields of course from object to array
+		public function to_array()
+		{
+			return array(
+				"id" => $this->id,
+				"year" => $this->year,
+				"term" => $this->term,
+				"subject" => $this->subject,
+				"number" => $this->number,
+				"title" => $this->title,
+			);
+		}
+
+		// Export course to_array() data as JSON
+		public function to_json()
+		{
+			return json_encode($this->to_array());
 		}
 
 		// STATIC METHODS - - - - - - - - - - - - - - - - - - - -
