@@ -435,7 +435,7 @@
 			return false;
 		}
 
-		// Flatten relevant information fields of user from object to array (for JSON with AJAX)
+		// Flatten relevant information fields of user from object to array
 		public function to_array()
 		{
 			return array(
@@ -446,6 +446,12 @@
 				"firstname" => $this->firstname,
 				"lastname" => $this->lastname,
 			);
+		}
+
+		// Export user to_array() data as JSON
+		public function to_json()
+		{
+			return json_encode($this->to_array());
 		}
 
 		// STATIC METHODS - - - - - - - - - - - - - - - - - - - -

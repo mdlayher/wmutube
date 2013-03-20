@@ -28,6 +28,13 @@
 	// Set application's name
 	$app->setName("khan");
 
+	// FUNCTIONS - - - - - - - - - - - - - - - - - - - - - -
+
+	function json_status($status)
+	{
+		return json_encode(array("status" => $status));
+	}
+
 	// ROUTING - - - - - - - - - - - - - - - - - - - - - - -
 
 	// VIEWS - - - - - - - - - - - - - - - - - - - - - - - -
@@ -42,6 +49,91 @@
 	$app->get("/upload", function() use ($app)
 	{
 		return $app->render("upload.php");
+	});
+
+	// LOGIN - - - - - - - - - - - - - - - - - - - - - - - -
+
+	// Login using specified method
+	$app->post("/login", function() use ($app)
+	{
+		// Parse username and password from request
+		$req = $app->request();
+		$username = $req->post("username");
+		$password = $req->post("password");
+		$method = $req->post("method");
+
+		// Check for required parameters
+		if (isset($username, $password))
+		{
+			// Pull user object
+			config::load("user");
+			$user = user::get_user($username, "username");
+
+			// Check for valid username
+			if (!$user)
+			{
+				echo json_status("bad username");
+				return;
+			}
+
+			// Check if a method was specified, use it if available
+			if (isset($method))
+			{
+				config::load("login*");
+				switch ($method)
+				{
+					case login::DB:
+						$method = new login_db();
+						break;
+					case login::FTP:
+						$method = new login_ftp();
+						break;
+					case login::IMAP:
+						$method = new login_imap();
+						break;
+					case login::LDAP:
+						$method = new login_ldap();
+						break;
+					case login::SSH:
+						$method = new login_ssh();
+						break;
+					case login::WAVEBOX:
+						$method = new login_wavebox();
+						break;
+					default:
+						echo json_status("bad login method");
+						return;
+						break;
+				}
+				$user->set_login($method);
+			}
+
+			// Attempt authentication
+			try
+			{
+				if ($user->authenticate($password))
+				{
+					echo json_status("success");
+				}
+				else
+				{
+					echo json_status("bad password");
+				}
+			}
+			// Catch any exceptions, useful for catching programmer errors
+			catch (\Exception $e)
+			{
+				echo json_status($e->getMessage());
+			}
+
+			return;
+		}
+		else
+		{
+			echo json_status("missing required parameters");
+		}
+
+		return;
 	});
 
 	// AJAX - - - - - - - - - - - - - - - - - - - - - - - -
@@ -61,7 +153,7 @@
 
 		if ($user)
 		{
-			echo json_encode($user->to_array());
+			echo $user->to_json();
 			return;
 		}
 		else

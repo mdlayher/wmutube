@@ -48,6 +48,14 @@
 	// Class which utilizes provided method for authentication
 	class login
 	{
+		// Login method enumerations
+		const DB = 0;
+		const FTP = 1;
+		const IMAP = 2;
+		const LDAP = 3;
+		const SSH = 4;
+		const WAVEBOX = 5;
+
 		// Authentication method
 		private $method;
 
