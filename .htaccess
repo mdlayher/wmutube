@@ -1,5 +1,3 @@
-#only needed if your apache-webroot points here (not recommended)
-RewriteEngine on
-RewriteRule ^$ webroot/ [L]
-RewriteRule (.*) webroot/$1 [L]
-
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^ index.php [QSA,L]
