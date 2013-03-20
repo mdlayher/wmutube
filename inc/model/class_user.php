@@ -4,6 +4,8 @@
 	//
 	// changelog:
 	//
+	// 3/20/13 MDL:
+	//	- added to_array(), to help with JSON encoding
 	// 3/7/13 MDL:
 	//	- query optimizations
 	// 2/27/13 MDL:
@@ -431,6 +433,19 @@
 			}
 
 			return false;
+		}
+
+		// Flatten relevant information fields of user from object to array (for JSON with AJAX)
+		public function to_array()
+		{
+			return array(
+				"id" => $this->id,
+				"username" => $this->username,
+				"email" => $this->email,
+				"role" => $this->get_role()->get_title(),
+				"firstname" => $this->firstname,
+				"lastname" => $this->lastname,
+			);
 		}
 
 		// STATIC METHODS - - - - - - - - - - - - - - - - - - - -

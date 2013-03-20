@@ -47,24 +47,40 @@
 	// AJAX - - - - - - - - - - - - - - - - - - - - - - - -
 
 	// Fetch user by ID
-	$app->get("/ajax/user/id/:id", function($id)
+	$app->get("/ajax/user/id/:id", function($id) use ($app)
 	{
+		// Temporary: work out way to implement session security for these
+		if ($app->request()->get("s") !== "tempdev")
+		{
+			$app->notFound();
+			return;
+		}
+
 		config::load("user");
 		$user = user::get_user($id);
 
 		if ($user)
 		{
-			printf("Hello, my name is %s %s!\n", $user->get_firstname(), $user->get_lastname());
+			echo json_encode($user->to_array());
+			return;
 		}
 		else
 		{
-			echo "404";
+			$app->notFound();
+			return;
 		}
 	});
 
 	// Fetch video by ID
-	$app->get("/ajax/video/id/:id", function($id)
+	$app->get("/ajax/video/id/:id", function($id) use ($app)
 	{
+		// Temporary: work out way to implement session security for these
+		if ($app->request()->get("s") !== "tempdev")
+		{
+			$app->notFound();
+			return;
+		}
+
 		config::load("video");
 		$video = video::get_video($id);
 
@@ -74,7 +90,7 @@
 		}
 		else
 		{
-			echo "404";
+			$app->notFound();
 		}
 	});
 
