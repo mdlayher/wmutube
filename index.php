@@ -14,7 +14,7 @@
 
 	// Data model configuration
 	require_once "inc/class_config.php";
-	config::load(array("cache", "login*", "user", "video"));
+	config::load(array("cache", "login*", "session", "user", "video"));
 
 	// CONFIGURATION - - - - - - - - - - - - - - - - - - - 
 
@@ -30,12 +30,9 @@
 	// Set application's name
 	$app->setName("khan");
 
-	// Set up Slim session cookie store, implicit session_start()
-	$app->add(new \Slim\Middleware\SessionCookie(array(
-		"expires" => config::SESSION_EXPIRE,
-		"secret" => config::SESSION_SALT,
-		"name" => config::SESSION_NAME,
-	)));
+	// Use custom memcache+database session handler
+	session_set_save_handler(new session(), true);
+	session_start();
 
 	// FUNCTIONS - - - - - - - - - - - - - - - - - - - - - -
 
