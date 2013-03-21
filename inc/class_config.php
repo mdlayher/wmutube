@@ -39,9 +39,6 @@
 		// Session expire time
 		const SESSION_EXPIRE = "2 hours";
 
-		// Session salt
-		const SESSION_SALT = "remindmetochangethislater";
-
 		// Session name
 		const SESSION_NAME = "khan_session";
 

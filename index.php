@@ -32,6 +32,7 @@
 
 	// Use custom memcache+database session handler
 	session_set_save_handler(new session(), true);
+	session_set_cookie_params(strtotime(config::SESSION_EXPIRE, true), '/', null);
 	session_start();
 
 	// FUNCTIONS - - - - - - - - - - - - - - - - - - - - - -
@@ -195,8 +196,8 @@
 	// Logout, destroy current session
 	$app->map("/logout", function() use ($app)
 	{
-		// Expire session cookie
-		$app->response()->setCookie(config::SESSION_NAME, "0", time() - 10, "/", null);
+		// Expire session cookie, remove session in database
+		session_destroy();
 		echo json_status("success");
 	})->via("GET", "POST");
 
