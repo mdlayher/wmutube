@@ -20,7 +20,9 @@
 
 	// CONFIGURATION - - - - - - - - - - - - - - - - - - - 
 
-	define("TITLE_PREFIX", "WMU - Khan Academy Clone - ");
+	// Constants which define naming conventions
+	define("PROJECT_TITLE", "Khan Academy Clone");
+	define("TITLE_PREFIX", "WMU - " . PROJECT_TITLE . " - ");
 
 	// Create an instance of Slim, set configuration
 	use \Slim\Slim as Slim;
@@ -32,7 +34,7 @@
 	));
 
 	// Set application's name
-	$app->setName("khan");
+	$app->setName(PROJECT_TITLE);
 
 	// Use custom memcache+database session handler
 	session_set_save_handler(new session(), true);
@@ -75,7 +77,11 @@
 		}
 
 		// Check cache
-		$user = cache::get(config::SESSION_NAME . '_' . $_SESSION['user']['id']);
+		$user = null;
+		if (config::MEMCACHE)
+		{
+			$user = cache::get(config::SESSION_NAME . '_' . $_SESSION['user']['id']);
+		}
 
 		// If user cached, unserialize and return
 		if ($user)
@@ -88,7 +94,10 @@
 			$user = user::get_user($_SESSION['user']['id']);
 
 			// Serialize and store in cache
-			cache::set(config::SESSION_NAME . '_' . $_SESSION['user']['id'], serialize($user));
+			if (config::MEMCACHE)
+			{
+				cache::set(config::SESSION_NAME . '_' . $_SESSION['user']['id'], serialize($user));
+			}
 
 			return $user;
 		}
@@ -99,7 +108,7 @@
 	{
 		return array(
 			// Title of project
-			"project_title" => "Khan Academy Clone",
+			"project_title" => PROJECT_TITLE,
 			// Session user object
 			"session_user" => session_user(),
 		);
@@ -120,11 +129,26 @@
 	// Video upload page
 	$app->get("/create", function() use ($app)
 	{
-		// Pull standard render variables, render create page
-		$std = std_render();
-		return $app->render("create.php", $std += array(
-			"page_title" => TITLE_PREFIX . "Create",
-		));
+		// Ensure user is logged in
+		if (!logged_in())
+		{
+			return $app->forbidden();
+		}
+
+		// Get session user, permission check (Instructor+)
+		$session_user = session_user();
+		if ($session_user->has_permission(role::INSTRUCTOR))
+		{
+			// Pull standard render variables, render create page
+			$std = std_render();
+			return $app->render("create.php", $std += array(
+				"page_title" => TITLE_PREFIX . "Create",
+			));
+		}
+		else
+		{
+			return $app->forbidden();
+		}
 	});
 
 	// AJAX - - - - - - - - - - - - - - - - - - - - - - - -
