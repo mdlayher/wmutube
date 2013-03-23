@@ -37,7 +37,7 @@ html
         div.stepbody
           div.inner
             p.top Start by uploading a video.
-            p.bottom You can also click <a id="fileChooseLink" href="#">here</a> to browse.  mp4 only, please!
+            p.bottom Click <a id="fileChooseLink" href="#">here</a> to browse.  mp4 only, please!
 
       #description_container.centered_on_page.section.initiallyHidden
         .padright
@@ -60,19 +60,24 @@ html
               | Next step
             a.button.topRight.addAnother
               | Add another
-            ul.clear.defaultPaddingMargins
+            ul.nostyle.defaultPaddingMargins
               li.step2_listitem
-                label.step2_listitem_label for='step2q1title'
-                  | Question body
-                input#step2q1title.textbox type='text' placeholder='Video title'
+                div
+                  label.stack.listitem_label
+                    | Question body
+                  input.stack.textbox.q_body type='text' placeholder='What is the diameter of the sun?'
               li.step2_listitem
-                label.step2_listitem_label for='step2q1a1'
-                  | Answer A
-                input#step2q1a1.textbox type='text' placeholder='Hello'
+                div
+                  label.stack.listitem_label
+                    | Answers / Correct?
+                  input.stack.textbox.q_answer type='text' placeholder='Hello'
+                  input.stack.textbox.q_answer type='text' placeholder='Hello'
+                  input.stack.textbox.q_answer type='text' placeholder='Hello'
+                  input.stack.textbox.q_answer type='text' placeholder='Hello'
 
       div#step3.centered_on_page.section.initiallyHidden
-        a.button.topRight.nextButton
-          | Go to next
+        a.button.topRight.submitButton
+          | Submit
     #footer_container
       #footer.centered_on_page.headerfooter
         | &copy Western Michigan University 2013

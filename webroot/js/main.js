@@ -71,6 +71,9 @@ var khan_academy = (function () {
 			$(newQ).attr("id", newId);
 			$(newQ).css("margin-top", -($(oldQ).outerHeight()));
 
+			$(newQ).find(".q_body:first").each(function () {$(this).val('');});;
+			$(newQ).find(".q_answer").each(function () {$(this).val('');});
+
 			$('.question').each(function (index) {
 				$(this).transition({x: -($(this).width() + 15), "opacity": .3}, 100, function () {
 					var l = $(this).css("left") === 'auto' ? 0 : parseInt($(this).css("left"));
@@ -216,12 +219,14 @@ var khan_academy = (function () {
 			console.log(':O hello world canceled!');
 		});
 
-		$(".nextButton").on("click", function () {
-			var parentId = $(this).parent().attr("id");
+		$(document).on("click", ".nextButton", function () {
+			var parent = $(this).parent();
+			var parentId = parent.attr("id");
+
 			var selector = null;
 			if (parentId === "step1") {
 				selector = "#step2";
-			} else if (parentId === "step2_editor") {
+			} else if (parent.parent().attr("id") === "step2_editor") {
 				selector = "#step3";
 			}
 			console.log(selector + " " + parentId);
