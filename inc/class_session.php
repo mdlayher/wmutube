@@ -57,14 +57,20 @@
 		// Destroy this session
 		public function destroy($session_id)
 		{
-			cache::invalidate(self::SESSION_KEY . $session_id);
+			if (config::MEMCACHE)
+			{
+				cache::invalidate(self::SESSION_KEY . $session_id);
+			}
 			return database::query("DELETE FROM session WHERE sessionid=?;", $session_id);
 		}
 
 		// Destroy old sessions
 		public function gc($maxlifetime)
 		{
-			cache::invalidate(self::SESSION_KEY . $session_id);
+			if (config::MEMCACHE)
+			{
+				cache::invalidate(self::SESSION_KEY . $session_id);
+			}
 			return database::query("DELETE FROM session WHERE updated < ?;", time() - $maxlifetime);
 		}
 
@@ -96,7 +102,7 @@
 				}
 			}
 
-			return $session[0]["data"];
+			return empty($session[0]["data"]) ? null : $session[0]["data"];
 		}
 
 		// Write to session
@@ -109,7 +115,10 @@
 			if (!$res)
 			{
 				$ret = database::query("INSERT INTO session VALUES (null, ?, ?, ?, ?);", $session_id, time(), time(), $session_data);
-				cache::invalidate(self::SESSION_KEY . $session_id);
+				if (config::MEMCACHE)
+				{
+					cache::invalidate(self::SESSION_KEY . $session_id);
+				}
 			}
 			// Else, UPDATE
 			else
@@ -124,7 +133,10 @@
 				}
 				
 				$ret = database::query("UPDATE session SET sessionid=?, updated=?, data=? WHERE sessionid=?;", $session_id, time(), $session_data, $this->sessionid);
-				cache::invalidate(self::SESSION_KEY . $session_id);
+				if (config::MEMCACHE)
+				{
+					cache::invalidate(self::SESSION_KEY . $session_id);
+				}
 			}
 
 			return $ret;
