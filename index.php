@@ -4,6 +4,8 @@
 	//
 	// changelog:
 	//
+	// 3/23/13 MDL:
+	//	- unified endpoint return data
 	// 3/20/13 MDL:
 	//	- initial code
 
@@ -91,12 +93,14 @@
 	}
 
 	// ROUTING - - - - - - - - - - - - - - - - - - - - - - -
+	// The views of the application, rendered for user
 
 	// VIEWS - - - - - - - - - - - - - - - - - - - - - - - -
 
 	// Application root
 	$app->get("/", function() use ($app)
 	{
+		echo "Session Dump:\n";
 		echo print_r($_SESSION, true);
 	});
 
@@ -106,10 +110,13 @@
 		return $app->render("create.php");
 	});
 
+	// AJAX - - - - - - - - - - - - - - - - - - - - - - - -
+	// Data endpoints which are sent GET/POST data and return JSON
+
 	// LOGIN - - - - - - - - - - - - - - - - - - - - - - - -
 
-	// Login using specified method
-	$app->map("/login", function() use ($app)
+	// Login using specified method, start a session
+	$app->map("/ajax/login", function() use ($app)
 	{
 		// Parse username and password from request
 		$req = $app->request();
@@ -194,7 +201,7 @@
 	})->via("GET", "POST");
 
 	// Logout, destroy current session
-	$app->map("/logout", function() use ($app)
+	$app->map("/ajax/logout", function() use ($app)
 	{
 		// Expire session cookie, remove session in database
 		session_destroy();
@@ -204,7 +211,7 @@
 	// VIDEO UPLOAD - - - - - - - - - - - - - - - - - - - -
 
 	// Video upload via POST
-	$app->post("/upload", function() use ($app)
+	$app->post("/ajax/upload", function() use ($app)
 	{
 		// Parse video metadata from request
 		$req = $app->request();
@@ -214,7 +221,7 @@
 		return;
 	});
 
-	// AJAX - - - - - - - - - - - - - - - - - - - - - - - -
+	// AJAX METADATA - - - - - - - - - - - - - - - - - - - -
 
 	// Fetch user information by field and value
 	$app->get("/ajax/user/:field(/:value)", function($field, $value = null) use ($app)
@@ -222,7 +229,7 @@
 		// Ensure user is logged in
 		if (!logged_in())
 		{
-			$app->forbidden();
+			json_status("403 Forbidden");
 			return;
 		}
 
@@ -283,7 +290,7 @@
 		}
 		else
 		{
-			$app->notFound();
+			json_status("404 Not Found");
 			return;
 		}
 	});
@@ -294,7 +301,7 @@
 		// Ensure user is logged in
 		if (!logged_in())
 		{
-			$app->forbidden();
+			json_status("403 Forbidden");
 			return;
 		}
 
@@ -355,10 +362,10 @@
 		}
 		else
 		{
-			$app->notFound();
+			json_status("404 Not Found");
 			return;
 		}
 	});
 
-	// RUN IT!
+	// RUN IT! - - - - - - - - - - - - - - - - - - - - - - -
 	$app->run();
