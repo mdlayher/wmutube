@@ -24,10 +24,12 @@
 	<div class="centered_on_page initiallyHidden" id="step2">
 		<div class="player_container">
 			<!--controls-->
-			<video class="video-js vjs-default-skin" data-setup="{}" id="video_player" poster="../img/player_placeholder.png" preload="auto"><source src="http://herpderp.me/video/Chrome_ImF.webm" type="video/webm"></source></video>
+			<video class="video-js vjs-default-skin" data-setup="{}" id="video_player" poster="./img/player_placeholder.png" preload="auto">
+				<source src="http://herpderp.me/video/Chrome_ImF.webm" type="video/webm"></source>
+			</video>
 		</div>
 		<div class="editing_scrubber centered_on_page">
-			<img class="player_control_img" id="player_playpause" src="../img/controller-play.png"/>
+			<img class="player_control_img" id="player_playpause" src="./img/controller-play.png"/>
 			<div class="editing_scrubber_basebar">
 			</div>
 			<div class="editing_scrubber_progress">
@@ -41,7 +43,8 @@
 				<ul class="nostyle defaultPaddingMargins">
 					<li class="step2_listitem">
 					<div>
-						<label class="stack listitem_label">Question body</label><input class="stack textbox q_body" placeholder="What is the diameter of the sun?" type="text"/>
+						<label class="stack listitem_label">Question body</label>
+						<input class="stack textbox q_body" placeholder="What is the diameter of the sun?" type="text"/>
 					</div>
 					</li>
 					<li class="step2_listitem">
