@@ -1,34 +1,6 @@
-<doctype></doctype><html>
-<head>
-<link href="../css/main.css" rel="stylesheet" type="text/css"/>
-<link href="http://vjs.zencdn.net/c/video-js.css" rel="stylesheet"/>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
-<script src="../js/jquery.transit.min.js" type="text/javascript"></script>
-<script src="../js/main.js" type="text/javascript"></script>
-<script src="http://vjs.zencdn.net/c/video.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
-<script src="../js/jquery.transit.min.js" type="text/javascript"></script>
-<script src="../js/jquery.scrollTo.js"></script>
-<script type="text/javascript">| document.write('</' + 'script>')</script>
-<title>Senior design prototype</title>
-</head>
-<body>
-<a href="#" id="previous">Previous</a><a href="#" id="next">Next</a>
-<div id="header_container">
-	<div class="centered_on_page headerfooter" id="header">
-		<div class="left">
-			CourseraClone
-		</div>
-		<div class="leftish">
-			<a href="#" id="videos_link">Videos</a>
-		</div>
-		<div class="right">
-			Hello, Justin!
-		</div>
-	</div>
-</div>
-<div id="browse_drawer">
-</div>
+<?php
+	require_once "header.inc.php";
+?>
 <div id="body_container">
 	<div class="centered_on_page section" id="step1">
 		<a class="button topRight nextButton">Next step</a>
@@ -52,10 +24,10 @@
 	<div class="centered_on_page initiallyHidden" id="step2">
 		<div class="player_container">
 			<!--controls-->
-			<video class="video-js vjs-default-skin" data-setup="{}" id="video_player" poster="../img/player_placeholder.png" preload="auto"><source src="http://herpderp.me/video/Chrome_ImF.webm" type="video/webm"></source></video>
+			<video class="video-js vjs-default-skin" data-setup="{}" id="video_player" poster="./img/player_placeholder.png" preload="auto"><source src="http://herpderp.me/video/Chrome_ImF.webm" type="video/webm"></source></video>
 		</div>
 		<div class="editing_scrubber centered_on_page">
-			<img class="player_control_img" id="player_playpause" src="../img/controller-play.png"/>
+			<img class="player_control_img" id="player_playpause" src="./img/controller-play.png"/>
 			<div class="editing_scrubber_basebar">
 			</div>
 			<div class="editing_scrubber_progress">
@@ -85,10 +57,6 @@
 		<a class="button topRight submitButton">Submit</a>
 	</div>
 </div>
-<div id="footer_container">
-	<div class="centered_on_page headerfooter" id="footer">
-		&copy Western Michigan University 2013
-	</div>
-</div>
-</body>
-</html>
+<?php
+	require_once "footer.inc.php";
+?>
