@@ -24,10 +24,10 @@
 	<div class="centered_on_page initiallyHidden" id="step2">
 		<div class="player_container">
 			<!--controls-->
-			<video class="video-js vjs-default-skin" data-setup="{}" id="video_player" poster="./img/player_placeholder.png" preload="auto"><source src="http://herpderp.me/video/Chrome_ImF.webm" type="video/webm"></source></video>
+			<video class="video-js vjs-default-skin" data-setup="{}" id="video_player" poster="../img/player_placeholder.png" preload="auto"><source src="http://herpderp.me/video/Chrome_ImF.webm" type="video/webm"></source></video>
 		</div>
 		<div class="editing_scrubber centered_on_page">
-			<img class="player_control_img" id="player_playpause" src="./img/controller-play.png"/>
+			<img class="player_control_img" id="player_playpause" src="../img/controller-play.png"/>
 			<div class="editing_scrubber_basebar">
 			</div>
 			<div class="editing_scrubber_progress">
@@ -45,9 +45,25 @@
 					</div>
 					</li>
 					<li class="step2_listitem">
-					<div>
-						<label class="stack listitem_label">Answers / Correct?</label><input class="stack textbox q_answer" placeholder="Hello" type="text"/><input class="stack textbox q_answer" placeholder="Hello" type="text"/><input class="stack textbox q_answer" placeholder="Hello" type="text"/><input class="stack textbox q_answer" placeholder="Hello" type="text"/>
-					</div>
+					<form>
+						<label class="stack listitem_label">Answers / Correct?</label>
+						<div class="answer">
+							<input class="stack textbox q_answer" placeholder="Hello" type="text"/>
+							<input type='radio' name='correct' class='floated_checkbox'>
+						</div>
+						<div class="answer">
+							<input class="stack textbox q_answer" placeholder="Hello" type="text"/>
+							<input type='radio' name='correct' class='floated_checkbox'>
+						</div>
+						<div class="answer">
+							<input class="stack textbox q_answer" placeholder="Hello" type="text"/>
+							<input type='radio' name='correct' class='floated_checkbox'>
+						</div>
+						<div class="answer">
+							<input class="stack textbox q_answer" placeholder="Hello" type="text"/>
+							<input type='radio' name='correct' class='floated_checkbox'>
+						</div>
+					</form>
 					</li>
 				</ul>
 			</div>
