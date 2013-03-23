@@ -246,7 +246,7 @@
 		// Ensure user is logged in
 		if (!logged_in())
 		{
-			json_status("403 Forbidden");
+			echo json_status("403 Forbidden");
 			return;
 		}
 
@@ -307,7 +307,7 @@
 		}
 		else
 		{
-			json_status("404 Not Found");
+			echo json_status("404 Not Found");
 			return;
 		}
 	});
@@ -318,7 +318,7 @@
 		// Ensure user is logged in
 		if (!logged_in())
 		{
-			json_status("403 Forbidden");
+			echo json_status("403 Forbidden");
 			return;
 		}
 
@@ -379,7 +379,7 @@
 		}
 		else
 		{
-			json_status("404 Not Found");
+			echo json_status("404 Not Found");
 			return;
 		}
 	});

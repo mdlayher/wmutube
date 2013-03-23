@@ -96,7 +96,7 @@
 				}
 			}
 
-			return $session[0]["data"];
+			return empty($session[0]["data"]) ? null : $session[0]["data"];
 		}
 
 		// Write to session
