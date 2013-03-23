@@ -28,7 +28,13 @@
 				// Check for existing session
 				if (!empty($session_user))
 				{
-					printf("Hello, %s %s! %s", $session_user->get_firstname(), $session_user->get_lastname(), "[logout]");
+					// Display title for Instructor+
+					$role = null;
+					if ($session_user->has_permission(role::INSTRUCTOR))
+					{
+						$role = $session_user->get_role()->get_title();
+					}
+					printf("Hello, %s %s %s! %s", $role, $session_user->get_firstname(), $session_user->get_lastname(), "[logout]");
 				}
 				else
 				{
