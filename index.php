@@ -20,6 +20,8 @@
 
 	// CONFIGURATION - - - - - - - - - - - - - - - - - - - 
 
+	define("TITLE_PREFIX", "WMU - Khan Academy Clone - ");
+
 	// Create an instance of Slim, set configuration
 	use \Slim\Slim as Slim;
 	$app = new Slim(array(
@@ -92,6 +94,17 @@
 		}
 	}
 
+	// Standard variables to be included in all rendered page
+	function std_render()
+	{
+		return array(
+			// Title of project
+			"project_title" => "Khan Academy Clone",
+			// Session user object
+			"session_user" => session_user(),
+		);
+	}
+
 	// ROUTING - - - - - - - - - - - - - - - - - - - - - - -
 	// The views of the application, rendered for user
 
@@ -107,7 +120,11 @@
 	// Video upload page
 	$app->get("/create", function() use ($app)
 	{
-		return $app->render("create.php");
+		// Pull standard render variables, render create page
+		$std = std_render();
+		return $app->render("create.php", $std += array(
+			"page_title" => TITLE_PREFIX . "Create",
+		));
 	});
 
 	// AJAX - - - - - - - - - - - - - - - - - - - - - - - -

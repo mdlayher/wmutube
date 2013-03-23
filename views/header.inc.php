@@ -11,20 +11,34 @@
 	<script src="./js/jquery.transit.min.js" type="text/javascript"></script>
 	<script src="./js/jquery.scrollTo.js"></script>
 	<!--<script type="text/javascript">| document.write('</' + 'script>')</script>-->
-	<title>Senior design prototype</title>
+	<title><?= $page_title ?></title>
 </head>
 <body>
 <a href="#" id="previous">Previous</a><a href="#" id="next">Next</a>
 <div id="header_container">
 	<div class="centered_on_page headerfooter" id="header">
 		<div class="left">
-			CourseraClone
+			<?= $project_title ?>
 		</div>
 		<div class="leftish">
 			<a href="#" id="videos_link">Videos</a>
 		</div>
 		<div class="right">
-			Hello, Justin!
+			<?php
+				// Check for existing session
+				if (!empty($session_user))
+				{
+					printf("Hello, %s %s! %s", $session_user->get_firstname(), $session_user->get_lastname(), "[logout]");
+				}
+				else
+				{
+			?>
+			<input type="text" value="username" />
+			<input type="password" value="password" />
+			<input type="submit" value="login" />
+			<?php
+				}
+			?>
 		</div>
 	</div>
 </div>
