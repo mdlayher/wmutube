@@ -36,6 +36,12 @@
 		// Password hash cost
 		const HASH_COST = 13;
 
+		// Session expire time
+		const SESSION_EXPIRE = "2 hours";
+
+		// Session name
+		const SESSION_NAME = "khan_session";
+
 		// Array of source files to quickly load
 		protected static $SOURCE_FILES = array(
 			"answer" => "/model/class_answer.php",

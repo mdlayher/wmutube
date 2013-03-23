@@ -4,6 +4,8 @@
 	//
 	// changelog:
 	//
+	// 3/20/13 MDL:
+	//	- added to_array(), to_json()
 	// 3/7/13 MDL:
 	//	- query optimizations
 	// 2/27/13 MDL:
@@ -264,6 +266,38 @@
 			}
 
 			return $success;
+		}
+
+		// Flatten relevant information fields of video from object to array
+		public function to_array()
+		{
+			// Gather basic data
+			$data = array(
+				"id" => $this->id,
+				"userid" => $this->userid,
+				"user" => user::get_user($this->userid)->to_array(),
+				"courseid" => $this->courseid,
+				"course" => course::get_course($this->courseid)->to_array(),
+				"filename" => $this->filename,
+				"title" => $this->title,
+				"keywords" => $this->keywords,
+			);
+
+			// Fetch questions associated with this video
+			$questions = array();
+			foreach (question::fetch_questions($this->id) as $q)
+			{
+				$questions[] = $q->to_array();
+			}
+			$data["questions"] = $questions;
+
+			return $data;
+		}
+
+		// Export video to_array() data as JSON
+		public function to_json()
+		{
+			return json_encode($this->to_array());
 		}
 
 		// STATIC METHODS - - - - - - - - - - - - - - - - - - - -

@@ -4,6 +4,8 @@
 	//
 	// changelog:
 	//
+	// 3/20/13 MDL:
+	//	- added to_array(), to_json()
 	// 3/6/13 MDL:
 	//	- typo fix
 	// 2/26/13 MDL:
@@ -179,6 +181,23 @@
 			}
 
 			return $success;
+		}
+
+		// Flatten relevant information fields of answer from object to array
+		public function to_array()
+		{
+			return array(
+				"id" => $this->id,
+				"text" => $this->text,
+				"hint" => $this->hint,
+				"correct" => $this->correct,
+			);
+		}
+
+		// Export answer to_array() data as JSON
+		public function to_json()
+		{
+			return json_encode($this->to_array());
 		}
 
 		// STATIC METHODS - - - - - - - - - - - - - - - - - - - -
