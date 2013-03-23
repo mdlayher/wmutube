@@ -23,9 +23,15 @@ ul.nostyle {
   list-style: none; }
 
 .stack {
+  clear: left;
+  float: left;
   display: block;
-  clear: both;
   margin: 0; }
+
+.floated_checkbox {
+  float: left;
+  height: 25px;
+  margin-left: 5px; }
 
 .defaultPaddingMargins {
   margin: 0;
@@ -35,7 +41,8 @@ ul.nostyle {
 .listitem_label {
   text-transform: uppercase;
   font-size: 10px;
-  font-weight: bold; }
+  font-weight: bold;
+  padding-top: 15px; }
 
 .step2_listitem {
   font-family: 'Lato', sans-serif;
@@ -137,7 +144,7 @@ ul.nostyle {
   margin-top: 70px;
   padding-bottom: 100px;
   width: 100%;
-  height: auto; }
+  height: 100%; }
 
 #media_area_container {
   overflow: hidden; }
