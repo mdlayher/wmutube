@@ -28,6 +28,18 @@ ul.nostyle {
   display: block;
   margin: 0; }
 
+.bottom_spacer {
+  height: 400px;
+  opacity: 0;
+}
+
+.form_section_container {
+  margin-top: 15px;
+  height: auto;
+  overflow: auto;
+  clear: both;
+}
+
 .floated_checkbox {
   float: left;
   height: 25px;
@@ -41,8 +53,7 @@ ul.nostyle {
 .listitem_label {
   text-transform: uppercase;
   font-size: 10px;
-  font-weight: bold;
-  padding-top: 15px; }
+  font-weight: bold; }
 
 .step2_listitem {
   font-family: 'Lato', sans-serif;

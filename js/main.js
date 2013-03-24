@@ -225,9 +225,11 @@ var khan_academy = (function () {
 
 			var selector = null;
 			if (parentId === "step1") {
+				selector = "#step3";
+			} else if (parentId === "step3") {
 				selector = "#step2";
 			} else if (parent.parent().attr("id") === "step2_editor") {
-				selector = "#step3";
+				selector = "#step4";
 			}
 			console.log(selector + " " + parentId);
 			$(selector).css("display", "block").transition({opacity: 1});

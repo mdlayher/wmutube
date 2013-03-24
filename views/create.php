@@ -15,12 +15,11 @@
 			</div>
 		</div>
 	</div>
-	<div class="centered_on_page section initiallyHidden" id="description_container">
-		<div class="padright">
-			<div class="desc_body">
-			</div>
-		</div>
+
+	<div class="centered_on_page section initiallyHidden" id="step3">
+			<a class="button topRight nextButton">Next step</a>
 	</div>
+
 	<div class="centered_on_page initiallyHidden" id="step2">
 		<div class="player_container">
 			<!--controls-->
@@ -48,7 +47,7 @@
 					</div>
 					</li>
 					<li class="step2_listitem">
-					<form>
+					<div class="form_section_container">
 						<label class="stack listitem_label">Answers / Correct?</label>
 						<div class="answer">
 							<input class="stack textbox q_answer" placeholder="Hello" type="text"/>
@@ -66,15 +65,13 @@
 							<input class="stack textbox q_answer" placeholder="Hello" type="text"/>
 							<input type='radio' name='correct' class='floated_checkbox'>
 						</div>
-					</form>
+					</div>
 					</li>
 				</ul>
 			</div>
 		</div>
 	</div>
-	<div class="centered_on_page section initiallyHidden" id="step3">
-		<a class="button topRight submitButton">Submit</a>
-	</div>
+	<div class="bottom_spacer"></div>
 </div>
 <?php
 	require_once "footer.inc.php";
