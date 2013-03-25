@@ -1,6 +1,9 @@
 <?php
 	require_once "header.inc.php";
 ?>
+
+<script type="text/javascript" src="./js/jquery.uploadify-3.1.min.js"></script>
+
 <div id="body_container">
 	<div class="centered_on_page section" id="step1">
 		<a class="button topRight nextButton">Next step</a>
@@ -10,7 +13,7 @@
 					Start by uploading a video.
 				</p>
 				<p class="bottom">
-					Click <a id="fileChooseLink" href="#">here</a> to browse. mp4 only, please!
+					Click <input type="file" id="file_upload" href="#">here</input> to browse. mp4 only, please!
 				</p>
 			</div>
 		</div>

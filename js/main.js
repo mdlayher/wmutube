@@ -35,8 +35,8 @@ var khan_academy = (function () {
 			generateGuid: function () {
 				// courtesy of http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
 				var retVal = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-				    var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
-				    return v.toString(16);
+					var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+					return v.toString(16);
 				});
 
 				return retVal;
@@ -189,6 +189,19 @@ var khan_academy = (function () {
 
 	// on document ready
 	$(function () {
+
+		$('#file_upload').uploadify({
+			'auto'				: true,
+			'swf'				: './swf/uploadify.swf',
+			'uploader'			: 'uploadify.php',
+			'method'			: 'post',
+			'onUploadSuccess'	: function (file, data, response) {
+				console.log("upload was successful");
+			},
+			'onUploadError'		: function (file, errorCode, errorMsg, errorString) {
+				console.log("upload failed");
+			}
+		});
 
 		// on video.js ready
 		_V_(video_player).ready(function () {
