@@ -17,7 +17,20 @@
 	</div>
 
 	<div class="centered_on_page section initiallyHidden" id="step3">
-			<a class="button topRight nextButton">Next step</a>
+		<a class="button topRight nextButton">Next step</a>
+		<div class="stepbody">
+			<div class="inner">
+				<div class="top">
+					Tell us a little about your video...
+				</div>
+				<div class="bottom">
+					<div class="answer">
+						<label class="stack listitem_label">Video title</label>
+						<input class="stack textbox q_answer" type="text"/>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 
 	<div class="centered_on_page initiallyHidden" id="step2">
@@ -38,7 +51,7 @@
 		</div>
 		<div id="step2_editor">
 			<div class="section_step2 question">
-				<a class="button topRight nextButton">Next step</a><a class="button topRight addAnother">Add another</a>
+				<a class="button topRight submitButton">Submit</a><a class="button topRight addAnother">Add another</a>
 				<ul class="nostyle defaultPaddingMargins">
 					<li class="step2_listitem">
 					<div>

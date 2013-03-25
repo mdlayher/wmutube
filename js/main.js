@@ -97,6 +97,28 @@ var khan_academy = (function () {
 			qSelectors.push("#" + newId);
 			currentQ = qSelectors.indexOf("#" + newId);
 			$('#step2_editor').append(newQ);
+
+			$('#step2').on("click", ".submitButton", function () {
+
+				// the submission object
+				var theObj = {};
+				theObj.questions = [];
+
+				var qi = 0, ai = 0;
+				// iterate over the questions
+				$(".question").each(function () {
+					theObj.questions.push({"text": $(this).find(".q_body").first().val(), "answers": []});
+					$(this).find(".answer").each(function () {
+						// iterate over each question's answers.
+						var kids = $(this).children();
+						theObj.questions[qi].answers.push({"text": $(kids[0]).val(), "correct": $(kids[1]).attr("checked") === undefined ? false : true});
+					});
+					ai = 0;
+					qi++;
+				});
+
+				console.log(theObj);
+			});
 		}
 
 		function move (direction) {
