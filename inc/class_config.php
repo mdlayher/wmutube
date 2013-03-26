@@ -30,6 +30,9 @@
 		// Profiler toggle
 		const PROFILER = 0;
 
+		// Project title
+		const PROJECT_TITLE = "WMUtube";
+
 		// Password hash algorithm
 		const HASH_ALGORITHM = PASSWORD_DEFAULT;
 
@@ -44,7 +47,7 @@
 		const SESSION_EXPIRE = "2 hours";
 
 		// Session name
-		const SESSION_NAME = "khan_session";
+		const SESSION_NAME = "wmutube_session";
 
 		// Array of source files to quickly load
 		protected static $SOURCE_FILES = array(
