@@ -195,8 +195,10 @@ var khan_academy = (function () {
 		$('#file_upload').uploadify({
 			'auto'				: true,
 			'swf'				: './swf/uploadify.swf',
-			'uploader'			: 'uploadify.php',
+			'uploader'			: 'ajax/upload',
 			'method'			: 'post',
+			'fileTypeDesc'		: 'mp4 files',
+			'fileTypeExts'		: '*.mp4',
 			'onUploadSuccess'	: function (file, data, response) {
 				console.log("upload was successful");
 			},
