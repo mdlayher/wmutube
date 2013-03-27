@@ -280,8 +280,31 @@
 		// Parse video metadata from request
 		$req = $app->request();
 
-		// Dump all POST data
-		echo print_r($rep->post(), true);
+		// Check for file upload
+		if (!empty($_FILES))
+		{
+			// Get path of temporary upload
+			$temp_file = $_FILES['Filedata']['tmp_name'];
+
+			// Set path for upload target
+			$target = __DIR__ . "/uploads/tmp.mp4";
+
+			// Attempt to store file
+			try
+			{
+				move_uploaded_file($temp_file, $target);
+			}
+			catch (\Exception $e)
+			{
+				echo json_status($e->getMessage());
+				return;
+			}
+
+			echo json_status("success");
+			return;
+		}
+
+		echo json_status("bad file upload");
 		return;
 	});
 
