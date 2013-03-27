@@ -1,2 +1,4 @@
 # Keep test scripts out
 inc/test
+# Keep uploads out
+uploads

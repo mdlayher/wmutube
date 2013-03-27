@@ -322,6 +322,37 @@
 		return;
 	});
 
+	// Video creation via POST
+	$app->post("/ajax/create", function() use ($app)
+	{
+		// Ensure user is logged in
+		if (!logged_in())
+		{
+			echo json_status("403 Forbidden");
+			return;
+		}
+
+		// Get session user, permission check (Instructor+)
+		$session_user = session_user();
+		if (!$session_user->has_permission(role::INSTRUCTOR))
+		{
+			echo json_status("403 Forbidden");
+			return;
+		}
+
+		// Check for video filename and existence stored in session from upload
+		if (empty($_SESSION['upload']) || !file_exists(__DIR__ . $_SESSION['upload']))
+		{
+			echo json_status("upload not found");
+			return;
+		}
+
+		// Check the sanity of all video upload variables from post ...
+		$req = $app->request();
+
+		echo json_status("success");
+		return;
+	});
 
 	// AJAX METADATA - - - - - - - - - - - - - - - - - - - -
 
