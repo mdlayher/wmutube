@@ -48,6 +48,8 @@ var khan_academy = (function () {
 
 	var editor_step2 = (function () {
 
+		const QSPACING = 50;
+
 		// private members
 		var qSelectors = [];
 		var currentQ = null;
@@ -57,68 +59,47 @@ var khan_academy = (function () {
 		function addAnother(self) {
 
 			if (animating === true) {
-				console.log("Animation in progress, not adding.");
+				// console.log("Animation in progress, not adding.");
 				return;
-			} else {
-				console.log("Not animating.  Continuing... animating: " + animating);
-			}
+			} 
 			animating = true;
-			console.log("just to check... animating: " + animating);
 
 			var newId = util.generateGuid();
 			var oldQ = $('.question:last');
 			var newQ = oldQ.clone(false);
-			$(newQ).attr("id", newId);
-			$(newQ).css("margin-top", -($(oldQ).outerHeight()));
 
+			// adjust attributes of new object
+			$(newQ).attr("id", newId);
+			$(newQ).find(":input").each(function () { $(this).prop("checked", false).attr("name", newId) });
+			$(newQ).css("margin-top", -($(oldQ).outerHeight()));
 			$(newQ).find(".q_body:first").each(function () {$(this).val('');});;
 			$(newQ).find(".q_answer").each(function () {$(this).val('');});
 
+			// shove the old questions left
 			$('.question').each(function (index) {
-				$(this).transition({x: -($(this).width() + 15), "opacity": .3}, 100, function () {
+				$(this).transition({x: -($(this).outerWidth() + QSPACING), "opacity": .3}, 100, function () {
 					var l = $(this).css("left") === 'auto' ? 0 : parseInt($(this).css("left"));
 					console.log("l: " + l);
 
 					// there must be a better way to do this...
 					$(this).removeAttr('style');
 					$(this).css('opacity', .3)
-					$(this).css("left", l - ($(this).width() + 15));
+					$(this).css("left", l - ($(this).outerWidth() + QSPACING));
 
 					if (index > 0) {
 						$(this).css('margin-top', -($(this).outerHeight()));
 					}
 					animating = false;
-					console.log(l - ($(this).width() + 15));
+					console.log(l - ($(this).width() + QSPACING));
 					console.log('callback!');
 				});
 				console.log(this.id + ": " + $(this).css("left"));
 			});
 
+			// append the new question to the DOM
 			qSelectors.push("#" + newId);
 			currentQ = qSelectors.indexOf("#" + newId);
 			$('#step2_editor').append(newQ);
-
-			$('#step2').on("click", ".submitButton", function () {
-
-				// the submission object
-				var theObj = {};
-				theObj.questions = [];
-
-				var qi = 0, ai = 0;
-				// iterate over the questions
-				$(".question").each(function () {
-					theObj.questions.push({"text": $(this).find(".q_body").first().val(), "answers": []});
-					$(this).find(".answer").each(function () {
-						// iterate over each question's answers.
-						var kids = $(this).children();
-						theObj.questions[qi].answers.push({"text": $(kids[0]).val(), "correct": $(kids[1]).attr("checked") === undefined ? false : true});
-					});
-					ai = 0;
-					qi++;
-				});
-
-				console.log(theObj);
-			});
 		}
 
 		function move (direction) {
@@ -132,13 +113,13 @@ var khan_academy = (function () {
 			var movesLeft = $('.question').length;
 
 			$('.question').each(function (index) {
-				$(this).transition({x: direction * ($(this).width() + 15), "opacity": .3}, 100, function () {
+				$(this).transition({x: direction * ($(this).outerWidth() + QSPACING), "opacity": .3}, 100, function () {
 					var l = $(this).css("left") === 'auto' ? 0 : parseInt($(this).css("left"));
 
 					// there must be a better way to do this...
 					$(this).removeAttr('style');
 					$(this).css('opacity', .3)
-					$(this).css("left", l + direction * ($(this).width() + 15));
+					$(this).css("left", l + direction * ($(this).outerWidth() + QSPACING));
 
 					if (index > 0) {
 						$(this).css('margin-top', -($(this).outerHeight()));
@@ -179,6 +160,27 @@ var khan_academy = (function () {
 				move(-1);
 			});
 
+			$('#step2').on("click", ".submitButton", function () {
+
+				// the submission object
+				var theObj = {};
+				theObj.questions = [];
+
+				var qi = 0;
+				// iterate over the questions
+				$(".question").each(function () {
+					theObj.questions.push({"text": $(this).find(".q_body").first().val(), "answers": []});
+					$(this).find(".answer").each(function () {
+						// iterate over each question's answers.
+						var kids = $(this).children();
+						theObj.questions[qi].answers.push({"text": $(kids[0]).val(), "correct": $(kids[1]).is(":checked")});
+					});
+					qi++;
+				});
+
+				console.log(theObj);
+			});
+
 			var guid = util.generateGuid();
 			$('.section_step2').attr('id', guid);
 			qSelectors.push("#" + guid);
@@ -200,6 +202,8 @@ var khan_academy = (function () {
 			},
 			'onUploadError'		: function (file, errorCode, errorMsg, errorString) {
 				console.log("upload failed");
+				$("#step3").css("display", "block").transition({opacity: 1});
+				$.scrollTo("#step3", 600, { offset: { top: -70 }});
 			}
 		});
 

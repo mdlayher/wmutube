@@ -20,7 +20,14 @@ html {
   height: 100%; }
 
 ul.nostyle {
-  list-style: none; }
+  list-style: none;
+  list-style-type: none; }
+
+.answer {
+  clear: left;
+  height: auto;
+  overflow: auto;
+}
 
 .stack {
   clear: left;
@@ -37,7 +44,15 @@ ul.nostyle {
   margin-top: 15px;
   height: auto;
   overflow: auto;
-  clear: both;
+  clear: left;
+}
+
+.form_section_container>textarea {
+  height: 40px;
+}
+
+.form_section_container>.button {
+  margin-right: 5px;
 }
 
 .floated_checkbox {
@@ -53,7 +68,8 @@ ul.nostyle {
 .listitem_label {
   text-transform: uppercase;
   font-size: 10px;
-  font-weight: bold; }
+  font-weight: bold;
+  padding-top: 10px; }
 
 .step2_listitem {
   font-family: 'Lato', sans-serif;
@@ -228,10 +244,12 @@ ul.nostyle {
   z-index: 60; }
 
 .button {
+  display: inline-block;
   font-weight: bold;
   font-size: 13px;
   padding: 10px;
-  background-color: #bbb; }
+  background-color: #bbb; 
+  cursor: pointer; }
 
 .topRight {
   position: relative;
@@ -240,6 +258,10 @@ ul.nostyle {
   top: 15px;
   right: 15px;
   cursor: pointer; }
+
+.floatLeft {
+  float: left;
+  width: 49%; }
 
 .stepbody {
   display: table;
@@ -266,6 +288,12 @@ ul.nostyle {
   .stepbody .bottom {
     font-weight: 300;
     font-size: 11pt; }
+  .stepbody .video_info_bottom {
+    height: auto;
+    margin-left: auto;
+    margin-right: auto;
+    width: 600px;
+  }
 
 .initiallyHidden {
   display: none;
@@ -294,6 +322,7 @@ ul.nostyle {
   overflow: auto;
   width: 650px;
   height: 30%;
+  padding: 15px;
   box-sizing: border-box; }
 
 #description_container h1 {

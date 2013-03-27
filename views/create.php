@@ -26,11 +26,17 @@
 				<div class="top">
 					Tell us a little about your video...
 				</div>
-				<div class="bottom">
-					<div class="answer">
-						<label class="stack listitem_label">Video title</label>
-						<input class="stack textbox q_answer" type="text"/>
-					</div>
+				<div class="video_info_bottom">
+					<label class="stack listitem_label">Video title</label>
+					<input id="video_title" class="stack textbox q_answer" type="text"/>
+					<label class="stack listitem_label">Video description</label>
+					<input id="video_title" class="stack textbox q_answer" type="text"/>
+					<label class="stack listitem_label">Department</label>
+					<input id="video_title" class="stack textbox q_answer" type="text"/>
+					<label class="stack listitem_label">Subject</label>
+					<input id="video_title" class="stack textbox q_answer" type="text"/>
+					<label class="stack listitem_label">Year</label>
+					<input id="video_title" class="stack textbox q_answer" type="text"/>
 				</div>
 			</div>
 		</div>
@@ -54,15 +60,12 @@
 		</div>
 		<div id="step2_editor">
 			<div class="section_step2 question">
-				<a class="button topRight submitButton">Submit</a><a class="button topRight addAnother">Add another</a>
-				<ul class="nostyle defaultPaddingMargins">
-					<li class="step2_listitem">
-					<div>
+				<div class="floatLeft">
+					<div class="form_section_container">
 						<label class="stack listitem_label">Question body</label>
 						<input class="stack textbox q_body" placeholder="What is the diameter of the sun?" type="text"/>
 					</div>
-					</li>
-					<li class="step2_listitem">
+
 					<div class="form_section_container">
 						<label class="stack listitem_label">Answers / Correct?</label>
 						<div class="answer">
@@ -82,8 +85,22 @@
 							<input type='radio' name='correct' class='floated_checkbox'>
 						</div>
 					</div>
-					</li>
-				</ul>
+				</div>
+				
+
+				<div class="floatLeft">
+					<div class="form_section_container">
+						<label class="stack listitem_label">Presentation time</label>
+						<input class="stack textbox q_time" type="text"/>
+					</div>
+					<div class="form_section_container">
+						<label class="stack listitem_label">Hint</label>
+						<textarea class="stack textbox q_hint" placeholder="Hello" rows="3" type="text"></textarea>
+					</div>
+					<div class="form_section_container"><a class="button submitButton">Submit</a><a class="button addAnother">Add another</a></div>
+				</div>
+				
+
 			</div>
 		</div>
 	</div>
