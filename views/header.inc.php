@@ -2,26 +2,42 @@
 <html>
 <head>
 	<link href="./css/main.css" rel="stylesheet" type="text/css"/>
-	<link href="http://vjs.zencdn.net/c/video-js.css" rel="stylesheet"/>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
-	<script src="./js/jquery.transit.min.js" type="text/javascript"></script>
-	<script src="./js/main.js" type="text/javascript"></script>
-	<script src="http://vjs.zencdn.net/c/video.js"></script>
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
-	<script src="./js/jquery.transit.min.js" type="text/javascript"></script>
-	<script src="./js/jquery.scrollTo.js"></script>
+	<script src="./js/login.js" type="text/javascript"></script>
 	<!--<script type="text/javascript">| document.write('</' + 'script>')</script>-->
 	<title><?= $page_title ?></title>
 </head>
 <body>
-<a href="#" id="previous">Previous</a><a href="#" id="next">Next</a>
 <div id="header_container">
 	<div class="centered_on_page headerfooter" id="header">
-		<div class="left">
-			<?= $project_title ?>
-		</div>
+		<div class="left"><?= $project_title ?></div>
 		<div class="leftish">
-			<a href="#" id="videos_link">Videos</a>
+			<a href="./" title="Home">Home</a> 
+			| <a href="#" id="videos_link" title="View learning module videos">Videos</a>
+			<?php
+				// Check for existing session
+				if (!empty($session_user))
+				{
+					// Display appropriate links for each user class
+					// Instructor
+					if ($session_user->has_permission(role::INSTRUCTOR))
+					{
+						echo " | <a href=\"create\" title=\"Create a learning module\">Create</a>\n";
+					}
+					// Administrator
+					if ($session_user->has_permission(role::ADMINISTRATOR))
+					{
+						echo " | <a href=\"#\" title=\"Create, modify, and delete users\">Manage Users</a>\n";
+						echo " | <a href=\"#\" title=\"Create, modify, and delete videos\">Manage Videos</a>\n";
+					}
+					// Developer
+					if ($session_user->has_permission(role::DEVELOPER))
+					{
+						echo " | <a href=\"#\" title=\"Configure aspects of the system\">Configuration</a>\n";
+						echo " | <a href=\"#\" title=\"View metrics regarding the system\">Metrics</a>\n";
+					}
+				}
+			?>
 		</div>
 		<div class="right">
 			<?php
@@ -34,14 +50,15 @@
 					{
 						$role = $session_user->get_role()->get_title();
 					}
-					printf("Hello, %s %s %s! %s", $role, $session_user->get_firstname(), $session_user->get_lastname(), "[logout]");
+					printf("Hello, %s %s %s! ", $role, $session_user->get_firstname(), $session_user->get_lastname());
+					echo "<input type=\"button\" id=\"logout_button\" value=\"logout\" />\n";
 				}
 				else
 				{
 			?>
-			<input type="text" value="username" />
-			<input type="password" value="password" />
-			<input type="submit" value="login" />
+			<input type="text" id="login_username" placeholder="username" />
+			<input type="password" id="login_password" placeholder="password" />
+			<input type="button" id="login_button" value="login" />
 			<?php
 				}
 			?>

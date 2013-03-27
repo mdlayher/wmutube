@@ -4,6 +4,8 @@
 	//
 	// changelog:
 	//
+	// 3/27/13 MDL:
+	//	- lots of changes past few days, working sessions, login, etc.
 	// 3/23/13 MDL:
 	//	- unified endpoint return data
 	// 3/20/13 MDL:
@@ -143,11 +145,16 @@
 	// VIEWS - - - - - - - - - - - - - - - - - - - - - - - -
 
 	// Application root
-	$app->get("/", function() use ($app)
+	$index = function() use ($app)
 	{
-		echo "Session Dump:\n";
-		echo print_r($_SESSION, true);
-	});
+		// Render the index
+		$std = std_render();
+		return $app->render("index.php", $std += array(
+			"page_title" => TITLE_PREFIX . "Home",
+		));
+	};
+	$app->get("/", $index);
+	$app->get("/index", $index);
 
 	// Video upload page
 	$app->get("/create", function() use ($app)
@@ -180,7 +187,7 @@
 	// LOGIN - - - - - - - - - - - - - - - - - - - - - - - -
 
 	// Login using specified method, start a session
-	$app->map("/ajax/login", function() use ($app)
+	$app->post("/ajax/login", function() use ($app)
 	{
 		// Parse username and password from request
 		$req = $app->request();
@@ -262,15 +269,15 @@
 		}
 
 		return;
-	})->via("GET", "POST");
+	});
 
 	// Logout, destroy current session
-	$app->map("/ajax/logout", function() use ($app)
+	$app->post("/ajax/logout", function() use ($app)
 	{
 		// Expire session cookie, remove session in database
 		session_destroy();
 		echo json_status("success");
-	})->via("GET", "POST");
+	});
 
 	// VIDEO UPLOAD - - - - - - - - - - - - - - - - - - - -
 
