@@ -299,12 +299,12 @@
 		if (!empty($_FILES))
 		{
 			// Set path for upload target, identify video with filename and username
-			$target = sprintf("%s/%s/%s_%s", __DIR__, "uploads", $session_user->get_username(), $req->post("Filename"));
+			$target = sprintf("/uploads/tmp/%s_%s", $session_user->get_username(), $req->post("Filename"));
 
 			// Attempt to store file
 			try
 			{
-				move_uploaded_file($_FILES['Filedata']['tmp_name'], $target);
+				move_uploaded_file($_FILES['Filedata']['tmp_name'], __DIR__ . $target);
 			}
 			catch (\Exception $e)
 			{
@@ -314,7 +314,7 @@
 
 			// Store this upload's location in session, for use with video editor
 			$_SESSION['upload'] = $target;
-			echo json_status("success");
+			echo stripslashes(json_encode(array("status" => "success", "filename" => $target)));
 			return;
 		}
 
