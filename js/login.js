@@ -20,8 +20,7 @@ $(function () {
 			// Else, display error
 			else
 			{
-				$("#error").text("login error: " + data.status);
-				$("#error").show();
+				$("#error").html("<p class=\"error\">login error: " + data.status + "</p>");
 			}
 		}, "json");
 	});

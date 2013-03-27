@@ -9,6 +9,7 @@
 <script src="./js/jquery.scrollTo.js"></script>
 <script type="text/javascript" src="./js/jquery.uploadify-3.1.min.js"></script>
 <div id="body_container">
+	<span id="error"></span>
 	<a href="#" id="previous">Previous</a><a href="#" id="next">Next</a>
 	<div class="centered_on_page section" id="step1">
 		<a class="button topRight nextButton">Next step</a>

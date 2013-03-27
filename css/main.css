@@ -40,6 +40,15 @@ ul.nostyle {
   opacity: 0;
 }
 
+.error {
+  font-family: 'Lato', sans-serif;
+  margin: 0% 25% 0% 25%;
+  padding: 5px 0px 5px 0px;
+  text-align: center;
+  background-color: #CD5C5C;
+  font-size: 18pt;
+}
+
 .form_section_container {
   margin-top: 15px;
   height: auto;
