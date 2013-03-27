@@ -277,22 +277,34 @@
 	// Video upload via POST
 	$app->post("/ajax/upload", function() use ($app)
 	{
+		// Ensure user is logged in
+		if (!logged_in())
+		{
+			echo json_status("403 Forbidden");
+			return;
+		}
+
+		// Get session user, permission check (Instructor+)
+		$session_user = session_user();
+		if (!$session_user->has_permission(role::INSTRUCTOR))
+		{
+			echo json_status("403 Forbidden");
+			return;
+		}
+
 		// Parse video metadata from request
 		$req = $app->request();
 
 		// Check for file upload
 		if (!empty($_FILES))
 		{
-			// Get path of temporary upload
-			$temp_file = $_FILES['Filedata']['tmp_name'];
-
-			// Set path for upload target
-			$target = __DIR__ . "/uploads/tmp.mp4";
+			// Set path for upload target, identify video with filename and username
+			$target = sprintf("%s/%s/%s_%s", __DIR__, "uploads", $session_user->get_username(), $req->post("Filename"));
 
 			// Attempt to store file
 			try
 			{
-				move_uploaded_file($temp_file, $target);
+				move_uploaded_file($_FILES['Filedata']['tmp_name'], $target);
 			}
 			catch (\Exception $e)
 			{
@@ -300,6 +312,8 @@
 				return;
 			}
 
+			// Store this upload's location in session, for use with video editor
+			$_SESSION['upload'] = $target;
 			echo json_status("success");
 			return;
 		}
@@ -307,6 +321,7 @@
 		echo json_status("bad file upload");
 		return;
 	});
+
 
 	// AJAX METADATA - - - - - - - - - - - - - - - - - - - -
 
