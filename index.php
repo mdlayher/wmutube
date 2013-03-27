@@ -155,6 +155,7 @@
 	};
 	$app->get("/", $index);
 	$app->get("/index", $index);
+	$app->get("/home", $index);
 
 	// Video upload page
 	$app->get("/create", function() use ($app)
