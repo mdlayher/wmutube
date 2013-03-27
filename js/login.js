@@ -39,7 +39,7 @@ $(function () {
 	// Logout functionality
 	$("#logout_button").click(function() {
 		$.post("ajax/logout", function() {
-			location.reload();
+			location = "./";
 		});
 	});
 });
