@@ -20,9 +20,8 @@
 
 	// CONFIGURATION - - - - - - - - - - - - - - - - - - - 
 
-	// Constants which define naming conventions
-	define("PROJECT_TITLE", "Khan Academy Clone");
-	define("TITLE_PREFIX", "WMU - " . PROJECT_TITLE . " - ");
+	// Page naming convention
+	define("TITLE_PREFIX", config::PROJECT_TITLE . " - ");
 
 	// Create an instance of Slim, set configuration
 	use \Slim\Slim as Slim;
@@ -34,7 +33,7 @@
 	));
 
 	// Set application's name
-	$app->setName(PROJECT_TITLE);
+	$app->setName(config::PROJECT_TITLE);
 
 	// Check for which session handler (5.3 vs 5.4) to use
 	if (config::SESSION_HANDLER === "/class_session.php")
@@ -132,7 +131,7 @@
 	{
 		return array(
 			// Title of project
-			"project_title" => PROJECT_TITLE,
+			"project_title" => config::PROJECT_TITLE,
 			// Session user object
 			"session_user" => session_user(),
 		);
