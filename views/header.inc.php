@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<link href="./css/main.css" rel="stylesheet" type="text/css"/>
+	<link rel="icon" type="image/ico" href="./img/favicon.ico" />
+	<link href="./css/main.css" rel="stylesheet" type="text/css" />
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
 	<script src="./js/login.js" type="text/javascript"></script>
 	<!--<script type="text/javascript">| document.write('</' + 'script>')</script>-->
