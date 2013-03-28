@@ -15,7 +15,7 @@
 
 	class session
 	{
-		// CONSTANTS - - - - - - - - - - - - - - - - - -
+		// CONSTANTS - - - - - - - - - - - - - - - - - - - -
 
 		// Key to identify sessions in memcache
 		const SESSION_KEY = "session";

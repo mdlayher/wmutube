@@ -37,6 +37,22 @@
 	// Set application's name
 	$app->setName(config::PROJECT_TITLE);
 
+	// Session setup
+	// Prevent XSS attacks on session
+	ini_set("session.cookie_httponly", 1);
+
+	// Add entropy to session ID generation
+	ini_set("session.entropy_file", "/dev/urandom");
+
+	// Use a strong hash function
+	ini_set("session.hash_function", "whirlpool");
+
+	// Session IDs may only be passed via cookie
+	ini_set("session.use_only_cookies", 1);
+
+	// Use HTTPs if possible
+	ini_set("session.cookie_secure", 1);
+
 	// Use custom memcache+database session handler, using PHP5.3 method
 	$session = new session();
 	session_set_save_handler(
@@ -52,7 +68,7 @@
 	register_shutdown_function('session_write_close');
 
 	// Setup cookie handling
-	session_set_cookie_params(strtotime(config::SESSION_EXPIRE, true), '/', null);
+	session_set_cookie_params(strtotime(config::SESSION_EXPIRE, true), '/', null, true, true);
 	session_start();
 
 	// FUNCTIONS - - - - - - - - - - - - - - - - - - - - - -
