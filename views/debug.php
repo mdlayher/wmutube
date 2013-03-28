@@ -1,37 +1,44 @@
 <?php
 	require_once "header.inc.php";
 ?>
+<script type="text/javascript">
+	$(function()
+	{
+		$("#selftest_link").click(function()
+		{
+			$("#selftest_result").text("loading . . .");
+			$.post("./inc/test/selftest.php", function(data)
+			{
+				$("#selftest_result").text('\n' + data);
+			});
+		});
+
+		$("#logintest_link").click(function()
+		{
+			$("#logintest_result").text("loading . . .");
+			$.post("./inc/test/login_test.php", function(data)
+			{
+				$("#logintest_result").text('\n' + data);
+			});
+		});
+	});
+</script>
 <div id="body_container">
 	<span id="error"></span>
 	<div style="margin-left: 25%">
 		<pre>
-		Session Dump
+			<big>Session Dump</big>
 <?= print_r($_SESSION, true); ?>
-		<br />
-		Cache Version
+			<br />
+			<big>Cache Version</big>
 
 <?= print_r(cache::version(), true); ?>
-		<br />
-		<a href="debug?selftest=1">Selftest</a>
-
-		<?php
-			if (isset($_GET['selftest']) && $_GET['selftest'])
-			{
-				echo "\n";
-				include_once __DIR__ . "/../inc/test/selftest.php";
-			}
-		?>
-
-		<br />
-		<a href="debug?logintest=1">Login Test</a>
-
-		<?php
-			if (isset($_GET['logintest']) && $_GET['logintest'])
-			{
-				echo "\n";
-				include_once __DIR__ . "/../inc/test/login_test.php";
-			}
-		?>
+			<br />
+			<big><a href="#" id="selftest_link">Selftest</a></big>
+			<span id="selftest_result"></span>
+			<br />
+			<big><a href="#" id="logintest_link">Login Test</a></big>
+			<span id="logintest_result"></span>
 		</pre>
 		<br />
 		<br />
