@@ -84,37 +84,20 @@
 	// Generate, cache, and return this session's user object
 	function session_user()
 	{
+		// Ensure user logged in
+		if (!logged_in())
+		{
+			return null;
+		}
+
 		// Ensure session user ID set
 		if (!isset($_SESSION['user']['id']))
 		{
 			return null;
 		}
 
-		// Check cache
-		$user = null;
-		if (config::MEMCACHE)
-		{
-			$user = cache::get(config::SESSION_NAME . '_' . $_SESSION['user']['id']);
-		}
-
-		// If user cached, unserialize and return
-		if ($user)
-		{
-			return unserialize($user);
-		}
-		else
-		{
-			// Else, pull user from database
-			$user = user::get_user($_SESSION['user']['id']);
-
-			// Serialize and store in cache
-			if (config::MEMCACHE)
-			{
-				cache::set(config::SESSION_NAME . '_' . $_SESSION['user']['id'], serialize($user));
-			}
-
-			return $user;
-		}
+		// Return user
+		return user::get_user($_SESSION['user']['id']);
 	}
 
 	// Standard variables to be included in all rendered page
