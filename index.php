@@ -37,6 +37,27 @@
 	// Set application's name
 	$app->setName(config::PROJECT_TITLE);
 
+	// Set session name
+	ini_set("session.name", config::PROJECT_TITLE);
+
+	// Run garbage collection more aggressively
+	ini_set("session.gc_probability", 50);
+
+	// Use /dev/urandom for better session entropy
+	ini_set("session.entropy_file", "/dev/urandom");
+
+	// Use sha1 hash for session IDs
+	ini_set("session.hash_function", 1);
+
+	// Use more bits per character stored in session
+	ini_set("session.hash_bits_per_character", 6);
+
+	// Disallow transient session IDs in URLs
+	ini_set("session.use_trans_sid", 0);
+
+	// Send cookies over HTTP only, to help mitigate XSS
+	ini_set("session.cookie_httponly", 1);
+
 	// Use custom memcache+database session handler, using PHP5.3 method
 	$session = new session();
 	session_set_save_handler(
@@ -256,6 +277,9 @@
 					// On success, store user array, log in user
 					$_SESSION['user'] = $user->to_array();
 					logged_in(true);
+
+					// Regenerate session ID
+					session_regenerate_id();
 				}
 				else
 				{

@@ -5,20 +5,22 @@
 	//
 	// changelog:
 	//
+	// 3/28/13 MDL:
+	//	- encrypt session data using crypto class
 	// 3/23/13 MDL:
 	//	- initial code
 
 	error_reporting(E_ALL);
 
 	require_once __DIR__ . "/class_config.php";
-	config::load(array("cache", "database"));
+	config::load(array("cache", "database", "crypto"));
 
 	class session
 	{
 		// CONSTANTS - - - - - - - - - - - - - - - - - - - -
 
 		// Key to identify sessions in memcache
-		const SESSION_KEY = "session";
+		const SESSION_KEY = "wmutube_session_";
 
 		// INSTANCE VARIABLES - - - - - - - - - - - - - -
 
@@ -89,7 +91,8 @@
 				}
 			}
 
-			return empty($session[0]["data"]) ? null : $session[0]["data"];
+			// Return session data, decrypted
+			return empty($session[0]["data"]) ? null : crypto::decrypt($session[0]["data"]);
 		}
 
 		// Write to session
@@ -101,6 +104,9 @@
 			// If none, INSERT
 			if (!$res)
 			{
+				// Encrypt session data on storage
+				$session_data = crypto::encrypt($session_data);
+
 				$ret = database::query("INSERT INTO session VALUES (null, ?, ?, ?, ?);", $session_id, time(), time(), $session_data);
 				if (config::MEMCACHE)
 				{
@@ -118,6 +124,9 @@
 				{
 					return 1;
 				}
+
+				// Encrypt session data on storage
+				$session_data = crypto::encrypt($session_data);
 				
 				$ret = database::query("UPDATE session SET sessionid=?, updated=?, data=? WHERE sessionid=?;", $session_id, time(), $session_data, $this->sessionid);
 				if (config::MEMCACHE)

@@ -53,6 +53,7 @@
 			"answer" => "/model/class_answer.php",
 			"cache" => "/class_cache.php",
 			"course" => "/model/class_course.php",
+			"crypto" => "/class_crypto.php",
 			"database" => "/class_database.php",
 			"login" => "/login/interface_login.php",
 			"login_db" => "/login/class_login_db.php",
