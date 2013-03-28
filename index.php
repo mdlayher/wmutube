@@ -365,7 +365,7 @@
 	// AJAX METADATA - - - - - - - - - - - - - - - - - - - -
 
 	// Fetch user information by field and value
-	$app->get("/ajax/user/:field(/:value)", function($field, $value = null) use ($app)
+	$app->get("/ajax/user(/(:field(/(:value))))", function($field = "id", $value = null) use ($app)
 	{
 		// Ensure user is logged in
 		if (!logged_in())
@@ -437,7 +437,7 @@
 	});
 
 	// Fetch video information by field and value
-	$app->get("/ajax/video/:field(/:value)", function($field, $value = null) use ($app)
+	$app->get("/ajax/video(/(:field(/(:value))))", function($field = "id", $value = null) use ($app)
 	{
 		// Ensure user is logged in
 		if (!logged_in())
