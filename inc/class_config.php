@@ -49,6 +49,9 @@
 		// Session name
 		const SESSION_NAME = "wmutube_session";
 
+		// View key, to protect against pages being loaded outside of framework
+		const VIEW_KEY = "2Mg!Nz0qR5cLd)7,HBc73+z>UuE0.ggS";
+
 		// Array of source files to quickly load
 		protected static $SOURCE_FILES = array(
 			"answer" => "/model/class_answer.php",

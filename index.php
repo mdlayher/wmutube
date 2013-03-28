@@ -134,6 +134,8 @@
 		return array(
 			// Title of project
 			"project_title" => config::PROJECT_TITLE,
+			// View key, to protect pages from being accessed manually
+			"view_key" => config::VIEW_KEY,
 			// Session user object
 			"session_user" => session_user(),
 		);
@@ -144,6 +146,7 @@
 
 	// VIEWS - - - - - - - - - - - - - - - - - - - - - - - -
 
+	// Permission: All users
 	// Application root
 	$index = function() use ($app)
 	{
@@ -174,6 +177,37 @@
 			$std = std_render();
 			return $app->render("create.php", $std += array(
 				"page_title" => TITLE_PREFIX . "Create",
+			));
+		}
+		else
+		{
+			return $app->forbidden();
+		}
+	});
+
+	// Permission: Instructor+
+
+	// Permission: Administrator+
+
+	// Permission: Developer+
+
+	// PHP debug page
+	$app->get("/debug", function() use ($app)
+	{
+		// Ensure user is logged in
+		if (!logged_in())
+		{
+			return $app->forbidden();
+		}
+
+		// Get session user, permission check (Developer+)
+		$session_user = session_user();
+		if ($session_user->has_permission(role::DEVELOPER))
+		{
+			// Pull standard render variables, render create page
+			$std = std_render();
+			return $app->render("debug.php", $std += array(
+				"page_title" => TITLE_PREFIX . "Debug",
 			));
 		}
 		else

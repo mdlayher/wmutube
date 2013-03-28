@@ -1,3 +1,13 @@
+<?php
+	// Protect against direct access to views
+	require_once __DIR__ . "/../inc/class_config.php";
+	if (!isset($view_key) || $view_key !== config::VIEW_KEY)
+	{
+		header("Location: /wmutube");
+		exit(0);
+	}
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -34,6 +44,7 @@
 					// Developer
 					if ($session_user->has_permission(role::DEVELOPER))
 					{
+						echo " | <a href=\"debug\" title=\"Debug information about the system\">Debug</a>\n";
 						echo " | <a href=\"#\" title=\"Configure aspects of the system\">Configuration</a>\n";
 						echo " | <a href=\"#\" title=\"View metrics regarding the system\">Metrics</a>\n";
 					}
