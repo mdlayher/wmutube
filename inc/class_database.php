@@ -272,6 +272,28 @@
 			return $sanitized;
 		}
 
+		// Perform a raw query
+		public static function raw_query($query, $fetch = self::DB_FETCH)
+		{
+			$singleton = self::singleton();
+
+			// Prepare query
+			$prepared_query = $singleton->db->prepare($query);
+
+			// Execute query using prepared arguments
+			if (!empty($query_args))
+			{
+				$prepared_query->execute($query_args);
+			}
+			else
+			{
+				$prepared_query->execute();
+			}
+
+			// Fetch results
+			return $prepared_query->fetchAll($fetch);
+		}
+
 		// Perform a database query (fetching associative array by default)
 		public static function query($query)
 		{
