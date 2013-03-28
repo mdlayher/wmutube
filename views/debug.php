@@ -7,27 +7,35 @@
 		<pre>
 		Session Dump
 <?= print_r($_SESSION, true); ?>
-		</pre>
-		<pre>
+		<br />
 		Cache Version
 
 <?= print_r(cache::version(), true); ?>
-		</pre>
+		<br />
 		<a href="debug?selftest=1">Selftest</a>
+
 		<?php
 			if (isset($_GET['selftest']) && $_GET['selftest'])
 			{
-				config::load(array("user", "video", "course", "question", "answer", "role"));
-				echo "<pre>\n";
-				answer::selftest();
-				course::selftest();
-				question::selftest();
-				role::selftest();
-				user::selftest();
-				video::selftest();
-				echo "</pre>\n";
+				echo "\n";
+				include_once __DIR__ . "/../inc/test/selftest.php";
 			}
 		?>
+
+		<br />
+		<a href="debug?logintest=1">Login Test</a>
+
+		<?php
+			if (isset($_GET['logintest']) && $_GET['logintest'])
+			{
+				echo "\n";
+				include_once __DIR__ . "/../inc/test/login_test.php";
+			}
+		?>
+		</pre>
+		<br />
+		<br />
+		<br />
 	</div>
 </div>
 <?php
