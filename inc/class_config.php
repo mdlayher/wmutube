@@ -39,10 +39,6 @@
 		// Password hash cost
 		const HASH_COST = 13;
 
-		// Session handler to use (5.4 or 5.3)
-		const SESSION_HANDLER = "/class_session.php";
-		//const SESSION_HANDLER = "/class_session_compat.php";
-
 		// Session expire time
 		const SESSION_EXPIRE = "2 hours";
 
@@ -69,7 +65,7 @@
 			"profiler" => "/etc/class_profiler.php",
 			"question" => "/model/class_question.php",
 			"role" => "/model/class_role.php",
-			"session" => self::SESSION_HANDLER,
+			"session" => "/class_session.php",
 			"user" => "/model/class_user.php",
 			"video" => "/model/class_video.php",
 		);

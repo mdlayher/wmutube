@@ -37,34 +37,23 @@
 	// Set application's name
 	$app->setName(config::PROJECT_TITLE);
 
-	// Check for which session handler (5.3 vs 5.4) to use
-	if (config::SESSION_HANDLER === "/class_session.php")
-	{
-		// PHP 5.4: Use custom memcache+database session handler with SessionHandlerInterface
-		session_set_save_handler(new session(), true);
-		session_set_cookie_params(strtotime(config::SESSION_EXPIRE, true), '/', null);
-		session_start();
-	}
-	else
-	{
-		// PHP 5.3: Use custom memcache+database session handler with old method
-		$session = new session();
-		session_set_save_handler(
-			array($session, 'open'),
-			array($session, 'close'),
-			array($session, 'read'),
-			array($session, 'write'),
-			array($session, 'destroy'),
-			array($session, 'gc')
-		);
+	// Use custom memcache+database session handler, using PHP5.3 method
+	$session = new session();
+	session_set_save_handler(
+		array($session, 'open'),
+		array($session, 'close'),
+		array($session, 'read'),
+		array($session, 'write'),
+		array($session, 'destroy'),
+		array($session, 'gc')
+	);
 
-		// Register shutdown function
-		register_shutdown_function('session_write_close');
+	// Register shutdown function
+	register_shutdown_function('session_write_close');
 
-		// Setup cookie handling
-		session_set_cookie_params(strtotime(config::SESSION_EXPIRE, true), '/', null);
-		session_start();
-	}
+	// Setup cookie handling
+	session_set_cookie_params(strtotime(config::SESSION_EXPIRE, true), '/', null);
+	session_start();
 
 	// FUNCTIONS - - - - - - - - - - - - - - - - - - - - - -
 

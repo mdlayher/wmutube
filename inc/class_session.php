@@ -1,10 +1,11 @@
 <?php
-	// class_session.php - Khan Academy Workflow, 3/21/13
+	// class_session_compat.php - Khan Academy Workflow, 3/21/13
 	// PHP class which handles sessions using cache + database
+	// Note: this class for compatibility with PHP5.3
 	//
 	// changelog:
 	//
-	// 3/21/13 MDL:
+	// 3/23/13 MDL:
 	//	- initial code
 
 	error_reporting(E_ALL);
@@ -12,7 +13,7 @@
 	require_once __DIR__ . "/class_config.php";
 	config::load(array("cache", "database"));
 
-	class session implements SessionHandlerInterface
+	class session
 	{
 		// CONSTANTS - - - - - - - - - - - - - - - - - -
 
@@ -23,20 +24,6 @@
 
 		// Session ID
 		private $sessionid;
-
-		// DESTRUCTOR - - - - - - - - - - - - - - - - - -
-
-		// Constructor
-		function __construct()
-		{
-
-		}
-
-		// Destructor handles cleanup
-		function __destruct()
-		{
-			register_shutdown_function('session_write_close');
-		}
 
 		// PRIVATE METHODS - - - - - - - - - - - - - - - - 
 
