@@ -10,6 +10,9 @@ $(function () {
 		// Database authentication
 		login.method = 0;
 
+		// Display status
+		$("#login_status").text("logging in...");
+
 		// Attempt login
 		$.post("ajax/login", login, function(data) {
 			// Reload on successful login
@@ -20,6 +23,8 @@ $(function () {
 			// Else, display error
 			else
 			{
+				// Print error
+				$("#login_status").text("failure!");
 				$("#error").html("<p class=\"error\">login error: " + data.status + "</p>");
 			}
 		}, "json");

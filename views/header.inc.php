@@ -57,9 +57,12 @@
 				else
 				{
 			?>
-			<input type="text" id="login_username" placeholder="username" />
-			<input type="password" id="login_password" placeholder="password" />
-			<input type="button" id="login_button" value="login" />
+			<div id="login">
+				<input type="text" id="login_username" placeholder="username" />
+				<input type="password" id="login_password" placeholder="password" />
+				<input type="button" id="login_button" value="login" />
+				<span id="login_status"></span>
+			</div>
 			<?php
 				}
 			?>
