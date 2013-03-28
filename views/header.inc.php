@@ -3,7 +3,8 @@
 	require_once __DIR__ . "/../inc/class_config.php";
 	if (!isset($view_key) || $view_key !== config::VIEW_KEY)
 	{
-		header("Location: /wmutube");
+		// Return user to the framework view of this page
+		header(sprintf("Location: /%s/%s", strtolower(config::PROJECT_TITLE), basename($_SERVER["REQUEST_URI"], ".php")));
 		exit(0);
 	}
 ?>
@@ -14,7 +15,9 @@
 	<link rel="icon" type="image/ico" href="./img/favicon.ico" />
 	<link href="./css/main.css" rel="stylesheet" type="text/css" />
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+	<script src="./js/jquery.transit.min.js" type="text/javascript"></script>
 	<script src="./js/login.js" type="text/javascript"></script>
+	<script src="./js/drawer.js" type="text/javascript"></script>
 	<!--<script type="text/javascript">| document.write('</' + 'script>')</script>-->
 	<title><?= $page_title ?></title>
 </head>
@@ -24,7 +27,7 @@
 		<div class="left"><?= $project_title ?></div>
 		<div class="leftish">
 			<a href="./" title="Home">Home</a> 
-			| <a href="#" id="videos_link" title="View learning module videos">Videos</a>
+			| <a href="#" id="videos_link" title="View learning module videos">Videos &darr;</a>
 			<?php
 				// Check for existing session
 				if (!empty($session_user))
@@ -38,8 +41,7 @@
 					// Administrator
 					if ($session_user->has_permission(role::ADMINISTRATOR))
 					{
-						echo " | <a href=\"#\" title=\"Create, modify, and delete users\">Manage Users</a>\n";
-						echo " | <a href=\"#\" title=\"Create, modify, and delete videos\">Manage Videos</a>\n";
+						echo " | <a href=\"#\" id=\"manage_link\" title=\"Create, modify, and delete users\">Manage &darr;</a>\n";
 					}
 					// Developer
 					if ($session_user->has_permission(role::DEVELOPER))
@@ -81,4 +83,5 @@
 	</div>
 </div>
 <div id="browse_drawer">
+	<a href="/video" title="videos">Videos!</a>
 </div>
