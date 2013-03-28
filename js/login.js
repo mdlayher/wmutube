@@ -18,6 +18,7 @@ $(function () {
 			// Reload on successful login
 			if (data.status === "success")
 			{
+				$("#login_status").text("success!");
 				location.reload();
 			}
 			// Else, display error
