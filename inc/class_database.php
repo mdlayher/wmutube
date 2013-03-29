@@ -59,6 +59,9 @@
 		// Instance of PDO database connection
 		protected $db;
 
+		// Cache control
+		protected $cache = true;
+
 		// DESTRUCTOR - - - - - - - - - - - - - - - - - - - - - -
 
 		// Destructor handles any necessary cleanup
@@ -252,6 +255,14 @@
 
 		// PUBLIC METHODS - - - - - - - - - - - - - - - - - - - -
 
+		// Force cache enable/disable
+		public static function do_cache($enable = true)
+		{
+			$singleton = self::singleton();
+			$singleton->cache = $enable;
+			return true;
+		}
+
 		// Sanitize data not using with prepared queries
 		public static function sanitize($data)
 		{
@@ -384,7 +395,7 @@
 						$results = $prepared_query->fetchAll(self::DB_FETCH);
 
 						// Store query result in memcache if applicable
-						if (config::MEMCACHE && $results)
+						if (config::MEMCACHE && $results && $singleton->cache)
 						{
 							// Store query result
 							cache::set(self::memcache_key($query, $query_args), $results);

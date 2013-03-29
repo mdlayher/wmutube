@@ -58,7 +58,7 @@
 		{
 			if (config::MEMCACHE)
 			{
-				cache::invalidate(self::SESSION_KEY . $session_id);
+				cache::invalidate(self::SESSION_KEY . $this->sessionid);
 			}
 			return database::query("DELETE FROM session WHERE updated < ?;", time() - $maxlifetime);
 		}
@@ -117,7 +117,7 @@
 			else
 			{
 				// Pull old data
-				$old_data = $res[0]["data"];
+				$old_data = crypto::decrypt($res[0]["data"]);
 
 				// If no changes, don't update!
 				if ($old_data == $session_data)
