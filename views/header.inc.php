@@ -62,9 +62,9 @@
 					$role = null;
 					if ($session_user->has_permission(role::INSTRUCTOR))
 					{
-						$role = $_SESSION['user']['role'];
+						$role = $session_user->get_role()->get_title();
 					}
-					printf("Hello, %s %s %s! ", $role, $_SESSION['user']['firstname'], $_SESSION['user']['lastname']);
+					printf("Hello, %s %s %s! ", $role, $session_user->get_firstname(), $session_user->get_lastname());
 					echo "<input type=\"button\" id=\"logout_button\" value=\"logout\" />\n";
 				}
 				else

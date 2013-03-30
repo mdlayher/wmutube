@@ -84,15 +84,9 @@
 		return json_encode(array("status" => $status));
 	}
 
-	// Set this user's session to logged in, or return its status
-	function logged_in($set = false)
+	// Return user's login status
+	function logged_in()
 	{
-		// Set if needed
-		if ($set)
-		{
-			$_SESSION['login'] = true;
-		}
-
 		// Check for valid login
 		if (!isset($_SESSION['login']))
 		{
@@ -112,13 +106,13 @@
 		}
 
 		// Ensure session user ID set
-		if (!isset($_SESSION['user']['id']))
+		if (!isset($_SESSION['id']))
 		{
 			return null;
 		}
 
 		// Return user
-		return user::get_user($_SESSION['user']['id']);
+		return user::get_user($_SESSION['id']);
 	}
 
 	// Standard variables to be included in all rendered page
@@ -274,9 +268,9 @@
 				{
 					echo json_status("success");
 
-					// On success, store user array, log in user
-					$_SESSION['user'] = $user->to_array();
-					logged_in(true);
+					// On success, store user ID, log in user
+					$_SESSION['id'] = 1;
+					$_SESSION['login'] = 1;
 
 					// Regenerate session ID
 					session_regenerate_id();
