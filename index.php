@@ -227,6 +227,7 @@
 			if (!$user)
 			{
 				echo json_status("bad username");
+				$app->halt(400);
 				return;
 			}
 
@@ -255,6 +256,7 @@
 						break;
 					default:
 						echo json_status("bad login method");
+						$app->halt(400);
 						return;
 						break;
 				}
@@ -278,12 +280,14 @@
 				else
 				{
 					echo json_status("bad password");
+					$app->halt(400);
 				}
 			}
 			// Catch any exceptions, useful for catching programmer errors
 			catch (\Exception $e)
 			{
 				echo json_status($e->getMessage());
+				$app->halt(400);
 			}
 
 			return;
@@ -291,6 +295,7 @@
 		else
 		{
 			echo json_status("missing required parameters");
+			$app->halt(400);
 		}
 
 		return;
@@ -313,6 +318,7 @@
 		if (!logged_in())
 		{
 			echo json_status("403 Forbidden");
+			$app->halt(403);
 			return;
 		}
 
@@ -321,6 +327,7 @@
 		if (!$session_user->has_permission(role::INSTRUCTOR))
 		{
 			echo json_status("403 Forbidden");
+			$app->halt(403);
 			return;
 		}
 
@@ -341,6 +348,7 @@
 			catch (\Exception $e)
 			{
 				echo json_status($e->getMessage());
+				$app->halt(400);
 				return;
 			}
 
@@ -351,6 +359,7 @@
 		}
 
 		echo json_status("bad file upload");
+		$app->halt(400);
 		return;
 	});
 
@@ -361,6 +370,7 @@
 		if (!logged_in())
 		{
 			echo json_status("403 Forbidden");
+			$app->halt(403);
 			return;
 		}
 
@@ -369,6 +379,7 @@
 		if (!$session_user->has_permission(role::INSTRUCTOR))
 		{
 			echo json_status("403 Forbidden");
+			$app->halt(403);
 			return;
 		}
 
@@ -376,6 +387,7 @@
 		if (empty($_SESSION['upload']) || !file_exists(__DIR__ . $_SESSION['upload']))
 		{
 			echo json_status("upload not found");
+			$app->halt(400);
 			return;
 		}
 
@@ -395,6 +407,7 @@
 		if (!logged_in())
 		{
 			echo json_status("403 Forbidden");
+			$app->halt(403);
 			return;
 		}
 
@@ -404,7 +417,8 @@
 		// Check if trying to query all users (Administrator+), or a single user (User+)
 		if ((empty($value) && !$session_user->has_permission(role::ADMINISTRATOR)) || !$session_user->has_permission(role::USER))
 		{
-			echo json_status("bad permissions");
+			echo json_status("403 Forbidden");
+			$app->halt(403);
 			return;
 		}
 
@@ -456,6 +470,7 @@
 		else
 		{
 			echo json_status("404 Not Found");
+			$app->halt(404);
 			return;
 		}
 	});
@@ -467,6 +482,7 @@
 		if (!logged_in())
 		{
 			echo json_status("403 Forbidden");
+			$app->halt(403);
 			return;
 		}
 
@@ -476,7 +492,8 @@
 		// Check if trying to query all users (Administrator+), or a single user (User+)
 		if ((empty($value) && !$session_user->has_permission(role::ADMINISTRATOR)) || !$session_user->has_permission(role::USER))
 		{
-			echo json_status("bad permissions");
+			echo json_status("403 Forbidden");
+			$app->halt(403);
 			return;
 		}
 
@@ -528,6 +545,7 @@
 		else
 		{
 			echo json_status("404 Not Found");
+			$app->halt(404);
 			return;
 		}
 	});
