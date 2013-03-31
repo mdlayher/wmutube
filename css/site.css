@@ -1,0 +1,128 @@
+@import url("http://fonts.googleapis.com/css?family=Lato:300,400");
+
+body {
+  height: 100%;
+  margin: 0px;
+  padding: 0px;
+  background-color: #eee;
+  background-repeat: repeat; 
+  font-family: 'Lato', sans-serif;
+  color: #333;
+}
+
+ul.nostyle {
+  list-style: none;
+  list-style-type: none; }
+
+.error {
+	font-family: 'Lato', sans-serif;
+	margin: 0% 25% 0% 25%;
+	padding: 5px 0px 5px 0px;
+	text-align: center;
+	background-color: #CD5C5C;
+	font-size: 18pt;
+}
+
+#header_container, #footer_container {
+  padding: 0px;
+  position: fixed;
+  top: 0px;
+  background-color: rgba(0, 0, 0, 0.95);
+  margin: 0px;
+  width: 100%;
+  height: 35px;
+  z-index: 75; 
+}
+
+#footer_container {
+  top: auto;
+  bottom: 0px; 
+}
+
+#footer {
+  font-weight: 300;
+  text-align: center; 
+}
+
+.headerfooter {
+  height: 35px;
+  margin: 0 auto;
+  padding: 0px;
+  line-height: 35px;
+  font-family: 'Lato', sans-serif;
+  color: white; 
+}
+
+.headerfooter a:link, .headerfooter a:visited, .headerfooter a:active, .headerfooter a:hover {
+	text-decoration: none;
+	font-weight: 300;
+	font-size: 12px;
+	color: #fff;
+	line-height: 40px; 
+}
+
+.headerfooter .left {
+	font-weight: 400;
+	float: left; 
+}
+.headerfooter .leftish {
+	margin-left: 10px;
+	float: left; 
+}
+.headerfooter .right {
+	float: right;
+	font-weight: 300; 
+}
+
+#browse_drawer {
+  position: fixed;
+  top: 35px;
+  height: 0px;
+  width: 100%;
+  z-index: 60;
+  opacity: .95;
+  background-color: #000;
+  overflow: hidden; 
+}
+  
+#browse_drawer .shadow {
+    box-shadow: 0px 0px 0px 8px #000; 
+}
+
+.centered_on_page {
+  width: 980px;
+  margin-left: auto;
+  margin-right: auto; 
+}
+
+#body_container {
+  position: relative;
+  margin-top: 70px;
+  padding-bottom: 100px;
+  width: 100%;
+  height: 100%; 
+}
+
+.button {
+  display: inline-block;
+  font-weight: bold;
+  font-size: 13px;
+  padding: 10px;
+  background-color: #bbb; 
+  cursor: pointer; 
+}
+
+.site-section {
+  position: relative;
+  margin-bottom: 40px;
+  border-width: 4px 1px 1px 1px;
+  border-style: solid;
+  border-color: #bbb;
+  max-width: 100%;
+  color: #333;
+  font-family: 'Lato', sans-serif;
+  font-size: 14pt;
+  background-color: #eee;
+  padding: 10px;
+  box-sizing: border-box;
+}

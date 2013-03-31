@@ -1,11 +1,11 @@
 <?php
 	require_once "header.inc.php";
 ?>
+<link rel="stylesheet" type="text/css" href="./css/create.css">
 <link href="http://vjs.zencdn.net/c/video-js.css" rel="stylesheet"/>
 <script src="./js/jquery.transit.min.js" type="text/javascript"></script>
 <script src="./js/create.js" type="text/javascript"></script>
 <script src="http://vjs.zencdn.net/c/video.js"></script>
-<script src="./js/jquery.transit.min.js" type="text/javascript"></script>
 <script src="./js/jquery.scrollTo.js"></script>
 <script type="text/javascript" src="./js/jquery.uploadify-3.1.min.js"></script>
 <div id="body_container">

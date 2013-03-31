@@ -1,0 +1,48 @@
+.site-section header 
+{
+	font-weight: bold;
+	position: absolute;
+	margin-top: -30px;
+	/*margin-left: -10px;*/
+}
+
+.site-section
+{
+	padding: 0;
+}
+
+#body_container 
+{
+	margin-top: 80px;
+}
+
+.videos_list ul
+{
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.videos_list li:first-child
+{
+	/*height: 50px;*/
+	padding: 12px 5px 12px 5px;
+	font-size: .8em;
+	font-weight: bold;
+}
+
+.videos_list li:not(:first-child)
+{
+	font-size: .7em;
+	padding: 5px 5px 5px 15px;
+}
+
+.videos_list li:nth-child(even)
+{
+	background-color: #ddd;
+}
+
+.videos_list li:nth-child(odd)
+{
+
+}
