@@ -147,6 +147,17 @@
 	$app->get("/index", $index);
 	$app->get("/home", $index);
 
+	// Watch page
+	$app->get("/watch", function() use ($app)
+	{
+		$std = std_render();
+		return $app->render("watch.php", $std += array(
+			"page_title" => TITLE_PREFIX . "Videos",
+		));
+	});
+
+
+
 	// Video display page
 	$app->get("/videos", function() use ($app)
 	{

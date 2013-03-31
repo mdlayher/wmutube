@@ -27,7 +27,7 @@
 		<div class="left"><?= $project_title ?></div>
 		<div class="leftish">
 			<a href="./" title="Home">Home</a> 
-			| <a href="#" id="videos_link" title="View learning module videos">Videos &darr;</a>
+			| <a href="videos" id="videos_link" title="View learning module videos">Videos &darr;</a>
 			<?php
 				// Check for existing session
 				if (!empty($session_user))
