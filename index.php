@@ -150,9 +150,25 @@
 	// Video display page
 	$app->get("/videos", function() use ($app)
 	{
+		// Get a list of subjects for videos
+		$subjects = course::fetch_subjects();
+
+		// Build array of information about each department, its courses, its videos
+		$content = array();
+		foreach ($subjects as $s)
+		{
+			// Grab a list of all courses associated with department
+			$department = array();
+			$department["courses"] = course::filter_courses("subject", $s);
+
+			// Add data to array
+			$content[] = $department;
+		}
+
 		$std = std_render();
 		return $app->render("videos.php", $std += array(
 			"page_title" => TITLE_PREFIX . "Videos",
+			"content" => $content,
 		));
 	});
 

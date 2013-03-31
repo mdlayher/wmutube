@@ -42,6 +42,9 @@
 		private $number;
 		private $title;
 
+		// "Helper" objects
+		private $videos;
+
 		// PUBLIC PROPERTIES - - - - - - - - - - - - - - - - - - 
 
 		// id:
@@ -127,6 +130,21 @@
 		{
 			$this->title = $title;
 			return true;
+		}
+
+		// videos:
+		//	- get: videos (lazy-load, only fetch when needed)
+		//	- set: n/a, not handled by this class
+		public function get_videos()
+		{
+			// Check if videos already fetched
+			if (!isset($this->videos))
+			{
+				// Get videos associated with this course
+				$this->videos = video::filter_videos("courseid", $this->id);
+			}
+
+			return $this->videos;
 		}
 		
 		// CONSTRUCTOR/DESTRUCTOR - - - - - - - - - - - - - - - -
@@ -221,6 +239,22 @@
 		public function to_json()
 		{
 			return json_encode($this->to_array());
+		}
+
+		// Return mapped subject to department name
+		public function get_department()
+		{
+			$departments = array(
+				"CS" => "Computer Science",
+				"MATH" => "Mathematics",
+			);
+
+			if (array_key_exists($this->subject, $departments))
+			{
+				return $departments[$this->subject];
+			}
+
+			return null;
 		}
 
 		// STATIC METHODS - - - - - - - - - - - - - - - - - - - -
@@ -388,7 +422,7 @@
 
 			return $list;
 		}
-		
+	
 		// Selftest function for debugging
 		public static function selftest()
 		{
