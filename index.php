@@ -175,6 +175,7 @@
 			$std = std_render();
 			return $app->render("create.php", $std += array(
 				"page_title" => TITLE_PREFIX . "Create",
+				"subject_list" => course::fetch_subjects(),
 			));
 		}
 		else

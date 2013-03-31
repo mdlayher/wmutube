@@ -372,6 +372,22 @@
 				return null;
 			}
 		}
+
+		// Create a list of subjects
+		public static function fetch_subjects()
+		{
+			// Get subject list
+			$subjects = database::query("SELECT DISTINCT subject FROM courses ORDER BY subject;");
+
+			// Iterate subjects
+			$list = array();
+			foreach ($subjects as $s)
+			{
+				$list[] = $s["subject"];
+			}
+
+			return $list;
+		}
 		
 		// Selftest function for debugging
 		public static function selftest()
