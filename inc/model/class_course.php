@@ -23,8 +23,15 @@
 		// Allowed and disallowed fields for query
 		protected static $FIELDS = array(
 			"id" => true,
+			"subject" => true,
 			// todo: composite field query (via array?)
 		);
+
+		// Allowed and disallowed fields for filter
+		protected static $FILTERS = array(
+			"subject" => true,
+		);
+
 
 		// INSTANCE VARIABLES - - - - - - - - - - - - - - - - - -
 
@@ -233,7 +240,7 @@
 		}
 
 		// Populate course object from fields in database
-		public static function get_course($value, $field = "id")
+		public static function get_course($value, $field = "id", $number = null)
 		{
 			// Sanitize course's field input, as that won't be part of the prepared query
 			$field = database::sanitize($field);
@@ -246,7 +253,17 @@
 				return null;
 			}
 			
-			$results = database::query("SELECT * FROM courses WHERE $field=?;", $value);
+			// Check for valid number
+			if (!empty($number))
+			{
+				// Query for specific course by department and number
+				$number = database::sanitize($number);
+				$results = database::query("SELECT * FROM courses WHERE $field=? AND number=?;", $value, $number);
+			}
+			else
+			{
+				$results = database::query("SELECT * FROM courses WHERE $field=?;", $value);
+			}
 
 			if ($results)
 			{
@@ -267,7 +284,7 @@
 		}
 
 		// Create a list of course objects using specified parameters
-		public static function fetch_courses($field = "id")
+		public static function fetch_courses($field = "id", $values = null)
 		{
 			// Sanitize course's field input, as that won't be part of the prepared query
 			$field = database::sanitize($field);
@@ -280,8 +297,24 @@
 				return null;
 			}
 
-			// Query for a list of courses using specified field
-			$results = database::query("SELECT $field FROM courses ORDER BY $field ASC;");
+			// Check for specified values to fetch into list
+			if (isset($values) && is_array($values))
+			{
+				// Sanitize all values to fetch into list
+				$values = array_map(function($v)
+				{
+					return database::sanitize($v);
+				}, $values);
+				$query = implode(", ", $values);
+
+				// Query for a list of courses matching values in array
+				$results = database::query("SELECT $field FROM courses WHERE $field IN ($query) ORDER BY $field ASC;");
+			}
+			else
+			{
+				// Query for a list of courses using specified field
+				$results = database::query("SELECT $field FROM courses ORDER BY $field ASC;");
+			}
 
 			if ($results)
 			{	
@@ -301,6 +334,59 @@
 				// Return null if no results
 				return null;
 			}
+		}
+
+		// Create a list of course objects using specified filter
+		public static function filter_courses($filter, $value)
+		{
+			// Sanitize course filter input
+			$filter = database::sanitize($filter);
+
+			// Check for valid filter field
+			if (!array_key_exists($filter, self::$FILTERS) || !self::$FILTERS[$filter])
+			{
+				// Return null and trigger error on bad filter
+				trigger_error("course::filter_courses() cannot filter using invalid field '" . $filter . "'", E_USER_WARNING);
+				return null;
+			}
+
+			// Query for a filtered list of courses matching the wildcard value for specified field
+			$results = database::query("SELECT id FROM courses WHERE $filter LIKE ? ORDER BY id ASC;", '%' . $value . '%');
+
+			if ($results)
+			{	
+				// Generate list of course IDs
+				$id = array();
+				for ($i = 0; $i < count($results); $i++)
+				{
+					// Parse value from array
+					$id[] = $results[$i]["id"];
+				}
+
+				// Hand off array to fetch_courses() to generate list of course objects
+				return self::fetch_courses("id", $id);
+			}
+			else
+			{
+				// Return null if no results
+				return null;
+			}
+		}
+
+		// Create a list of subjects
+		public static function fetch_subjects()
+		{
+			// Get subject list
+			$subjects = database::query("SELECT DISTINCT subject FROM courses ORDER BY subject;");
+
+			// Iterate subjects
+			$list = array();
+			foreach ($subjects as $s)
+			{
+				$list[] = $s["subject"];
+			}
+
+			return $list;
 		}
 		
 		// Selftest function for debugging

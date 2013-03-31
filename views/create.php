@@ -36,12 +36,20 @@
 					<input id="video_title" class="stack textbox q_answer" type="text"/>
 					<label class="stack listitem_label">Video description</label>
 					<input id="video_title" class="stack textbox q_answer" type="text"/>
-					<label class="stack listitem_label">Department</label>
-					<input id="video_title" class="stack textbox q_answer" type="text"/>
 					<label class="stack listitem_label">Subject</label>
+					<select class="stack textbox q_answer">
+						<?php
+							foreach ($subject_list as $s)
+							{
+								printf("<option value=\"%s\">%s</option>\n", $s, $s);
+							}
+						?>
+					</select>
+					<!--<input id="video_title" class="stack textbox q_answer" type="text"/>-->
+					<label class="stack listitem_label">Course</label>
 					<input id="video_title" class="stack textbox q_answer" type="text"/>
 					<label class="stack listitem_label">Year</label>
-					<input id="video_title" class="stack textbox q_answer" type="text"/>
+					<input id="video_title" class="stack textbox q_answer" type="text" value="<?=date("Y")?>"/>
 				</div>
 			</div>
 		</div>
