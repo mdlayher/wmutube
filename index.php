@@ -183,28 +183,14 @@
 		}
 	});
 
+	// Video display page
 	$app->get("/videos", function() use ($app)
 	{
-		// Ensure user is logged in
-		if (!logged_in())
-		{
-			return $app->forbidden();
-		}
-
-		// Get session user, permission check (Instructor+)
-		$session_user = session_user();
-		if ($session_user->has_permission(role::INSTRUCTOR))
-		{
-			// Pull standard render variables, render videos page
-			$std = std_render();
-			return $app->render("videos.php", $std += array(
-				"page_title" => TITLE_PREFIX . "Videos",
-			));
-		}
-		else
-		{
-			return $app->forbidden();
-		}
+		// Pull standard render variables, render videos page
+		$std = std_render();
+		return $app->render("videos.php", $std += array(
+			"page_title" => TITLE_PREFIX . "Videos",
+		));
 	});
 
 	// Permission: Instructor+
