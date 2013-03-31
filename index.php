@@ -37,27 +37,6 @@
 	// Set application's name
 	$app->setName(config::PROJECT_TITLE);
 
-	// Set session name
-	ini_set("session.name", config::PROJECT_TITLE);
-
-	// Run garbage collection more aggressively
-	ini_set("session.gc_probability", 50);
-
-	// Use /dev/urandom for better session entropy
-	ini_set("session.entropy_file", "/dev/urandom");
-
-	// Use sha1 hash for session IDs
-	ini_set("session.hash_function", 1);
-
-	// Use more bits per character stored in session
-	ini_set("session.hash_bits_per_character", 6);
-
-	// Disallow transient session IDs in URLs
-	ini_set("session.use_trans_sid", 0);
-
-	// Send cookies over HTTP only, to help mitigate XSS
-	ini_set("session.cookie_httponly", 1);
-
 	// Use custom memcache+database session handler, using PHP5.3 method
 	$session = new session();
 	session_set_save_handler(
@@ -84,9 +63,15 @@
 		return json_encode(array("status" => $status));
 	}
 
-	// Return user's login status
-	function logged_in()
+	// Set this user's session to logged in, or return its status
+	function logged_in($set = false)
 	{
+		// Set if needed
+		if ($set)
+		{
+			$_SESSION['login'] = true;
+		}
+
 		// Check for valid login
 		if (!isset($_SESSION['login']))
 		{
@@ -99,20 +84,37 @@
 	// Generate, cache, and return this session's user object
 	function session_user()
 	{
-		// Ensure user logged in
-		if (!logged_in())
-		{
-			return null;
-		}
-
 		// Ensure session user ID set
-		if (!isset($_SESSION['id']))
+		if (!isset($_SESSION['user']['id']))
 		{
 			return null;
 		}
 
-		// Return user
-		return user::get_user($_SESSION['id']);
+		// Check cache
+		$user = null;
+		if (config::MEMCACHE)
+		{
+			$user = cache::get(config::SESSION_NAME . '_' . $_SESSION['user']['id']);
+		}
+
+		// If user cached, unserialize and return
+		if ($user)
+		{
+			return unserialize($user);
+		}
+		else
+		{
+			// Else, pull user from database
+			$user = user::get_user($_SESSION['user']['id']);
+
+			// Serialize and store in cache
+			if (config::MEMCACHE)
+			{
+				cache::set(config::SESSION_NAME . '_' . $_SESSION['user']['id'], serialize($user));
+			}
+
+			return $user;
+		}
 	}
 
 	// Standard variables to be included in all rendered page
@@ -181,6 +183,30 @@
 		}
 	});
 
+	$app->get("/videos", function() use ($app)
+	{
+		// Ensure user is logged in
+		if (!logged_in())
+		{
+			return $app->forbidden();
+		}
+
+		// Get session user, permission check (Instructor+)
+		$session_user = session_user();
+		if ($session_user->has_permission(role::INSTRUCTOR))
+		{
+			// Pull standard render variables, render videos page
+			$std = std_render();
+			return $app->render("videos.php", $std += array(
+				"page_title" => TITLE_PREFIX . "Videos",
+			));
+		}
+		else
+		{
+			return $app->forbidden();
+		}
+	});
+
 	// Permission: Instructor+
 
 	// Permission: Administrator+
@@ -236,7 +262,6 @@
 			if (!$user)
 			{
 				echo json_status("bad username");
-				$app->halt(400);
 				return;
 			}
 
@@ -265,7 +290,6 @@
 						break;
 					default:
 						echo json_status("bad login method");
-						$app->halt(400);
 						return;
 						break;
 				}
@@ -279,24 +303,19 @@
 				{
 					echo json_status("success");
 
-					// On success, store user ID, log in user
-					$_SESSION['id'] = $user->get_id();
-					$_SESSION['login'] = 1;
-
-					// Regenerate session ID
-					session_regenerate_id();
+					// On success, store user array, log in user
+					$_SESSION['user'] = $user->to_array();
+					logged_in(true);
 				}
 				else
 				{
 					echo json_status("bad password");
-					$app->halt(400);
 				}
 			}
 			// Catch any exceptions, useful for catching programmer errors
 			catch (\Exception $e)
 			{
 				echo json_status($e->getMessage());
-				$app->halt(400);
 			}
 
 			return;
@@ -304,7 +323,6 @@
 		else
 		{
 			echo json_status("missing required parameters");
-			$app->halt(400);
 		}
 
 		return;
@@ -327,7 +345,6 @@
 		if (!logged_in())
 		{
 			echo json_status("403 Forbidden");
-			$app->halt(403);
 			return;
 		}
 
@@ -336,7 +353,6 @@
 		if (!$session_user->has_permission(role::INSTRUCTOR))
 		{
 			echo json_status("403 Forbidden");
-			$app->halt(403);
 			return;
 		}
 
@@ -357,7 +373,6 @@
 			catch (\Exception $e)
 			{
 				echo json_status($e->getMessage());
-				$app->halt(400);
 				return;
 			}
 
@@ -368,7 +383,6 @@
 		}
 
 		echo json_status("bad file upload");
-		$app->halt(400);
 		return;
 	});
 
@@ -379,7 +393,6 @@
 		if (!logged_in())
 		{
 			echo json_status("403 Forbidden");
-			$app->halt(403);
 			return;
 		}
 
@@ -388,7 +401,6 @@
 		if (!$session_user->has_permission(role::INSTRUCTOR))
 		{
 			echo json_status("403 Forbidden");
-			$app->halt(403);
 			return;
 		}
 
@@ -396,7 +408,6 @@
 		if (empty($_SESSION['upload']) || !file_exists(__DIR__ . $_SESSION['upload']))
 		{
 			echo json_status("upload not found");
-			$app->halt(400);
 			return;
 		}
 
@@ -491,7 +502,6 @@
 		if (!logged_in())
 		{
 			echo json_status("403 Forbidden");
-			$app->halt(403);
 			return;
 		}
 
@@ -501,8 +511,7 @@
 		// Check if trying to query all users (Administrator+), or a single user (User+)
 		if ((empty($value) && !$session_user->has_permission(role::ADMINISTRATOR)) || !$session_user->has_permission(role::USER))
 		{
-			echo json_status("403 Forbidden");
-			$app->halt(403);
+			echo json_status("bad permissions");
 			return;
 		}
 
@@ -554,7 +563,6 @@
 		else
 		{
 			echo json_status("404 Not Found");
-			$app->halt(404);
 			return;
 		}
 	});
@@ -566,7 +574,6 @@
 		if (!logged_in())
 		{
 			echo json_status("403 Forbidden");
-			$app->halt(403);
 			return;
 		}
 
@@ -576,8 +583,7 @@
 		// Check if trying to query all users (Administrator+), or a single user (User+)
 		if ((empty($value) && !$session_user->has_permission(role::ADMINISTRATOR)) || !$session_user->has_permission(role::USER))
 		{
-			echo json_status("403 Forbidden");
-			$app->halt(403);
+			echo json_status("bad permissions");
 			return;
 		}
 
@@ -629,7 +635,6 @@
 		else
 		{
 			echo json_status("404 Not Found");
-			$app->halt(404);
 			return;
 		}
 	});
