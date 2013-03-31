@@ -271,7 +271,7 @@
 					echo json_status("success");
 
 					// On success, store user ID, log in user
-					$_SESSION['id'] = 1;
+					$_SESSION['id'] = $user->get_id();
 					$_SESSION['login'] = 1;
 
 					// Regenerate session ID
