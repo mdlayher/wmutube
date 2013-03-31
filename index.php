@@ -160,10 +160,19 @@
 		$session_user = session_user();
 		if ($session_user->has_permission(role::INSTRUCTOR))
 		{
+			// Query for list of valid subjects
+			$subjects = database::raw_query("SELECT DISTINCT subject FROM courses ORDER BY subject;");
+			$subject_list = array();
+			foreach ($subjects as $s)
+			{
+				$subject_list[] = $s["subject"];
+			}
+
 			// Pull standard render variables, render create page
 			$std = std_render();
 			return $app->render("create.php", $std += array(
 				"page_title" => TITLE_PREFIX . "Create",
+				"subject_list" => $subject_list,
 			));
 		}
 		else
@@ -399,6 +408,81 @@
 	});
 
 	// AJAX METADATA - - - - - - - - - - - - - - - - - - - -
+
+	// Fetch course information by subject and number
+	$app->get("/ajax/course/:subject(/(:number))", function($subject, $number = null) use ($app)
+	{
+		// Ensure course is logged in
+		if (!logged_in())
+		{
+			echo json_status("403 Forbidden");
+			$app->halt(403);
+			return;
+		}
+
+		// Get session user and check permissions
+		$session_user = session_user();
+
+		// Check if trying to query all courses (Administrator+), or a single course (User+)
+		if ((empty($value) && !$session_user->has_permission(role::ADMINISTRATOR)) || !$session_user->has_permission(role::USER))
+		{
+			echo json_status("403 Forbidden");
+			$app->halt(403);
+			return;
+		}
+
+		// If no value specified, fetch list
+		if (empty($number))
+		{
+			try
+			{
+				$course = course::filter_courses("subject", $subject);
+			}
+			catch (\Exception $e)
+			{
+				$course = null;
+			}
+		}
+		else
+		{
+			// Else, fetch single course
+			// Grab course from database using field and value combination
+			try
+			{
+				$course = course::get_course($subject, "subject", $number);
+			}
+			catch (\Exception $e)
+			{
+				$course = null;
+			}
+		}
+
+		// If found, return
+		if ($course)
+		{
+			// For single course, convert to JSON and send
+			if (!is_array($course))
+			{
+				echo $course->to_json();
+				return;
+			}
+
+			// For multiple courses, turn them into arrays, encode and send
+			$courses = array();
+			foreach ($course as $c)
+			{
+				$courses[] = $c->to_array();
+			}
+			echo json_encode($courses);
+			return;
+		}
+		else
+		{
+			echo json_status("404 Not Found");
+			$app->halt(404);
+			return;
+		}
+	});
 
 	// Fetch user information by field and value
 	$app->get("/ajax/user(/(:field(/(:value))))", function($field = "id", $value = null) use ($app)
