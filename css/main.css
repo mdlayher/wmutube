@@ -1,13 +1,4 @@
 @import url("http://fonts.googleapis.com/css?family=Lato:300,400");
-#previous {
-  position: fixed;
-  z-index: 100;
-  top: 150px; }
-
-#next {
-  position: fixed;
-  z-index: 100;
-  top: 100px; }
 
 body {
   height: 100%;
@@ -229,7 +220,7 @@ ul.nostyle {
   top: 8px;
   float: left; }
 
-.editing_scrubber_basebar, .editing_scrubber_progress, .editing_scrubber_buffer {
+.editing_scrubber_basebar, .editing_scrubber_progress, .editing_scrubber_buffer, .editing_scrubber_qmarker {
   position: absolute;
   top: 15px;
   left: 44px;
@@ -241,11 +232,20 @@ ul.nostyle {
 
 .editing_scrubber_progress {
   background-color: #fff;
-  z-index: 70; }
+  z-index: 62; }
 
 .editing_scrubber_buffer {
   background-color: #444;
-  z-index: 65; }
+  z-index: 61; }
+
+.editing_scrubber_qmarker {
+  background-color: #f00;
+  z-index: 63;
+  width: 5px;}
+
+.editing_scrubber_qmarker_is_selected {
+  background-color: #fff;
+}
 
 #controls {
   background-color: #000;
@@ -274,7 +274,33 @@ ul.nostyle {
 
 .floatLeft {
   float: left;
-  width: 49%; }
+  width: 49%; 
+  margin-top: -20px;}
+
+.leftRightButtonWrapper {
+  overflow: auto;
+  margin: 0;
+  padding: 0;
+  margin-top: -10px;
+}
+
+.leftRightButtonWrapper>span:nth-child(1) {
+  float: left;
+}
+
+.leftRightButtonWrapper>span:nth-child(2) {
+  float: right;
+}
+
+.leftRightButtonWrapper>span {
+  padding: 2px;
+  background-color: #bbb;
+  cursor: pointer;
+}
+
+.leftButton {
+  float:left;
+}
 
 .stepbody {
   display: table;

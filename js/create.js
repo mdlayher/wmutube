@@ -1,12 +1,15 @@
-var wmutube = (function () {
+// var wmutube = (function () {
 
 	//document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')
-	
+	var publicMembers = {};
+
+	var videoPlayer = null;
+
 	// utility functions
 	var util = (function () {
 		
 		var publicMembers = {
-			formattedTimeWithSeconds: function () {
+			formattedTimeWithSeconds: function (seconds) {
 				var stringTime, hrs, mins, secs;
 
 				stringTime = "";
@@ -48,15 +51,29 @@ var wmutube = (function () {
 
 	var editor_step2 = (function () {
 
-		const QSPACING = 50;
+		const QSPACING = 100;
 
 		// private members
 		var qSelectors = [];
 		var currentQ = null;
 		var animating = false;
 
+		function addQuestionTimeMarker (secondMarker) {
+			
+			// create new element
+			var newMarker = document.createElement("div");
+			newMarker.className = "editing_scrubber_qmarker";
+
+			// figure out its offset
+			var offset = (secondMarker / videoPlayer.duration()) * $(".editing_scrubber_basebar").width();
+			$(newMarker).css("margin-left", offset);
+
+			// append
+			$(".editing_scrubber").append(newMarker);
+		}
+
 		// self refers to the element, not this object.
-		function addAnother(self) {
+		function addAnother (self) {
 
 			if (animating === true) {
 				// console.log("Animation in progress, not adding.");
@@ -74,6 +91,7 @@ var wmutube = (function () {
 			$(newQ).css("margin-top", -($(oldQ).outerHeight()));
 			$(newQ).find(".q_body:first").each(function () {$(this).val('');});;
 			$(newQ).find(".q_answer").each(function () {$(this).val('');});
+			$(newQ).find(".q_time").val(util.formattedTimeWithSeconds(videoPlayer.currentTime()));
 
 			// shove the old questions left
 			$('.question').each(function (index) {
@@ -100,6 +118,8 @@ var wmutube = (function () {
 			qSelectors.push("#" + newId);
 			currentQ = qSelectors.indexOf("#" + newId);
 			$('#step2_editor').append(newQ);
+
+			addQuestionTimeMarker(videoPlayer.currentTime());
 		}
 
 		function move (direction) {
@@ -150,17 +170,17 @@ var wmutube = (function () {
 				console.log("called");
 			});
 
-			$("#previous").on('click', function (e) {
+			$('#step2_editor').on('click', ".previous", function (e) {
 				e.preventDefault();
 				move(1);
 			});
 
-			$("#next").on('click', function (e) {
+			$('#step2_editor').on('click', ".next", function (e) {
 				e.preventDefault();
 				move(-1);
 			});
 
-			$('#step2').on("click", ".submitButton", function () {
+			$('#step2_editor').on("click", ".submitButton", function () {
 
 				// the submission object
 				var theObj = {};
@@ -181,10 +201,16 @@ var wmutube = (function () {
 				console.log(theObj);
 			});
 
+
+			// add the first question, which we will clone.
 			var guid = util.generateGuid();
-			$('.section_step2').attr('id', guid);
-			qSelectors.push("#" + guid);
 			currentQ = "#" + guid;
+			qSelectors.push("#" + guid);
+			$('.section_step2').attr('id', guid);
+			$(currentQ).find(".q_time").val(util.formattedTimeWithSeconds(0));
+			// $(qurrentQ).find('.q_time')[0]
+			
+			
 		});
 	})();
 
@@ -193,6 +219,7 @@ var wmutube = (function () {
 	$(function () {
 
 		$('#file_upload').uploadify({
+			'buttonText'		: "Select File",
 			'auto'				: true,
 			'swf'				: './swf/uploadify.swf',
 			'uploader'			: 'ajax/upload',
@@ -200,7 +227,13 @@ var wmutube = (function () {
 			'fileTypeDesc'		: 'mp4 files',
 			'fileTypeExts'		: '*.mp4',
 			'onUploadSuccess'	: function (file, data, response) {
+				var realData = JSON.parse(data);
+				$("#step3").css("display", "block").transition({opacity: 1});
+				$.scrollTo("#step3", 600, { offset: { top: -70 }});
+				videoPlayer.src({src: "." + realData.filename, type: "video/mp4"});
 				console.log("upload was successful");
+				console.log("response: " + realData);
+				console.log("filename: " + realData.filename);
 			},
 			'onUploadError'		: function (file, errorCode, errorMsg, errorString) {
 				console.log("upload failed");
@@ -209,39 +242,58 @@ var wmutube = (function () {
 			}
 		});
 
+		// Make the uploadify button look like an actual button
+		$("#file_upload").addClass("button");
+
 		// on video.js ready
-		_V_(video_player).ready(function () {
-			var thePlayer = this;
+		_V_("video_player").ready(function () {
+			videoPlayer = this;
 			var lastTimeUpdate = 0;
-			thePlayer.addEvent("timeupdate", function () {
-				var update = Math.floor(thePlayer.currentTime());
+			videoPlayer.addEvent("timeupdate", function () {
+				var update = Math.floor(videoPlayer.currentTime());
 				if (update !== lastTimeUpdate) {
 					console.log(update);
 				}
 
 				var progressBar = $(".editing_scrubber_progress");
 				var baseBar = $(".editing_scrubber_basebar");
-				var timePercent = thePlayer.currentTime() / thePlayer.duration();
+				var timePercent = videoPlayer.currentTime() / videoPlayer.duration();
 				//console.log(timePercent * progressBar.width());
 				progressBar.transition({ width: (timePercent * baseBar.width()) }, 100, 'linear');
 			});
 
-			thePlayer.addEvent("progress", function () {
+			videoPlayer.addEvent("progress", function () {
 				var baseBar = $(".editing_scrubber_basebar");
-				$(".editing_scrubber_buffer").transition({ width: (thePlayer.bufferedPercent() * baseBar.width()) }, 100, 'linear');
+				$(".editing_scrubber_buffer").transition({ width: (videoPlayer.bufferedPercent() * baseBar.width()) }, 100, 'linear');
 			})
 
 			$("#" + this.id).width("100%");
 			$("#" + this.id).height("100%");
 			$("#player_playpause").on("click", function () {
-				if (thePlayer.paused()) {
-					thePlayer.play();
+				if (videoPlayer.paused()) {
+					videoPlayer.play();
 					$(this).attr("src", "img/controller-pause.png");
 				} else {
-					thePlayer.pause();
+					videoPlayer.pause();
 					$(this).attr("src", "img/controller-play.png");
 				}
 			});
+		});
+
+		var timeout;
+		$("#videos_link").hover(function () {
+			// on mouse in
+			timeout = setTimeout(function () {
+				$('#browse_drawer').transition({ height: '250px' }, 300, 'snap', function () {
+					// callback
+					$('browse_drawer').addClass('shadow');
+				});
+			}, 300);
+		}, function () {
+			// on mouse out
+			clearTimeout(timeout);
+			$('#browse_drawer').css('height', 0);
+			console.log(':O hello world canceled!');
 		});
 
 		$(document).on("click", ".nextButton", function () {
@@ -261,4 +313,6 @@ var wmutube = (function () {
 			$.scrollTo(selector, 600, { offset: { top: -70 }});
 		});
 	});
-})();
+
+// 	return publicMembers;
+// })();

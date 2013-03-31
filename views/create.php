@@ -2,13 +2,14 @@
 	require_once "header.inc.php";
 ?>
 <link href="http://vjs.zencdn.net/c/video-js.css" rel="stylesheet"/>
-<script src="http://vjs.zencdn.net/c/video.js"></script>
-<script src="./js/jquery.scrollTo.js" type="text/javascript"></script>
-<script src="./js/jquery.uploadify-3.1.min.js" type="text/javascript"></script>
+<script src="./js/jquery.transit.min.js" type="text/javascript"></script>
 <script src="./js/create.js" type="text/javascript"></script>
+<script src="http://vjs.zencdn.net/c/video.js"></script>
+<script src="./js/jquery.transit.min.js" type="text/javascript"></script>
+<script src="./js/jquery.scrollTo.js"></script>
+<script type="text/javascript" src="./js/jquery.uploadify-3.1.min.js"></script>
 <div id="body_container">
 	<span id="error"></span>
-	<a href="#" id="previous">Previous</a><a href="#" id="next">Next</a>
 	<div class="centered_on_page section" id="step1">
 		<a class="button topRight nextButton">Next step</a>
 		<div class="stepbody">
@@ -17,7 +18,7 @@
 					Start by uploading a video.
 				</p>
 				<p class="bottom">
-					Click <input type="file" id="file_upload" href="#">here</input> to browse. mp4 only, please!
+					<input type="file" id="file_upload" class='' href="#"></input> mp4 only, please!
 				</p>
 			</div>
 		</div>
@@ -61,9 +62,14 @@
 			</div>
 			<div class="editing_scrubber_buffer">
 			</div>
+			<div class="editing_scrubber_qmarker"></div>
 		</div>
 		<div id="step2_editor">
 			<div class="section_step2 question">
+				<div class="leftRightButtonWrapper">
+					<span class="previous">&lt</span>
+					<span class="next">&gt</span>
+				</div>
 				<div class="floatLeft">
 					<div class="form_section_container">
 						<label class="stack listitem_label">Question body</label>
