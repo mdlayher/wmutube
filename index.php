@@ -147,17 +147,6 @@
 	$app->get("/index", $index);
 	$app->get("/home", $index);
 
-	// Watch page
-	$app->get("/watch", function() use ($app)
-	{
-		$std = std_render();
-		return $app->render("watch.php", $std += array(
-			"page_title" => TITLE_PREFIX . "Videos",
-		));
-	});
-
-
-
 	// Video display page
 	$app->get("/videos", function() use ($app)
 	{
@@ -180,6 +169,24 @@
 		return $app->render("videos.php", $std += array(
 			"page_title" => TITLE_PREFIX . "Videos",
 			"content" => $content,
+		));
+	});
+
+	// Watch video page
+	$app->get("/watch(/(:id))", function($id = null) use ($app)
+	{
+		// If no ID, redirect to /videos
+		if (empty($id))
+		{
+			$app->response()->redirect("./videos");
+			return;
+		}
+
+		$std = std_render();
+		return $app->render("watch.php", $std += array(
+			"page_title" => TITLE_PREFIX . "Videos",
+			"root_uri" => $app->request()->getRootUri(),
+			"video_id" => $id,
 		));
 	});
 

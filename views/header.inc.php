@@ -7,17 +7,23 @@
 		header(sprintf("Location: /%s/%s", strtolower(config::PROJECT_TITLE), basename($_SERVER["REQUEST_URI"], ".php")));
 		exit(0);
 	}
+
+	// Check for root URI
+	if (!isset($root_uri))
+	{
+		$root_uri = ".";
+	}
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-	<link rel="icon" type="image/ico" href="./img/favicon.ico" />
-	<link href="./css/site.css" rel="stylesheet" type="text/css" />
+	<link rel="icon" type="image/ico" href="<?= $root_uri ?>/img/favicon.ico" />
+	<link href="<?= $root_uri ?>/css/site.css" rel="stylesheet" type="text/css" />
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
-	<script src="./js/jquery.transit.min.js" type="text/javascript"></script>
-	<script src="./js/login.js" type="text/javascript"></script>
-	<script src="./js/drawer.js" type="text/javascript"></script>
+	<script src="<?= $root_uri ?>/js/jquery.transit.min.js" type="text/javascript"></script>
+	<script src="<?= $root_uri ?>/js/login.js" type="text/javascript"></script>
+	<script src="<?= $root_uri ?>/js/drawer.js" type="text/javascript"></script>
 	<!--<script type="text/javascript">| document.write('</' + 'script>')</script>-->
 	<title><?= $page_title ?></title>
 </head>
@@ -26,8 +32,8 @@
 	<div class="centered_on_page headerfooter" id="header">
 		<div class="left"><?= $project_title ?></div>
 		<div class="leftish">
-			<a href="./" title="Home">Home</a> 
-			| <a href="videos" id="videos_link" title="View learning module videos">Videos &darr;</a>
+			<a href="<?= $root_uri ?>/" title="Home">Home</a> 
+			| <a href="<?= $root_uri ?>/videos" id="videos_link" title="View learning module videos">Videos &darr;</a>
 			<?php
 				// Check for existing session
 				if (!empty($session_user))
@@ -36,19 +42,17 @@
 					// Instructor
 					if ($session_user->has_permission(role::INSTRUCTOR))
 					{
-						echo " | <a href=\"create\" title=\"Create a learning module\">Create</a>\n";
+						printf(" | <a href=\"%s/create\" title=\"Create a learning module\">Create</a>\n", $root_uri);
 					}
 					// Administrator
 					if ($session_user->has_permission(role::ADMINISTRATOR))
 					{
-						echo " | <a href=\"#\" id=\"manage_link\" title=\"Create, modify, and delete users\">Manage &darr;</a>\n";
+
 					}
 					// Developer
 					if ($session_user->has_permission(role::DEVELOPER))
 					{
-						echo " | <a href=\"debug\" title=\"Debug information about the system\">Debug</a>\n";
-						echo " | <a href=\"#\" title=\"Configure aspects of the system\">Configuration</a>\n";
-						echo " | <a href=\"#\" title=\"View metrics regarding the system\">Metrics</a>\n";
+						printf(" | <a href=\"%s/debug\" title=\"Debug information about the system\">Debug</a>\n", $root_uri);
 					}
 				}
 			?>

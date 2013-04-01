@@ -7,7 +7,7 @@
 		$("#selftest_link").click(function()
 		{
 			$("#selftest_result").text("loading . . .");
-			$.post("./inc/test/selftest.php", function(data)
+			$.post("<?= $root_uri ?>/inc/test/selftest.php", function(data)
 			{
 				$("#selftest_result").text('\n' + data);
 			});
@@ -16,7 +16,7 @@
 		$("#logintest_link").click(function()
 		{
 			$("#logintest_result").text("loading . . .");
-			$.post("./inc/test/login_test.php", function(data)
+			$.post("<?= $root_uri ?>/inc/test/login_test.php", function(data)
 			{
 				$("#logintest_result").text('\n' + data);
 			});

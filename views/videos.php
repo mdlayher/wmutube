@@ -1,9 +1,9 @@
 <?php
 	require_once "header.inc.php";
 ?>
-<link rel="stylesheet" type="text/css" href="./css/videos.css">
-<script src="./js/jquery.scrollTo.js"></script>
-<script src="./js/videoList.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="<?= $root_uri ?>/css/videos.css">
+<script src="<?= $root_uri ?>/js/jquery.scrollTo.js"></script>
+<script src="<?= $root_uri ?>/js/videoList.js" type="text/javascript"></script>
 <div id="body_container">
 
 	<div class='site-section centered_on_page'>
@@ -37,7 +37,7 @@
 					// Print video links
 					foreach ($video_list as $video)
 					{
-						printf("<li><a href=\"./watch/%d\" title=\"%s\">%s</a></li>\n", $video->get_id(), $video->get_title(), $video->get_title());
+						printf("<li><a href=\"%s/watch/%d\" title=\"%s\">%s</a></li>\n", $root_uri, $video->get_id(), $video->get_title(), $video->get_title());
 					}
 				}
 				echo "</ul>\n";

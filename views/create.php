@@ -1,13 +1,13 @@
 <?php
 	require_once "header.inc.php";
 ?>
-<link rel="stylesheet" type="text/css" href="./css/create.css">
-<link href="http://vjs.zencdn.net/c/video-js.css" rel="stylesheet"/>
-<script src="./js/jquery.transit.min.js" type="text/javascript"></script>
-<script src="./js/create.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="<?= $root_uri ?>/css/create.css">
+<link rel="stylesheet" type="text/css" href="http://vjs.zencdn.net/c/video-js.css"/>
 <script src="http://vjs.zencdn.net/c/video.js"></script>
-<script src="./js/jquery.scrollTo.js"></script>
-<script type="text/javascript" src="./js/jquery.uploadify-3.1.min.js"></script>
+<script src="<?= $root_uri ?>/js/jquery.transit.min.js" type="text/javascript"></script>
+<script src="<?= $root_uri ?>/js/create.js" type="text/javascript"></script>
+<script src="<?= $root_uri ?>/js/jquery.scrollTo.js" type="text/javascript"></script>
+<script src="<?= $root_uri ?>/js/jquery.uploadify-3.1.min.js" type="text/javascript"></script>
 <div id="body_container">
 	<span id="error"></span>
 	<div class="centered_on_page section" id="step1">
@@ -58,12 +58,12 @@
 	<div class="centered_on_page initiallyHidden" id="step2">
 		<div class="player_container">
 			<!--controls-->
-			<video class="video-js vjs-default-skin" data-setup="{}" id="video_player" poster="./img/player_placeholder.png" preload="auto">
+			<video class="video-js vjs-default-skin" data-setup="{}" id="video_player" poster="<?= $root_uri ?>/img/player_placeholder.png" preload="auto">
 				<source src="http://herpderp.me/video/Chrome_ImF.webm" type="video/webm"></source>
 			</video>
 		</div>
 		<div class="editing_scrubber centered_on_page">
-			<img class="player_control_img" id="player_playpause" src="./img/controller-play.png"/>
+			<img class="player_control_img" id="player_playpause" src="<?= $root_uri ?>/img/controller-play.png"/>
 			<div class="editing_scrubber_basebar">
 			</div>
 			<div class="editing_scrubber_progress">
