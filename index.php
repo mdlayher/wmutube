@@ -271,7 +271,13 @@
 			if (!$user)
 			{
 				echo json_status("bad username");
-				$app->halt(400);
+				return;
+			}
+
+			// Ensure user is enabled for login
+			if (!$user->get_enabled())
+			{
+				echo json_status("account disabled");
 				return;
 			}
 
@@ -300,7 +306,6 @@
 						break;
 					default:
 						echo json_status("bad login method");
-						$app->halt(400);
 						return;
 						break;
 				}
@@ -324,14 +329,12 @@
 				else
 				{
 					echo json_status("bad password");
-					$app->halt(400);
 				}
 			}
 			// Catch any exceptions, useful for catching programmer errors
 			catch (\Exception $e)
 			{
 				echo json_status($e->getMessage());
-				$app->halt(400);
 			}
 
 			return;
@@ -339,7 +342,6 @@
 		else
 		{
 			echo json_status("missing required parameters");
-			$app->halt(400);
 		}
 
 		return;
