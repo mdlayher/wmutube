@@ -43,7 +43,7 @@
 			"courseid" => true,
 			"filename" => true,
 			"title" => true,
-			"keywords" => true,
+			"description" => true,
 		);
 
 		// INSTANCE VARIABLES - - - - - - - - - - - - - - - - - -
@@ -54,7 +54,7 @@
 		private $courseid;
 		private $filename;
 		private $title;
-		private $keywords;
+		private $description;
 
 		// Helper objects
 		private $user;
@@ -135,16 +135,16 @@
 			return true;
 		}
 		
-		// keywords:
-		//	- get: keywords
-		//	- set: keywords
-		public function get_keywords()
+		// description:
+		//	- get: description
+		//	- set: description
+		public function get_description()
 		{
-			return $this->keywords;
+			return $this->description;
 		}
-		public function set_keywords($keywords)
+		public function set_description($description)
 		{
-			$this->keywords = $keywords;
+			$this->description = $description;
 			return true;
 		}
 
@@ -221,7 +221,7 @@
 			if (count($result) === 0)
 			{
 				// Store video object by fields in database
-				$success = database::query("INSERT INTO videos VALUES (null, ?, ?, ?, ?, ?);", $this->userid, $this->courseid, $this->filename, $this->title, $this->keywords);
+				$success = database::query("INSERT INTO videos VALUES (null, ?, ?, ?, ?, ?);", $this->userid, $this->courseid, $this->filename, $this->title, $this->description);
 
 				// Check for success
 				if ($success)
@@ -239,7 +239,7 @@
 			else
 			{
 				// Else, update this object
-				$success = database::query("UPDATE videos SET userid=?, courseid=?, filename=?, title=?, keywords=? WHERE id=?;", $this->userid, $this->courseid, $this->filename, $this->title, $this->keywords, $this->id);
+				$success = database::query("UPDATE videos SET userid=?, courseid=?, filename=?, title=?, description=? WHERE id=?;", $this->userid, $this->courseid, $this->filename, $this->title, $this->description, $this->id);
 
 				// Check for failure
 				if (!$success)
@@ -280,7 +280,7 @@
 				"course" => course::get_course($this->courseid)->to_array(),
 				"filename" => $this->filename,
 				"title" => $this->title,
-				"keywords" => $this->keywords,
+				"description" => $this->description,
 			);
 
 			// Fetch questions associated with this video
@@ -303,7 +303,7 @@
 		// STATIC METHODS - - - - - - - - - - - - - - - - - - - -
 
 		// Generate and fill a new video object using pseudo-constructor
-		public static function create_video($userid, $courseid, $filename, $title, $keywords)
+		public static function create_video($userid, $courseid, $filename, $title, $description)
 		{
 			$instance = new self();
 
@@ -311,7 +311,7 @@
 			$instance->set_courseid($courseid);
 			$instance->set_filename($filename);
 			$instance->set_title($title);
-			$instance->set_keywords($keywords);
+			$instance->set_description($description);
 
 			return $instance;
 		}
