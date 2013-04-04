@@ -442,6 +442,27 @@
 		return;
 	});
 
+	// AJAX QUIZ OPERATIONS - - - - - - - - - - - - - - - -
+
+	// Return if specified answer is correct
+	$app->get("/ajax/answer/correct/:id", function($id)
+	{
+		// Get answer by ID
+		$answer = answer::get_answer($id);
+
+		// Check if exists
+		if (!$answer)
+		{
+			echo json_status("bad answer ID");
+			$app->halt(400);
+			return;
+		}
+
+		// Return if answer is correct
+		echo $answer->get_correct();
+		return;
+	});
+
 	// AJAX METADATA - - - - - - - - - - - - - - - - - - - -
 
 	// Fetch course information by subject and number
