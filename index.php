@@ -445,7 +445,7 @@
 	// AJAX QUIZ OPERATIONS - - - - - - - - - - - - - - - -
 
 	// Return if specified answer is correct
-	$app->get("/ajax/answer/correct/:id", function($id)
+	$app->get("/ajax/answer/correct/:id", function($id) use ($app)
 	{
 		// Get answer by ID
 		$answer = answer::get_answer($id);
