@@ -90,6 +90,7 @@ ul.nostyle {
 }
 
 .centered_on_page {
+  max-width: 100%;
   width: 980px;
   margin-left: auto;
   margin-right: auto; 
