@@ -342,12 +342,12 @@
 				$query = implode(", ", $values);
 
 				// Query for a list of courses matching values in array
-				$results = database::query("SELECT $field FROM courses WHERE $field IN ($query) ORDER BY $field ASC;");
+				$results = database::query("SELECT $field FROM courses WHERE $field IN ($query) ORDER BY subject,number ASC;");
 			}
 			else
 			{
 				// Query for a list of courses using specified field
-				$results = database::query("SELECT $field FROM courses ORDER BY $field ASC;");
+				$results = database::query("SELECT $field FROM courses ORDER BY subject,number ASC;");
 			}
 
 			if ($results)

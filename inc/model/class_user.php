@@ -362,51 +362,42 @@
 		// are added accordingly to the input array
 		public function authenticate($input)
 		{
-			// Ensure login is enabled
-			if ($this->enabled)
+			// Check to ensure login set
+			if (!isset($this->login))
 			{
-				// Check to ensure login set
-				if (!isset($this->login))
-				{
-					// If it isn't, default to login_db
-					$this->set_login(new login_db());
-				}
-
-				// Ensure input is an array
-				if (!is_array($input))
-				{
-					// Populate required parameters
-					$input = array(
-						"username" => $this->username,
-						"password" => $input,
-					);
-
-					// If using login_ssh and only password was sent in, try password authentication
-					if ($this->login instanceof login_ssh)
-					{
-						$input["method"] = login_ssh::AUTH_PASSWORD;
-					}
-				}
-
-				// Check for options to pass with login_db
-				if ($this->login instanceof login_db)
-				{
-					// Set options for login_db
-					$input["password_hash"] = $this->password;
-					$input["salt"] = $this->salt;
-				}
-				
-				// Generate login strategy based upon passed object type
-				$login = new login($this->login);
-
-				// Attempt authentication via specified strategy
-				return $login->authenticate($input);
+				// If it isn't, default to login_db
+				$this->set_login(new login_db());
 			}
-			else
+
+			// Ensure input is an array
+			if (!is_array($input))
 			{
-				// Prevent authentication for disabled users
-				return false;
+				// Populate required parameters
+				$input = array(
+					"username" => $this->username,
+					"password" => $input,
+				);
+
+				// If using login_ssh and only password was sent in, try password authentication
+				if ($this->login instanceof login_ssh)
+				{
+					$input["method"] = login_ssh::AUTH_PASSWORD;
+				}
 			}
+
+			// Check for options to pass with login_db
+			if ($this->login instanceof login_db)
+			{
+				// Set options for login_db
+				$input["password_hash"] = $this->password;
+				$input["salt"] = $this->salt;
+			}
+
+			// Generate login strategy based upon passed object type
+			$login = new login($this->login);
+
+			// Attempt authentication via specified strategy
+			return $login->authenticate($input);
 		}
 
 		// Check user's permissions using their specified role

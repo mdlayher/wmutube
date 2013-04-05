@@ -25,6 +25,7 @@
 		private $videoid;
 		private $timestamp;
 		private $text;
+		private $hint;
 
 		// Helper objects
 		private $answers;
@@ -90,6 +91,19 @@
 			return true;
 		}
 
+		// hint:
+		//	- get: hint
+		//	- set: hint
+		public function get_hint()
+		{
+			return $this->hint;
+		}
+		public function set_hint($hint)
+		{
+			$this->hint = $hint;
+			return true;
+		}
+
 		// answers:
 		//	- get: answers (lazy-load, only fetch when needed)
 		//	- set: n/a, not handled by this class
@@ -133,7 +147,7 @@
 			if (count($result) === 0)
 			{
 				// Store question object by fields in database
-				$success = database::query("INSERT INTO questions VALUES (null, ?, ?, ?);", $this->videoid, $this->timestamp, $this->text);
+				$success = database::query("INSERT INTO questions VALUES (null, ?, ?, ?, ?);", $this->videoid, $this->timestamp, $this->text, $this->hint);
 
 				// Check for success
 				if ($success)
@@ -151,7 +165,7 @@
 			else
 			{
 				// Else, update this object
-				$success = database::query("UPDATE questions SET videoid=?, timestamp=?, text=? WHERE id=?;", $this->videoid, $this->timestamp, $this->text, $this->id);
+				$success = database::query("UPDATE questions SET videoid=?, timestamp=?, text=?, hint=? WHERE id=?;", $this->videoid, $this->timestamp, $this->text, $this->hint, $this->id);
 
 				// Check for failure
 				if (!$success)
@@ -188,6 +202,7 @@
 				"id" => $this->id,
 				"timestamp" => $this->timestamp,
 				"text" => $this->text,
+				"hint" => $this->hint,
 			);
 
 			// Fetch answers associated with this question
@@ -210,13 +225,14 @@
 		// STATIC METHODS - - - - - - - - - - - - - - - - - - - -
 
 		// Generate and fill a new question object using pseudo-constructor
-		public static function create_question($videoid, $timestamp, $text)
+		public static function create_question($videoid, $timestamp, $text, $hint)
 		{
 			$instance = new self();
 
 			$instance->set_videoid($videoid);
 			$instance->set_timestamp($timestamp);
 			$instance->set_text($text);
+			$instance->set_hint($hint);
 
 			return $instance;
 		}
@@ -231,7 +247,7 @@
 			{
 				// Generate question object populated with fields from database
 				$question = new self();
-				foreach($results[0] as $key => $val)
+				foreach ($results[0] as $key => $val)
 				{
 					$question->{$key} = $val;
 				}
@@ -275,7 +291,7 @@
 		public static function selftest()
 		{
 			// Test create_question()
-			$question = self::create_question(1, 1, "test");
+			$question = self::create_question(1, 1, "test", "hint");
 			if (!$question)
 			{
 				trigger_error("question::selftest(): question::create_question() failed with status: '" . $question . "'", E_USER_WARNING);

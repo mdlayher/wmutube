@@ -271,7 +271,13 @@
 			if (!$user)
 			{
 				echo json_status("bad username");
-				$app->halt(400);
+				return;
+			}
+
+			// Ensure user is enabled for login
+			if (!$user->get_enabled())
+			{
+				echo json_status("account disabled");
 				return;
 			}
 
@@ -300,7 +306,6 @@
 						break;
 					default:
 						echo json_status("bad login method");
-						$app->halt(400);
 						return;
 						break;
 				}
@@ -324,14 +329,12 @@
 				else
 				{
 					echo json_status("bad password");
-					$app->halt(400);
 				}
 			}
 			// Catch any exceptions, useful for catching programmer errors
 			catch (\Exception $e)
 			{
 				echo json_status($e->getMessage());
-				$app->halt(400);
 			}
 
 			return;
@@ -339,7 +342,6 @@
 		else
 		{
 			echo json_status("missing required parameters");
-			$app->halt(400);
 		}
 
 		return;
@@ -439,6 +441,27 @@
 		$req = $app->request();
 
 		echo json_status("success");
+		return;
+	});
+
+	// AJAX QUIZ OPERATIONS - - - - - - - - - - - - - - - -
+
+	// Return if specified answer is correct
+	$app->get("/ajax/answer/correct/:id", function($id) use ($app)
+	{
+		// Get answer by ID
+		$answer = answer::get_answer($id);
+
+		// Check if exists
+		if (!$answer)
+		{
+			echo json_status("bad answer ID");
+			$app->halt(400);
+			return;
+		}
+
+		// Return if answer is correct
+		echo $answer->get_correct();
 		return;
 	});
 

@@ -25,7 +25,6 @@
 		private $id;
 		private $questionid;
 		private $text;
-		private $hint;
 		private $correct;
 
 		// PUBLIC PROPERTIES - - - - - - - - - - - - - - - - - - 
@@ -70,21 +69,6 @@
 			return true;
 		}
 
-		// hint:
-		//	- get: hint
-		//	- set: hint
-		public function get_hint()
-		{
-			return $this->hint;
-		}
-		public function set_hint($hint)
-		{
-			$this->hint = $hint;
-			return true;
-		}
-
-		// correct:
-		//	- get: correct
 		//	- set: correct (validated by is_bool())
 		public function get_correct()
 		{
@@ -136,7 +120,7 @@
 			if (count($result) === 0)
 			{
 				// Store answer object by fields in database
-				$success = database::query("INSERT INTO answers VALUES (null, ?, ?, ?, ?);", $this->questionid, $this->text, $this->hint, $this->correct);
+				$success = database::query("INSERT INTO answers VALUES (null, ?, ?, ?);", $this->questionid, $this->text, $this->correct);
 
 				// Check for success
 				if ($success)
@@ -154,7 +138,7 @@
 			else
 			{
 				// Else, update this object
-				$success = database::query("UPDATE answers SET questionid=?, text=?, hint=?, correct=? WHERE id=?;", $this->questionid, $this->text, $this->hint, $this->correct, $this->id);
+				$success = database::query("UPDATE answers SET questionid=?, text=?, correct=? WHERE id=?;", $this->questionid, $this->text, $this->correct, $this->id);
 
 				// Check for failure
 				if (!$success)
@@ -189,8 +173,6 @@
 			return array(
 				"id" => $this->id,
 				"text" => $this->text,
-				"hint" => $this->hint,
-				"correct" => $this->correct,
 			);
 		}
 
@@ -203,13 +185,12 @@
 		// STATIC METHODS - - - - - - - - - - - - - - - - - - - -
 
 		// Generate and fill a new answer object using pseudo-constructor
-		public static function create_answer($questionid, $text, $hint, $correct)
+		public static function create_answer($questionid, $text, $correct)
 		{
 			$instance = new self();
 
 			$instance->set_questionid($questionid);
 			$instance->set_text($text);
-			$instance->set_hint($hint);
 			$instance->set_correct($correct);
 
 			return $instance;
@@ -225,7 +206,7 @@
 			{
 				// Generate answer object populated with fields from database
 				$answer = new self();
-				foreach($results[0] as $key => $val)
+				foreach ($results[0] as $key => $val)
 				{
 					$answer->{$key} = $val;
 				}
@@ -269,7 +250,7 @@
 		public static function selftest()
 		{
 			// Test create_answer()
-			$answer = self::create_answer(1, "test text", "test hint", false);
+			$answer = self::create_answer(1, "test text", false);
 			if (!$answer)
 			{
 				trigger_error("answer::selftest(): answer::create_answer() failed with status: '" . $answer . "'", E_USER_WARNING);
