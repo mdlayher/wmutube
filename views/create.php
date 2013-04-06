@@ -33,11 +33,11 @@
 				</div>
 				<div class="video_info_bottom">
 					<label class="stack listitem_label">Video title</label>
-					<input id="video_title" class="stack textbox q_answer" type="text"/>
+					<input id="video_title" class="stack textbox" type="text"/>
 					<label class="stack listitem_label">Video description</label>
-					<input id="video_title" class="stack textbox q_answer" type="text"/>
+					<input id="video_description" class="stack textbox" type="text"/>
 					<label class="stack listitem_label">Subject</label>
-					<select class="stack textbox q_answer">
+					<select id="video_subject" class="stack textbox">
 						<?php
 							foreach ($subject_list as $s)
 							{
@@ -45,11 +45,10 @@
 							}
 						?>
 					</select>
-					<!--<input id="video_title" class="stack textbox q_answer" type="text"/>-->
 					<label class="stack listitem_label">Course</label>
-					<input id="video_title" class="stack textbox q_answer" type="text"/>
+					<input id="video_course" class="stack textbox q_answer" type="text"/>
 					<label class="stack listitem_label">Year</label>
-					<input id="video_title" class="stack textbox q_answer" type="text" value="<?=date("Y")?>"/>
+					<input id="video_year" class="stack textbox q_answer" type="text" value="<?=date("Y")?>"/>
 				</div>
 			</div>
 		</div>

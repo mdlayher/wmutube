@@ -3,6 +3,8 @@
 	//document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')
 	var publicMembers = {};
 
+	//var videoInfo = {"questions":[{"text":"", "time": 15, "answers":[{"text":"","correct":false},{"text":"","correct":false},{"text":"","correct":false},{"text":"","correct":false}]}],"title":"omg","description":"wtf","subject":"CS","course":"why","year":"2013"};
+
 	var videoPlayer = null;
 
 	// utility functions
@@ -51,7 +53,7 @@
 
 	var editor_step2 = (function () {
 
-		const QSPACING = 100;
+		const QSPACING = 25;
 
 		// private members
 		var qSelectors = [];
@@ -73,44 +75,70 @@
 		}
 
 		// self refers to the element, not this object.
-		function addAnother (self) {
+		function addAnother (self, animate, questionInfo) {
 
 			if (animating === true) {
 				// console.log("Animation in progress, not adding.");
 				return;
 			} 
-			animating = true;
 
 			var newId = util.generateGuid();
 			var oldQ = $('.question:last');
 			var newQ = oldQ.clone(false);
+			var $newQ = $(newQ);
 
 			// adjust attributes of new object
-			$(newQ).attr("id", newId);
-			$(newQ).find(":input").each(function () { $(this).prop("checked", false).attr("name", newId) });
-			$(newQ).css("margin-top", -($(oldQ).outerHeight()));
-			$(newQ).find(".q_body:first").each(function () {$(this).val('');});;
-			$(newQ).find(".q_answer").each(function () {$(this).val('');});
-			$(newQ).find(".q_time").val(util.formattedTimeWithSeconds(videoPlayer.currentTime()));
+			$newQ.attr("id", newId);
+			$newQ.css("margin-top", -($(oldQ).outerHeight()));
+
+			if (typeof(questionInfo) === "undefined")
+			{
+				$newQ.find(":input").each(function () { $(this).prop("checked", false).attr("name", newId) });
+				$newQ.find(".q_body:first").each(function () {$(this).val('');});
+				$newQ.find(".q_answer").each(function () {$(this).val('');});
+				$newQ.find(".q_time").val(util.formattedTimeWithSeconds(videoPlayer.currentTime()));
+			}
+			else
+			{
+					$newQ.find(":input").each(function (index) {
+						if (typeof(questionInfo.answers[index]) !== "undefined") {
+							var isCorrect = questionInfo.answers[index].correct == true ? true : false;
+							$(this).prop("checked", isCorrect).attr("name", newId) 
+						}
+					});
+
+					$newQ.find(".q_body:first").each(function (index) {
+						if (typeof(questionInfo.answers[index]) !== "undefined") {
+							var qText = typeof(questionInfo.text) === "undefined" ? "" : questionInfo.text;
+							$(this).val(qText);
+						}
+					});
+
+					$newQ.find(".q_answer").each(function (index) {
+						if (typeof(questionInfo.answers[index]) !== "undefined") {
+							var t = questionInfo.answers[index].text;
+							var aText = typeof(t) === undefined ? "" : t;
+							$(this).val(t);
+						}
+					});
+
+				var presentTime = typeof(questionInfo.time) === undefined ? 0 : questionInfo.time;
+				$newQ.find(".q_time").val(util.formattedTimeWithSeconds(presentTime));
+			}
 
 			// shove the old questions left
 			$('.question').each(function (index) {
-				$(this).transition({x: -($(this).outerWidth() + QSPACING), "opacity": .3}, 100, function () {
-					var l = $(this).css("left") === 'auto' ? 0 : parseInt($(this).css("left"));
-					console.log("l: " + l);
 
-					// there must be a better way to do this...
-					$(this).removeAttr('style');
-					$(this).css('opacity', .3)
-					$(this).css("left", l - ($(this).outerWidth() + QSPACING));
-
-					if (index > 0) {
-						$(this).css('margin-top', -($(this).outerHeight()));
-					}
-					animating = false;
-					console.log(l - ($(this).width() + QSPACING));
-					console.log('callback!');
-				});
+				var l = $(this).css("left") === 'auto' ? 0 : parseInt($(this).css("left"));
+				if (animate === true)
+				{
+					animating = true;
+					$(this).transition({x: -($(this).outerWidth() + QSPACING), "opacity": .3}, 100, function () {
+						finalizeAdd(this, l, index);
+						animating = false;
+					});
+				}
+				else finalizeAdd(this, l, index);
 				console.log(this.id + ": " + $(this).css("left"));
 			});
 
@@ -119,7 +147,22 @@
 			currentQ = qSelectors.indexOf("#" + newId);
 			$('#step2_editor').append(newQ);
 
-			addQuestionTimeMarker(videoPlayer.currentTime());
+			if (typeof(questionInfo) !== "undefined") {
+				addQuestionTimeMarker(questionInfo.time)
+			} else {
+				addQuestionTimeMarker(videoPlayer.currentTime());
+			}
+		}
+
+		function finalizeAdd (that, left, index) {
+			// there must be a better way to do this...
+			$(that).removeAttr('style');
+			$(that).css('opacity', .3)
+			$(that).css("left", left - ($(that).outerWidth() + QSPACING));
+
+			if (index > 0) {
+				$(that).css('margin-top', -($(that).outerHeight()));
+			}
 		}
 
 		function move (direction) {
@@ -166,7 +209,7 @@
 		// on document ready
 		$(function () {
 			$('#step2_editor').on('click', '.addAnother', function () {
-				addAnother(this);
+				addAnother(this, false);
 				console.log("called");
 			});
 
@@ -186,6 +229,14 @@
 				var theObj = {};
 				theObj.questions = [];
 
+				// get some basic information about the video
+				theObj.title = $("#video_title").val();
+				theObj.description = $("#video_description").val();
+				theObj.subject = $("#video_subject").val();
+				theObj.course = $("#video_course").val();
+				theObj.year = $("#video_year").val();
+
+				// get the questions and answers
 				var qi = 0;
 				// iterate over the questions
 				$(".question").each(function () {
@@ -198,9 +249,8 @@
 					qi++;
 				});
 
-				console.log(theObj);
+				console.log(JSON.stringify(theObj));
 			});
-
 
 			// add the first question, which we will clone.
 			var guid = util.generateGuid();
@@ -208,15 +258,34 @@
 			qSelectors.push("#" + guid);
 			$('.section_step2').attr('id', guid);
 			$(currentQ).find(".q_time").val(util.formattedTimeWithSeconds(0));
-			// $(qurrentQ).find('.q_time')[0]
 			
+			// restore the video state if there is videoInfo object in the global namespace
+			if (typeof(videoInfo !== "undefined"))
+			{
+				$("#video_title").val(videoInfo.title);
+				$("#video_description").val(videoInfo.description);
+				$("#video_subject").val(videoInfo.subject);
+				$("#video_course").val(videoInfo.course);
+				$("#video_year").val(videoInfo.year);
+
+				$.each(videoInfo.questions, function (index, item) {
+					addAnother(null, false, item);
+				});
+			}
+
 			
 		});
-	})();
+	});
 
 
 	// on document ready
 	$(function () {
+
+		// if there is video info present, don't show the uploader
+		if (typeof(videoInfo) !== "undefined") {
+			$("#step1").hide();
+			$("#step3").show().css("opacity", 1);
+		}
 
 		$('#file_upload').uploadify({
 			'buttonText'		: "Select File",
@@ -247,6 +316,10 @@
 
 		// on video.js ready
 		_V_("video_player").ready(function () {
+
+			// don't set up the editor until video.js is ready
+			editor_step2 = editor_step2();
+
 			videoPlayer = this;
 			var lastTimeUpdate = 0;
 			videoPlayer.addEvent("timeupdate", function () {
@@ -258,7 +331,6 @@
 				var progressBar = $(".editing_scrubber_progress");
 				var baseBar = $(".editing_scrubber_basebar");
 				var timePercent = videoPlayer.currentTime() / videoPlayer.duration();
-				//console.log(timePercent * progressBar.width());
 				progressBar.transition({ width: (timePercent * baseBar.width()) }, 100, 'linear');
 			});
 
