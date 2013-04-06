@@ -33,7 +33,7 @@
 		<div class="left"><?= $project_title ?></div>
 		<div class="leftish">
 			<a href="<?= $root_uri ?>/" title="Home">Home</a> 
-			| <a href="<?= $root_uri ?>/videos" id="videos_link" title="View learning module videos">Videos &darr;</a>
+			| <a href="<?= $root_uri ?>/videos" id="videos_link" title="View learning module videos">Videos</a>
 			<?php
 				// Check for existing session
 				if (!empty($session_user))

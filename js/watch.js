@@ -105,6 +105,7 @@ $(function () {
 				// check if it's time to show another quiz.
 				if (quizzing.PresentQuizIfNecessary(currentTime) === true) {
 					console.log("Aaaaaaaand we should pause");
+					videoPlayer.cancelFullScreen();
 					videoPlayer.pause();
 				}
 				console.log(currentTime);

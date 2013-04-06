@@ -16,6 +16,6 @@ $(function()
 		$('#browse_drawer').css('height', 0);
 	};
 
-	$("#videos_link").hover(drawer_open, drawer_close);
-	$("#manage_link").hover(drawer_open, drawer_close);
+	// $("#videos_link").hover(drawer_open, drawer_close);
+	// $("#manage_link").hover(drawer_open, drawer_close);
 });
