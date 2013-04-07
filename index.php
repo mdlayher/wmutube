@@ -186,7 +186,7 @@
 		$video = video::get_video($id);
 		if (!$video)
 		{
-			$app->response()->redirect("./videos");
+			$app->response()->redirect("../videos");
 			return;
 		}
 

@@ -1,5 +1,7 @@
 // AJAX login/logout functionality
 $(function () {
+	const ROOT = "/wmutube";
+
 	// Login functionality
 	$("#login_button").click(function() {
 		// Capture data from form
@@ -14,7 +16,7 @@ $(function () {
 		$("#login_status").text("logging in...");
 
 		// Attempt login
-		$.post("ajax/login", login, function(data) {
+		$.post(ROOT + "/ajax/login", login, function(data) {
 			// Reload on successful login
 			if (data.status === "success")
 			{
@@ -43,8 +45,8 @@ $(function () {
 
 	// Logout functionality
 	$("#logout_button").click(function() {
-		$.post("ajax/logout", function() {
-			location = "./";
+		$.post(ROOT + "/ajax/logout", function() {
+			location = ROOT;
 		});
 	});
 });
