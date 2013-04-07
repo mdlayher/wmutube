@@ -279,6 +279,12 @@
 
 				$.post("./ajax/create", "videoInfo=" + JSON.stringify(theObj), function (data, textStatus, jqXHR) {
 					console.log("Posted videoInfo object...\ndata: " + data + "\ntextStatus: " + textStatus);
+					$(".submitButton").css("background-color", "green").html("Success!");
+					setTimeout(function () {
+						var d = JSON.parse(data);
+						console.log(d.id);
+						window.location = "./watch/" + d.id;
+					}, 1000);
 				})
 				console.log(JSON.stringify(theObj));
 			});
