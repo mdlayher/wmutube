@@ -51,7 +51,7 @@ $(function () {
 			PresentQuizIfNecessary: function (currentTime) {
 				var presentIndex = undefined;
 				$.each(quizQuestions, function (index, item) {
-					if (item.timestamp <= currentTime && typeof(item.presented) === "undefined") {
+					if (parseInt(item.timestamp) <= currentTime && typeof(item.presented) === "undefined") {
 						console.log("Q" + index + ": We should now present this item. ");
 						item.presented = true;
 						presentIndex = index;
