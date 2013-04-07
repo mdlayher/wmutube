@@ -3,7 +3,7 @@
 	//document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')
 	var publicMembers = {};
 
-	//var videoInfo = {"questions":[{"text":"", "time": 15, "answers":[{"text":"","correct":false},{"text":"","correct":false},{"text":"","correct":false},{"text":"","correct":false}]}],"title":"omg","description":"wtf","subject":"CS","course":"why","year":"2013"};
+	// var videoInfo = {"questions":[{"text":"", "time": 15, "answers":[{"text":"","correct":false},{"text":"","correct":false},{"text":"","correct":false},{"text":"","correct":false}]}],"title":"omg","description":"wtf","subject":"CS","course":"why","year":"2013"};
 
 	var videoPlayer = null;
 
@@ -249,6 +249,9 @@
 					qi++;
 				});
 
+				$.post("./ajax/create", "videoInfo=" + JSON.stringify(theObj), function (data, textStatus, jqXHR) {
+					console.log("Posted videoInfo object...\ndata: " + data + "\ntextStatus: " + textStatus);
+				})
 				console.log(JSON.stringify(theObj));
 			});
 
