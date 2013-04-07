@@ -47,9 +47,9 @@
 
 <div id="body_container">
 	<div class="player_container centered_on_page">
-		<h1><header>CS 2240 - Programming in C</header></h1>
+		<h1><header><?= $video->get_title() ?></header></h1>
 		<video class="video-js vjs-default-skin" data-setup="{}" id="video_player" autoplay poster="<?= $root_uri ?>/img/player_placeholder.png" preload="auto" controls>
-			<source src="http://herpderp.me/video/Chrome_ImF.webm" type="video/webm"></source>
+			<source src="<?= $root_uri . "/uploads/" . $video->get_filename() ?>" type="video/mp4"></source>
 		</video>
 	</div>
 </div>

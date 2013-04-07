@@ -182,11 +182,19 @@
 			return;
 		}
 
+		// Pull video object, ensure it exists
+		$video = video::get_video($id);
+		if (!$video)
+		{
+			$app->response()->redirect("./videos");
+			return;
+		}
+
 		$std = std_render();
 		return $app->render("watch.php", $std += array(
-			"page_title" => TITLE_PREFIX . "Videos",
+			"page_title" => TITLE_PREFIX . "Watch - " . $video->get_title(),
 			"root_uri" => $app->request()->getRootUri(),
-			"video_id" => $id,
+			"video" => $video,
 		));
 	});
 
@@ -433,14 +441,65 @@
 		if (empty($_SESSION['upload']) || !file_exists(__DIR__ . $_SESSION['upload']))
 		{
 			echo json_status("upload not found");
-			$app->halt(400);
 			return;
 		}
 
 		// Check the sanity of all video upload variables from post ...
-		$req = $app->request();
+		$video_obj = json_decode($app->request()->post("videoInfo"));
 
-		echo json_status("success");
+		// Generate new video filename hash
+		$name = uniqid() . ".mp4";
+
+		// Generate video object from parameters
+		$video = video::create_video((int)$session_user->get_id(), (int)$video_obj->course, $name, $video_obj->title, $video_obj->description);
+
+		// Store video object
+		if (!$video->set_video())
+		{
+			echo json_status("failed to save video");
+			return;
+		}
+
+		// Store questions
+		foreach ($video_obj->questions as $q)
+		{
+			// Convert to timestamp format
+			list($m, $s) = explode(':', $q->timestamp);
+			$time = mktime(0, $m, $s) - mktime(0, 0, 0);
+
+			// Generate question object
+			$question = question::create_question((int)$video->get_id(), $time, $q->text, $q->hint);
+
+			// Store question object
+			if (!$question->set_question())
+			{
+				echo json_status("failed to save questions");
+				return;
+			}
+
+			// Store answers
+			foreach ($q->answers as $a)
+			{
+				// Generate answer object
+				$answer = answer::create_answer((int)$question->get_id(), $a->text, $a->correct);
+
+				// Store answer object
+				if (!$answer->set_answer())
+				{
+					echo json_status("failed to save answers");
+					return;
+				}
+			}
+		}
+
+		// Move file into its permanent home
+		if (!rename(__DIR__ . $_SESSION['upload'], __DIR__ . "/uploads/" . $name))
+		{
+			echo json_status("failed to move file");
+			return;
+		}
+
+		echo json_encode(array("status" => "success", "id" => $video->get_id()));
 		return;
 	});
 
