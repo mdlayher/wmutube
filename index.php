@@ -520,7 +520,27 @@
 		}
 
 		// Return if answer is correct
-		echo $answer->get_correct();
+		$correct = $answer->get_correct() === 1 ? true : false;
+		echo json_encode(array("correct" => $correct));
+		return;
+	});
+
+	// Return the hint for specified question
+	$app->get("/ajax/question/hint/:id", function($id) use ($app)
+	{
+		// Get question by ID
+		$question = question::get_question($id);
+
+		// Check if exists
+		if (!$question)
+		{
+			echo json_status("bad question ID");
+			$app->halt(400);
+			return;
+		}
+
+		// Return question hint
+		echo json_encode(array("hint" => $question->get_hint()));
 		return;
 	});
 

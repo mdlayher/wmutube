@@ -202,7 +202,6 @@
 				"id" => $this->id,
 				"timestamp" => $this->timestamp,
 				"text" => $this->text,
-				"hint" => $this->hint,
 			);
 
 			// Fetch answers associated with this question
