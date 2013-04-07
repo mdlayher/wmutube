@@ -24,8 +24,13 @@
 		// Allowed LDAP hosts with necessary data
 		protected static $HOSTS = array(
 			"ldap.wmich.edu" => array(
+				// For basic authentication
 				"port" => 389,
 				"dn" => "wmuuid=%s,ou=People,o=wmich.edu,dc=wmich,dc=edu",
+				// For synchronization of users from LDAP to our database
+				"sync" => true,
+				"filter" => "(&(uid=%s)(objectclass=wmichEduPerson))",
+				"attributes" => array("givenname", "sn", "mail"),
 			),
 		);
 
@@ -84,6 +89,55 @@
 
 				// Attempt to bind to LDAP server using credentials
 				$success = @ldap_bind($ldap, $ldapdn, $password);
+
+				// See if user already exists in database
+				$user = user::get_user($username, "username");
+
+				// Check for successful bind, but user not in database
+				if ($success && !$user)
+				{
+					if (!self::$HOSTS[$host]["sync"])
+					{
+						trigger_error("login_ldap->authenticate() user sync disallowed for host '" . $host . "'", E_USER_WARNING);
+						return false;
+					}
+
+					// Set filter to gather information about this user
+					$filter = sprintf(self::$HOSTS[$host]["filter"], $username);
+
+					// Query LDAP for information about this user
+					$search = ldap_read($ldap, $ldapdn, $filter, self::$HOSTS[$host]["attributes"]);
+					$query_result = ldap_get_entries($ldap, $search);
+
+					// Check for query result
+					if (!isset($query_result[0]))
+					{
+						trigger_error("login_ldap->authenticate() failed to query LDAP for user '" . $username . "'", E_USER_WARNING);
+						return false;
+					}
+
+					// Iterate query results to grab firstname, lastname, email address
+					$user = array();
+					foreach (self::$HOSTS[$host]["attributes"] as $a)
+					{
+						if (isset($query_result[0][$a][0]))
+						{
+							$user[] = $query_result[0][$a][0];
+						}
+						else
+						{
+							trigger_error("login_ldap->authenticate() failed to parse LDAP query results for user '" . $username . "'", E_USER_WARNING);
+							return false;
+						}
+					}
+
+					// Split user into fields
+					list($firstname, $lastname, $email) = $user;
+
+					// Generate a new user account from this LDAP result
+					$user = user::create_user($username, $email, role::USER, 1, $password, $firstname, $lastname);
+					$user->set_user();
+				}
 
 				// Disconnect from LDAP server, return authentication status
 				ldap_unbind($ldap);

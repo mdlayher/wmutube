@@ -278,8 +278,27 @@
 			// Check for valid username
 			if (!$user)
 			{
-				echo json_status("bad username");
-				return;
+				// Call LDAP sync to try to pull credentials into our database, and authenticate
+				$login = new login(new login_ldap());
+				if ($login->authenticate(array("username" => $username, "password" => $password)))
+				{
+					echo json_status("success");
+
+					// On success, store user ID, log in user
+					$user = user::get_user($username, "username");
+					$_SESSION['id'] = $user->get_id();
+					$_SESSION['login'] = 1;
+
+					// Regenerate session ID
+					session_regenerate_id();
+
+					return;
+				}
+				else
+				{
+					echo json_status("bad username or password");
+					return;
+				}
 			}
 
 			// Ensure user is enabled for login
@@ -520,7 +539,27 @@
 		}
 
 		// Return if answer is correct
-		echo $answer->get_correct();
+		$correct = $answer->get_correct() === 1 ? true : false;
+		echo json_encode(array("correct" => $correct));
+		return;
+	});
+
+	// Return the hint for specified question
+	$app->get("/ajax/question/hint/:id", function($id) use ($app)
+	{
+		// Get question by ID
+		$question = question::get_question($id);
+
+		// Check if exists
+		if (!$question)
+		{
+			echo json_status("bad question ID");
+			$app->halt(400);
+			return;
+		}
+
+		// Return question hint
+		echo json_encode(array("hint" => $question->get_hint()));
 		return;
 	});
 
