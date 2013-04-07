@@ -7,8 +7,8 @@
 
 <link rel="stylesheet" type="text/css" href="<?= $root_uri ?>/css/watch.css">
 <script src="<?= $root_uri ?>/js/jquery.scrollTo.js"></script>
+<script type="text/javascript">var questions = <?php $q = $video->to_array(); echo json_encode($q["questions"]); ?>;</script>
 <script src="<?= $root_uri ?>/js/watch.js" type="text/javascript"></script>
-<script type="text/javascript">var questions = <?php $q = $video->to_array(); echo json_encode($q["questions"]); ?></script>
 
 <div class="body_fade"></div>
 <div class="quiz_container">

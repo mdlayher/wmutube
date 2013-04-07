@@ -12,27 +12,30 @@ $(function () {
 
 	var quizzing = (function () {
 
-		var quizQuestions = [
-			{
-				question: "What is the diameter of the sun?",
-				presentationTime: 7,
-				answers: [
-					{ text: "5km", correct: false, answerId: 1 },
-					{ text: "20km", correct: false, answerId: 2 },
-					{ text: "500km", correct: false, answerId: 3 },
-					{ text: "Larger than all of these combined", correct: true, answerId: 4 }
-				]
-			},
-			{
-				question: "Another question!",
-				presentationTime: 15,
-				answers: [
-					{ text: "yes", correct: false, answerId: 5 },
-					{ text: "no", correct: false, answerId: 6 },
-					{ text: "pz", correct: false, answerId: 7 }
-				]
-			},
-		];
+		// var quizQuestions = [
+		// 	{
+		// 		question: "What is the diameter of the sun?",
+		// 		presentationTime: 7,
+		// 		answers: [
+		// 			{ text: "5km", correct: false, answerId: 1 },
+		// 			{ text: "20km", correct: false, answerId: 2 },
+		// 			{ text: "500km", correct: false, answerId: 3 },
+		// 			{ text: "Larger than all of these combined", correct: true, answerId: 4 }
+		// 		]
+		// 	},
+		// 	{
+		// 		question: "Another question!",
+		// 		presentationTime: 15,
+		// 		answers: [
+		// 			{ text: "yes", correct: false, answerId: 5 },
+		// 			{ text: "no", correct: false, answerId: 6 },
+		// 			{ text: "pz", correct: false, answerId: 7 }
+		// 		]
+		// 	},
+		// ];
+
+		var quizQuestions = questions;
+		var currentQuestionId = undefined;
 
 		var newAnswerDiv = function (answerText, answerId) {
 			// create the div that contains the answer
@@ -48,7 +51,7 @@ $(function () {
 			PresentQuizIfNecessary: function (currentTime) {
 				var presentIndex = undefined;
 				$.each(quizQuestions, function (index, item) {
-					if (item.presentationTime <= currentTime && typeof(item.presented) === "undefined") {
+					if (item.timestamp <= currentTime && typeof(item.presented) === "undefined") {
 						console.log("Q" + index + ": We should now present this item. ");
 						item.presented = true;
 						presentIndex = index;
@@ -62,10 +65,11 @@ $(function () {
 					$(".answer").remove();
 
 					var question = quizQuestions[presentIndex];
+					currentQuestionId = question.id;
 
-					$(".question>div").html("<p>" + question.question + "</p>");
+					$(".question>div").html("<p>" + question.text + "</p>");
 					$.each(question.answers, function (index, item) {
-						$(".answers>div").append(newAnswerDiv(item.text, item.answerId));
+						$(".answers>div").append(newAnswerDiv(item.text, item.id));
 					});
 
 					$('.body_fade').css("display", "block");
@@ -85,6 +89,8 @@ $(function () {
 				$('.quiz_container').css("display", "none");
 				player.play();
 			});
+
+			console.log("questions: " + questions);
 		});
 		return publicMembers;
 
