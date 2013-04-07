@@ -46,7 +46,7 @@
 						?>
 					</select>
 					<label class="stack listitem_label">Course</label>
-					<input id="video_course" class="stack textbox q_answer" type="text"/>
+					<select id="video_course" class="stack textbox q_answer" type="text"></select>
 					<label class="stack listitem_label">Year</label>
 					<input id="video_year" class="stack textbox q_answer" type="text" value="<?=date("Y")?>"/>
 				</div>

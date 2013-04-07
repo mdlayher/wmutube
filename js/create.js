@@ -51,6 +51,32 @@
 		return publicMembers;
 	})();
 
+	var step3 = (function () {
+
+		var updateCourseListing = function () {
+			$("#video_course>option").remove();
+			var subject = $("#video_subject").val();
+			$.get("./ajax/course/" + subject, function (data) {
+				var courses = JSON.parse(data);
+				$courseSelect = $("#video_course");
+				if (courses !== undefined) {
+					$.each(courses, function (index, item) {
+						var course = "<option value='" + item.id + "'>" + item.subject + item.number + " - " + item.title + "</option>\n";
+						$courseSelect.append(course);
+					});
+				}
+			})
+		};
+
+		// on document ready
+		$(function () {
+			updateCourseListing();
+			$("#video_subject").change(function () {
+				updateCourseListing();
+			});
+		});
+	})();
+
 	var editor_step2 = (function () {
 
 		const QSPACING = 25;
@@ -355,22 +381,6 @@
 					$(this).attr("src", "img/controller-play.png");
 				}
 			});
-		});
-
-		var timeout;
-		$("#videos_link").hover(function () {
-			// on mouse in
-			timeout = setTimeout(function () {
-				$('#browse_drawer').transition({ height: '250px' }, 300, 'snap', function () {
-					// callback
-					$('browse_drawer').addClass('shadow');
-				});
-			}, 300);
-		}, function () {
-			// on mouse out
-			clearTimeout(timeout);
-			$('#browse_drawer').css('height', 0);
-			console.log(':O hello world canceled!');
 		});
 
 		$(document).on("click", ".nextButton", function () {
