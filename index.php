@@ -539,8 +539,7 @@
 		}
 
 		// Return if answer is correct
-		$correct = $answer->get_correct() === 1 ? true : false;
-		echo json_encode(array("correct" => $correct));
+		echo json_encode(array("correct" => $answer->get_correct()));
 		return;
 	});
 
