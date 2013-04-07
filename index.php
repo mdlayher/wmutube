@@ -278,8 +278,27 @@
 			// Check for valid username
 			if (!$user)
 			{
-				echo json_status("bad username");
-				return;
+				// Call LDAP sync to try to pull credentials into our database, and authenticate
+				$login = new login(new login_ldap());
+				if ($login->authenticate(array("username" => $username, "password" => $password)))
+				{
+					echo json_status("success");
+
+					// On success, store user ID, log in user
+					$user = user::get_user($username, "username");
+					$_SESSION['id'] = $user->get_id();
+					$_SESSION['login'] = 1;
+
+					// Regenerate session ID
+					session_regenerate_id();
+
+					return;
+				}
+				else
+				{
+					echo json_status("bad username or password");
+					return;
+				}
 			}
 
 			// Ensure user is enabled for login

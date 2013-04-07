@@ -7,8 +7,8 @@ $(function () {
 		login.username = $("#login_username").val();
 		login.password = $("#login_password").val();
 
-		// Database authentication
-		login.method = 0;
+		// LDAP authentication
+		login.method = 3;
 
 		// Display status
 		$("#login_status").text("logging in...");
