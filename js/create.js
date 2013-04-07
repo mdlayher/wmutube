@@ -232,15 +232,17 @@
 				// get some basic information about the video
 				theObj.title = $("#video_title").val();
 				theObj.description = $("#video_description").val();
-				theObj.subject = $("#video_subject").val();
 				theObj.course = $("#video_course").val();
-				theObj.year = $("#video_year").val();
 
 				// get the questions and answers
 				var qi = 0;
 				// iterate over the questions
 				$(".question").each(function () {
-					theObj.questions.push({"text": $(this).find(".q_body").first().val(), "answers": []});
+					theObj.questions.push({
+						"text": $(this).find(".q_body").first().val(), 
+						"hint": $(this).find(".q_hint").first().val(), 
+						"timestamp": $(this).find(".q_time").first().val(),
+						"answers": []});
 					$(this).find(".answer").each(function () {
 						// iterate over each question's answers.
 						var kids = $(this).children();
