@@ -191,17 +191,17 @@
 				{
 					animating = true;
 					$(this).transition({x: -($(this).outerWidth() + QSPACING), "opacity": .3}, 100, function () {
-						finalizeAdd(this, l, index);
+						finalizeAdd(this, l, index, -1);
 						animating = false;
 					});
 				}
-				else finalizeAdd(this, l, index);
+				else finalizeAdd(this, l, index, -1);
 				console.log(this.id + ": " + $(this).css("left"));
 			});
 
 			// append the new question to the DOM
 			qSelectors.push("#" + newId);
-			currentQ = qSelectors.indexOf("#" + newId);
+			currentQ = "#" + newId;
 			$('#step2_editor').append(newQ);
 
 			if (typeof(questionInfo) !== "undefined") {
@@ -211,11 +211,11 @@
 			}
 		}
 
-		function finalizeAdd (that, left, index) {
+		function finalizeAdd (that, left, index, direction) {
 			// there must be a better way to do this...
 			$(that).removeAttr('style');
 			$(that).css('opacity', .3)
-			$(that).css("left", left - ($(that).outerWidth() + QSPACING));
+			$(that).css("left", left + (direction*($(that).outerWidth() + QSPACING)));
 
 			if (index > 0) {
 				$(that).css('margin-top', -($(that).outerHeight()));
@@ -258,7 +258,7 @@
 
 			// -1 is next, 1 is previous
 
-			if (currentQ == 0 && direction === 1 || currentQ + 1 == qSelectors.length && direction === -1) {
+			if (qSelectors.indexOf(currentQ) == 0 && direction === 1 || qSelectors.indexOf(currentQ) + 1 == qSelectors.length && direction === -1) {
 				return;
 			}
 
@@ -279,8 +279,8 @@
 
 					movesLeft--;
 					if (movesLeft === 0) {
-						currentQ = currentQ - direction;
-						$(qSelectors[currentQ]).css("opacity", "1");
+						currentQ = qSelectors[qSelectors.indexOf(currentQ) - direction];
+						$(currentQ).css("opacity", "1");
 					}
 				});
 			});
@@ -303,6 +303,52 @@
 					addAnother(this, true);
 				}
 				console.log("called");
+			});
+
+			$("#step2_editor").on('click', '.delete', function (e) {
+				if (qSelectors.length === 1) {
+					// if this is the only tile
+					// this should never happen.
+				} else if (qSelectors.indexOf(currentQ) < qSelectors.length - 1) {
+					// if there are tiles to the right of this one
+					var rm = qSelectors.indexOf(currentQ);
+					$(currentQ).remove();
+					qSelectors.splice(rm, 1);
+					currentQ = qSelectors[rm];
+
+					$.each(qSelectors, function (index, item) {
+						// if this item is at or after the currentQ, slide it left
+						if (index >= rm) {
+							var l = $(item).css("left") === 'auto' ? 0 : parseInt($(item).css("left"));
+							$(item).transition({x: -($(item).outerWidth() + QSPACING), "opacity": .3}, 100, function () { 
+								finalizeAdd(item, l, null, -1);
+								$(currentQ).css("opacity", 1);
+							});
+						}
+					});
+				} else 
+				{
+					// if neither of these is true, we should slide all the
+					// tiles right one
+
+					var rm = qSelectors.indexOf(currentQ);;
+					$(currentQ).remove();
+					qSelectors.splice(rm, 1);
+					currentQ = qSelectors[rm - 1];
+
+					console.log("deleting one");
+
+					$.each(qSelectors, function (index, item) {
+						// if this item is at or after the currentQ, slide it left
+						if (index <= rm) {
+							var l = $(item).css("left") === 'auto' ? 0 : parseInt($(item).css("left"));
+							$(item).transition({x: ($(item).outerWidth() + QSPACING), "opacity": .3}, 100, function () { 
+								finalizeAdd(item, l, null, 1);
+								$(currentQ).css("opacity", 1);
+							});
+						}
+					});
+				}
 			});
 
 			$('#step2_editor').on('click', ".previous", function (e) {

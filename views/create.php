@@ -112,7 +112,7 @@
 						<label class="stack listitem_label">Answer justification</label>
 						<textarea class="stack textbox q_hint" placeholder="Hello" rows="3" type="text"></textarea>
 					</div>
-					<div class="form_section_container"><a class="button submitButton">Submit</a><a class="button addAnother">Add another</a></div>
+					<div class="form_section_container"><a class="button submitButton">Submit</a><a class="button addAnother">Add another</a><a class="button delete">Delete</a></div>
 				</div>
 				
 
