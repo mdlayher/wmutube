@@ -20,31 +20,10 @@
 	<header>Quiz</header>
 	<hr>
 	<div class='question left'>
-		<div>
-			<p>Which of these is a member of the seven wonders of the world?</p>
-			<p>Lorem ipsum Magna in proident do amet incididunt incididunt proident laborum pariatur cupidatat enim nostrud elit do Excepteur laboris magna commodo exercitation dolore ut nisi minim Duis nulla occaecat nostrud.</p>
-		</div>
+		<div></div>
 	</div>
 	<div class="answers left">
-		<div>
-			<p>Answers:</p>
-			<div class="answer">
-				<div class="radio"></div>
-				<div class="answer_text">Hello world</div>
-			</div>
-			<div class="answer">
-				<div class="radio selected"></div>
-				<div class="answer_text">Another answer</div>
-			</div>
-			<div class="answer">
-				<div class="radio"></div>
-				<div class="answer_text">Cool man</div>
-			</div>
-			<div class="answer">
-				<div class="radio"></div>
-				<div class="answer_text">It works!</div>
-			</div>
-		</div>
+		<div><p>Answers:</p></div>
 	</div>
 	<footer>
 		<div id="quiz_submit" class="button right">Submit</div>

@@ -84,19 +84,19 @@
 					<div class="form_section_container">
 						<label class="stack listitem_label">Answers / Correct?</label>
 						<div class="answer">
-							<input class="stack textbox q_answer" placeholder="Hello" type="text"/>
+							<input class="stack textbox q_answer" placeholder="" type="text"/>
 							<input type='radio' name='correct' class='floated_checkbox'>
 						</div>
 						<div class="answer">
-							<input class="stack textbox q_answer" placeholder="Hello" type="text"/>
+							<input class="stack textbox q_answer" placeholder="" type="text"/>
 							<input type='radio' name='correct' class='floated_checkbox'>
 						</div>
 						<div class="answer">
-							<input class="stack textbox q_answer" placeholder="Hello" type="text"/>
+							<input class="stack textbox q_answer" placeholder="" type="text"/>
 							<input type='radio' name='correct' class='floated_checkbox'>
 						</div>
 						<div class="answer">
-							<input class="stack textbox q_answer" placeholder="Hello" type="text"/>
+							<input class="stack textbox q_answer" placeholder="" type="text"/>
 							<input type='radio' name='correct' class='floated_checkbox'>
 						</div>
 					</div>
