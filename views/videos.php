@@ -12,12 +12,14 @@
 		{
 			// Print department header first time
 			$first = true;
+			$loop = false;
 			foreach ($c["courses"] as $course)
 			{
 				// Check if videos exist
 				$video_list = $course->get_videos();
 				if (!empty($video_list))
 				{
+					$loop = true;
 					// Print department header
 					if ($first)
 					{
@@ -36,9 +38,12 @@
 						printf("<li><a href=\"%s/watch/%d\" title=\"%s\">%s</a></li>\n", $root_uri, $video->get_id(), $video->get_title(), $video->get_title());
 					}
 				}
-				echo "</ul>\n";
 			}
-			echo "</div>\n";
+			if ($loop)
+			{
+				echo "</ul>\n";
+				echo "</div>\n";
+			}
 		}
 	?>
 </div>
