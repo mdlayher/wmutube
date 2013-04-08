@@ -72,6 +72,8 @@ $(function () {
 						$(".answers>div").append(newAnswerDiv(item.text, item.id));
 					});
 
+					$(".quiz_result").hide();
+
 					$('.body_fade').css("display", "block");
 					$('.quiz_container').css("display", "block");
 
@@ -85,8 +87,35 @@ $(function () {
 		$(function () {
 			// on ready
 			$("#quiz_submit").click(function () {
-				$('.body_fade').css("display", "none");
-				$('.quiz_container').css("display", "none");
+				
+				var selectedAnswer = $(".selected").parent().attr("data-answer_id");
+
+				$.get("/wmutube/ajax/answer/correct/" + selectedAnswer, function (data) {
+					var result = JSON.parse(data);
+					$(".quiz_result").removeClass("correct incorrect")
+
+					if (result.correct == 1) {
+						$(".quiz_result").addClass("correct");
+						$(".bottom").html("CORRECT");
+					} else if (result.correct == 0) {
+						$(".quiz_result").addClass("incorrect");
+						$(".bottom").html("INCORRECT");
+					}
+					$(".top").html("Loading justification...");
+
+					$(".quiz_result").show();
+					$.get("/wmutube/ajax/question/hint/" + currentQuestionId, function (data) {
+						var result = JSON.parse(data);
+						$(".top").html(result.hint);
+					});
+
+				});
+				//player.play();
+			});
+
+			$("#result_confirm").click(function () {
+				$(".body_fade").hide();
+				$(".quiz_container").hide();
 				player.play();
 			});
 

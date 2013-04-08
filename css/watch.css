@@ -144,3 +144,70 @@
 	clear: right;
 	max-width: 188px;
 }
+
+.quiz_result
+{
+	z-index: 101;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	color: white;
+	text-shadow: 1px 1px 2px #000;
+}
+
+/* quiz result header */
+.quiz_result>:first-child
+{
+	position: relative;
+	height: 30%;
+}
+
+/* quiz result justification */
+.quiz_result>:nth-child(2)
+{
+	position: relative;
+	height: 70%;
+}
+
+.quiz_result .button
+{
+	position: absolute;
+	text-shadow: none;
+	color: #333;
+	bottom: 10px;
+	right: 10px;
+}
+
+.top
+{
+	margin: 0;
+	padding: 0;
+	position: absolute;
+	width: 100%;
+	top: 0px;
+	text-align: center;
+}
+
+.bottom
+{
+	margin: 0;
+	padding: 0;
+	position: absolute;
+	font-weight: bold;
+	font-size: 2em;
+	width: 100%;
+	bottom: 0px;
+	text-align: center;
+}
+
+.correct
+{
+	background-color: green;
+}
+
+.incorrect
+{
+	background-color: red;
+}

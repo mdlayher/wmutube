@@ -12,6 +12,11 @@
 
 <div class="body_fade"></div>
 <div class="quiz_container">
+	<div class="quiz_result incorrect">
+		<div><p class="bottom"></p></div>
+		<div><p class="top"></p></div>
+		<div id="result_confirm" class='button'>OK</div>
+	</div>
 	<header>Quiz</header>
 	<hr>
 	<div class='question left'>
