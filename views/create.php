@@ -11,7 +11,7 @@
 <div id="body_container">
 	<span id="error"></span>
 	<div class="centered_on_page section" id="step1">
-		<a class="button topRight nextButton">Next step</a>
+		<!-- <a class="button topRight nextButton">Next step</a> -->
 		<div class="stepbody">
 			<div class="inner">
 				<p class="top">
