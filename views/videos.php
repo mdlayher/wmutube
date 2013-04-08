@@ -5,11 +5,7 @@
 <script src="<?= $root_uri ?>/js/jquery.scrollTo.js"></script>
 <script src="<?= $root_uri ?>/js/videoList.js" type="text/javascript"></script>
 <div id="body_container">
-
-	<div class='site-section centered_on_page'>
-		<header>Departments</header>
-		<p>Lorem ipsum Voluptate ad quis do do magna dolor deserunt laboris nostrud adipisicing non id ex aute tempor consectetur est aute eu veniam dolore anim sed in id sint consectetur proident Excepteur.</p>
-	</div>
+	<span id="error"></span>
 	<?php
 		// Iterate all display content
 		foreach ($content as $c)
