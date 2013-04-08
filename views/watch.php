@@ -5,18 +5,20 @@
 <script src="http://vjs.zencdn.net/c/video.js"></script>
 <link rel="stylesheet" type="text/css" href="<?= $root_uri ?>/css/watch.css">
 <script src="<?= $root_uri ?>/js/jquery.scrollTo.js"></script>
-<script type="text/javascript">var questions = 
+<script type="text/javascript">
 <?php
+	echo "\tvar questions = ";
 	// Pull associated questions, if they exist
 	$q = $video->to_array();
 	if (!empty($q["questions"]))
 	{
-		printf("%s;", json_encode($q["questions"]));
+		echo json_encode($q["questions"]) . ';';
 	}
 	else
 	{
 		echo "{};";
 	}
+	echo "\n";
 ?>
 </script>
 <script src="<?= $root_uri ?>/js/watch.js" type="text/javascript"></script>
