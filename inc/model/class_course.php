@@ -247,6 +247,7 @@
 			$departments = array(
 				"CS" => "Computer Science",
 				"MATH" => "Mathematics",
+				"MISC" => "Miscellaneous"
 			);
 
 			if (array_key_exists($this->subject, $departments))
