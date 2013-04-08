@@ -5,7 +5,14 @@
 <script src="http://vjs.zencdn.net/c/video.js"></script>
 <link rel="stylesheet" type="text/css" href="<?= $root_uri ?>/css/watch.css">
 <script src="<?= $root_uri ?>/js/jquery.scrollTo.js"></script>
-<script type="text/javascript">var questions = <?php $q = $video->to_array(); echo json_encode($q["questions"]); ?>;</script>
+<?php
+	// Pull associated questions, if they exist
+	$q = $video->to_array();
+	if (!empty($q["questions"]))
+	{
+		printf("<script type=\"text/javascript\">var questions = %s;</script>\n", json_encode($q["questions"]));
+	}
+?>
 <script src="<?= $root_uri ?>/js/watch.js" type="text/javascript"></script>
 <div class="body_fade"></div>
 <div class="quiz_container">

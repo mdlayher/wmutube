@@ -283,13 +283,20 @@
 				"description" => $this->description,
 			);
 
-			// Fetch questions associated with this video
-			$questions = array();
-			foreach (question::fetch_questions($this->id) as $q)
+			// Try to fetch questions associated with this video
+			try
 			{
-				$questions[] = $q->to_array();
+				$questions = array();
+				foreach (question::fetch_questions($this->id) as $q)
+				{
+					$questions[] = $q->to_array();
+				}
+				$data["questions"] = $questions;
 			}
-			$data["questions"] = $questions;
+			catch (Exception $e)
+			{
+				// No questions, skip adding
+			}
 
 			return $data;
 		}
