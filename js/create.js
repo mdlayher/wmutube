@@ -37,6 +37,9 @@
 
 				return stringTime;
 			},
+			secondsWithFormattedTime: function (time) {
+
+			},
 			generateGuid: function () {
 				// courtesy of http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
 				var retVal = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -191,6 +194,38 @@
 			}
 		}
 
+		function validateQuestion (question, alertUser) {
+			var $q = $(question);
+			var errors = [];
+
+			// check for an empty question body
+			var qBody = $q.find(".q_body").val().trim();
+			if (qBody.length === 0) {
+				errors.push("Question body cannot be empty.\n"); 
+			}
+
+			$checked = $q.find(":checked");
+			if ($checked.length < 1) {
+				errors.push("You must select a correct answer.\n");
+			} else if ($($($checked[0]).siblings()[0]).val().trim() === "") {
+				errors.push("The correct answer cannot have an empty body.\n");
+			}
+
+			if (errors.length > 0) {
+				if (alertUser === true) {
+					var errString = "Please correct the following errors: \n\n";
+					$.each(errors, function (index, item) {
+						errString += item;
+					});
+					alert(errString);
+				}
+				return false;
+			} else {
+				return true;
+			}
+
+		}
+
 		function move (direction) {
 
 			// -1 is next, 1 is previous
@@ -235,7 +270,10 @@
 		// on document ready
 		$(function () {
 			$('#step2_editor').on('click', '.addAnother', function () {
-				addAnother(this, false);
+				
+				if (validateQuestion(currentQ, true)) {
+					addAnother(this, true);
+				}
 				console.log("called");
 			});
 
@@ -261,20 +299,29 @@
 				theObj.course = $("#video_course").val();
 
 				// get the questions and answers
-				var qi = 0;
 				// iterate over the questions
-				$(".question").each(function () {
-					theObj.questions.push({
-						"text": $(this).find(".q_body").first().val(), 
-						"hint": $(this).find(".q_hint").first().val(), 
-						"timestamp": $(this).find(".q_time").first().val(),
-						"answers": []});
-					$(this).find(".answer").each(function () {
-						// iterate over each question's answers.
-						var kids = $(this).children();
-						theObj.questions[qi].answers.push({"text": $(kids[0]).val(), "correct": $(kids[1]).is(":checked")});
-					});
-					qi++;
+				$(".question").each(function (index, item) {
+					if (validateQuestion(item, false) === true) {
+						theObj.questions.push({
+							"text": $(item).find(".q_body").first().val().trim(), 
+							"hint": $(item).find(".q_hint").first().val().trim(), 
+							"timestamp": $(item).find(".q_time").first().val().trim(),
+							"answers": []});
+						$(item).find(".answer").each(function () {
+							// iterate over each question's answers.
+							var kids = $(item).children();
+							var text = $(kids[0]).val().trim();
+							var correct = $(kids[1]).is(":checked");
+
+							if (text !== "") {
+								theObj.questions[index].answers.push({"text": text, "correct": correct});
+							} else {
+								console.log("discarded an answer");
+							}
+						});
+					} else {
+						console.log("Discarded invalid item at index: " + index);
+					}
 				});
 
 				$.post("./ajax/create", "videoInfo=" + JSON.stringify(theObj), function (data, textStatus, jqXHR) {
