@@ -411,11 +411,21 @@
 		if (!empty($_FILES))
 		{
 			// Set path for upload target, identify video with filename and username
-			$target = sprintf("/uploads/tmp/%s_%s", $session_user->get_username(), $req->post("Filename"));
+			$target = sprintf("/uploads/tmp/%s_%s", $session_user->get_username(), md5($req->post("Filename")) . ".mp4");
+
+			// Check for upload error
+			if ($_FILES['Filedata']['error'] > 0)
+			{
+				echo json_status("file upload error '" . $_FILES['Filedata']['error'] . "'");
+				$app->halt(400);
+				return;
+			}
 
 			// Attempt to store file
 			try
 			{
+				error_log(print_r($_FILES, true));
+				error_log(sprintf("moving '%s' to '%s'", $_FILES['Filedata']['tmp_name'], __DIR__ . $target));
 				move_uploaded_file($_FILES['Filedata']['tmp_name'], __DIR__ . $target);
 			}
 			catch (\Exception $e)
@@ -467,7 +477,7 @@
 		$video_obj = json_decode($app->request()->post("videoInfo"));
 
 		// Generate new video filename hash
-		$name = uniqid() . ".mp4";
+		$name = md5(uniqid()) . ".mp4";
 
 		// Generate video object from parameters
 		$video = video::create_video((int)$session_user->get_id(), (int)$video_obj->course, $name, $video_obj->title, $video_obj->description);

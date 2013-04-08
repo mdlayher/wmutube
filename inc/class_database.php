@@ -38,8 +38,8 @@
 		const DB_HOST = "localhost";
 		const DATABASE = "wmutube";
 		// Justin, set this file to untracked -Matt
-		const DB_USER = "root";
-		const DB_PASSWORD = "elizabeth";
+		const DB_USER = "wmutube";
+		const DB_PASSWORD = "tJEbu66lTpNbY%1w,aRy1SmUl2PK4pIG";
 		// Default result fetch type
 		const DB_FETCH = PDO::FETCH_ASSOC;
 
