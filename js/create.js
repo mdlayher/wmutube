@@ -78,6 +78,34 @@
 				updateCourseListing();
 			});
 		});
+
+		var publicMembers = {
+			validate: function (alertUser) {
+				var errors = [];
+
+				if ($("#video_title").val().trim().length === 0) {
+					errors.push("Video must have a title.\n");
+				}
+				if ($("#video_description").val().trim().length === 0) {
+					errors.push("Video description cannot be empty.\n");
+				}
+
+				if (errors.length > 0) {
+					if (alertUser === true) {
+						var alertText = "Please correct the following errors: \n\n";
+						$.each(errors, function (index, item) {
+							alertText += item;
+						});
+
+						alert(alertText);
+					}
+					return false;
+				}
+				return true;
+			}
+		};
+
+		return publicMembers;
 	})();
 
 	var editor_step2 = (function () {
@@ -307,16 +335,16 @@
 							"hint": $(item).find(".q_hint").first().val().trim(), 
 							"timestamp": $(item).find(".q_time").first().val().trim(),
 							"answers": []});
-						$(item).find(".answer").each(function () {
+						$(item).find(".answer").each(function (iIndex, iItem) {
 							// iterate over each question's answers.
-							var kids = $(item).children();
+							var kids = $(iItem).children();
 							var text = $(kids[0]).val().trim();
 							var correct = $(kids[1]).is(":checked");
 
 							if (text !== "") {
 								theObj.questions[index].answers.push({"text": text, "correct": correct});
 							} else {
-								console.log("discarded an answer");
+								console.log("discarded an answer: " + text);
 							}
 						});
 					} else {
@@ -444,6 +472,9 @@
 			if (parentId === "step1") {
 				selector = "#step3";
 			} else if (parentId === "step3") {
+				if (!step3.validate(true)) {
+					return;
+				}
 				selector = "#step2";
 			} else if (parent.parent().attr("id") === "step2_editor") {
 				selector = "#step4";

@@ -12,28 +12,6 @@ $(function () {
 
 	var quizzing = (function () {
 
-		// var quizQuestions = [
-		// 	{
-		// 		question: "What is the diameter of the sun?",
-		// 		presentationTime: 7,
-		// 		answers: [
-		// 			{ text: "5km", correct: false, answerId: 1 },
-		// 			{ text: "20km", correct: false, answerId: 2 },
-		// 			{ text: "500km", correct: false, answerId: 3 },
-		// 			{ text: "Larger than all of these combined", correct: true, answerId: 4 }
-		// 		]
-		// 	},
-		// 	{
-		// 		question: "Another question!",
-		// 		presentationTime: 15,
-		// 		answers: [
-		// 			{ text: "yes", correct: false, answerId: 5 },
-		// 			{ text: "no", correct: false, answerId: 6 },
-		// 			{ text: "pz", correct: false, answerId: 7 }
-		// 		]
-		// 	},
-		// ];
-
 		var quizQuestions = questions;
 		var currentQuestionId = undefined;
 
