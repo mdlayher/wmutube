@@ -548,6 +548,13 @@
 			return;
 		}
 
+		// Store user's answer in database if logged in
+		if (logged_in())
+		{
+			$session_user = session_user();
+			$session_user->set_answer($answer->get_questionid(), $id);
+		}
+
 		// Return if answer is correct
 		echo json_encode(array("correct" => $answer->get_correct()));
 		return;
