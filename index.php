@@ -424,8 +424,6 @@
 			// Attempt to store file
 			try
 			{
-				error_log(print_r($_FILES, true));
-				error_log(sprintf("moving '%s' to '%s'", $_FILES['Filedata']['tmp_name'], __DIR__ . $target));
 				move_uploaded_file($_FILES['Filedata']['tmp_name'], __DIR__ . $target);
 			}
 			catch (\Exception $e)
