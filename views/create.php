@@ -68,6 +68,7 @@
 			<div class="editing_scrubber_buffer">
 			</div>
 			<div class="editing_scrubber_qmarker"></div>
+			<div class="editing_elapsed_time">0:00</div>
 		</div>
 		<div id="step2_editor">
 			<div class="section_step2 question">

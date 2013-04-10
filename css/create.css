@@ -104,7 +104,7 @@
   height: 40px;
   background-color: #141414;
   padding: 0;
-  z-index: 100; }
+  z-index: 65; }
 
 .editing_question_anchor {
   position: absolute;
@@ -129,12 +129,14 @@
 .editing_scrubber_basebar, .editing_scrubber_progress, .editing_scrubber_buffer, .editing_scrubber_qmarker {
   position: absolute;
   top: 15px;
-  left: 44px;
+  left: 84px;
   z-index: 60;
-  width: 90%;
+  width: 84%;
   height: 10px;
   border: 0;
-  background-color: transparent; }
+  /*background-color: transparent; */
+  background-color: #111;
+}
 
 .editing_scrubber_progress {
   background-color: #fff;
@@ -151,6 +153,13 @@
 
 .editing_scrubber_qmarker_is_selected {
   background-color: #fff;
+}
+
+.editing_elapsed_time {
+  color: #fff;
+  position: absolute;
+  left: 40px;
+  line-height: 40px;
 }
 
 #controls {

@@ -489,7 +489,27 @@
 				var progressBar = $(".editing_scrubber_progress");
 				var baseBar = $(".editing_scrubber_basebar");
 				var timePercent = videoPlayer.currentTime() / videoPlayer.duration();
-				progressBar.transition({ width: (timePercent * baseBar.width()) }, 100, 'linear');
+				progressBar.css('width', timePercent * baseBar.width());
+				$(".editing_elapsed_time").html(util.formattedTimeWithSeconds(update));
+			});
+
+			$(".editing_scrubber_progress, .editing_scrubber_buffer").mousedown(function (e) {
+				// console.log("offsetX: " + e.offsetX + ", offsetY: ", e.offsetY);
+				var those = ".editing_scrubber_progress, .editing_scrubber_buffer";
+				var eventSeek = function (e) {
+					var seekPercent = e.offsetX / $(".editing_scrubber_basebar").width();
+					var seekSeconds = seekPercent * videoPlayer.duration();
+					videoPlayer.currentTime(seekSeconds);
+				}
+				
+				eventSeek(e);
+
+				$(those).mousemove(eventSeek);
+
+				$(window).mouseup(function () {
+					$(window).off("mouseup");
+					$(those).off("mousemove");
+				})
 			});
 
 			videoPlayer.addEvent("progress", function () {
