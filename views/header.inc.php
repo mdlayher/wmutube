@@ -75,8 +75,8 @@
 				{
 			?>
 			<div id="login">
-				<input type="text" id="login_username" placeholder="username" />
-				<input type="password" id="login_password" placeholder="password" />
+				<input type="text" id="login_username" placeholder="Bronco NetID" />
+				<input type="password" id="login_password" placeholder="Password" />
 				<input type="button" id="login_button" value="login" />
 				<span id="login_status"></span>
 			</div>
