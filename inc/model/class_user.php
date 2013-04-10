@@ -426,6 +426,19 @@
 			return false;
 		}
 
+		// Store user's answer for a given question
+		public function set_answer($questionid, $answerid)
+		{
+			// Check for pre-existing answer
+			$query = database::query("SELECT id FROM useranswers WHERE userid=? AND questionid=? AND answerid=?;", $this->id, $questionid, $answerid);
+			if (!$query)
+			{
+				// Store user's answer in database
+				$query = database::query("INSERT INTO useranswers VALUES (null, ?, ?, ?, ?);", $this->id, $questionid, $answerid, time());
+			}
+			return $query;
+		}
+
 		// Flatten relevant information fields of user from object to array
 		public function to_array()
 		{

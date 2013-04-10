@@ -424,8 +424,6 @@
 			// Attempt to store file
 			try
 			{
-				error_log(print_r($_FILES, true));
-				error_log(sprintf("moving '%s' to '%s'", $_FILES['Filedata']['tmp_name'], __DIR__ . $target));
 				move_uploaded_file($_FILES['Filedata']['tmp_name'], __DIR__ . $target);
 			}
 			catch (\Exception $e)
@@ -546,6 +544,13 @@
 			echo json_status("bad answer ID");
 			$app->halt(400);
 			return;
+		}
+
+		// Store user's answer in database if logged in
+		if (logged_in())
+		{
+			$session_user = session_user();
+			$session_user->set_answer($answer->get_questionid(), $id);
 		}
 
 		// Return if answer is correct
