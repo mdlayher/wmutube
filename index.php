@@ -200,6 +200,19 @@
 
 	// Permission: Instructor+
 
+	// My videos page
+	$app->get("/myvideos", function() use ($app)
+	{
+		// Get an array of this user's videos
+		$user_videos = session_user()->get_videos();
+
+		$std = std_render();
+		return $app->render("myvideos.php", $std += array(
+			"page_title" => TITLE_PREFIX . "Videos",
+			"videos" => $user_videos,
+		));
+	});
+
 	// Video upload page
 	$app->get("/create", function() use ($app)
 	{
@@ -804,5 +817,5 @@
 		}
 	});
 
-	// RUN IT! - - - - - - - - - - - - - - - - - - - - - - -
+	// RUN IT! - - - - - - - - - - - -
 	$app->run();

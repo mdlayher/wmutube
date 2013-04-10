@@ -43,6 +43,7 @@
 					if ($session_user->has_permission(role::INSTRUCTOR))
 					{
 						printf(" | <a href=\"%s/create\" title=\"Create a learning module\">Create</a>\n", $root_uri);
+						printf(" | <a href=\"%s/myvideos\" title=\"Manage your videos\">My Videos</a>\n", $root_uri);
 					}
 					// Administrator
 					if ($session_user->has_permission(role::ADMINISTRATOR))
