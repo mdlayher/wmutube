@@ -203,14 +203,27 @@
 	// My videos page
 	$app->get("/myvideos", function() use ($app)
 	{
-		// Get an array of this user's videos
-		$user_videos = session_user()->get_videos();
+		// Ensure user is logged in
+		if (!logged_in())
+		{
+			return $app->forbidden();
+		}
 
-		$std = std_render();
-		return $app->render("myvideos.php", $std += array(
-			"page_title" => TITLE_PREFIX . "Videos",
-			"videos" => $user_videos,
-		));
+		// Get session user, permission check (Instructor+)
+		$session_user = session_user();
+		if ($session_user->has_permission(role::INSTRUCTOR))
+		{
+			// Pull standard render variables, render create page
+			$std = std_render();
+			return $app->render("myvideos.php", $std += array(
+				"page_title" => TITLE_PREFIX . "My Videos",
+				"videos" => $session_user->get_videos(),
+			));
+		}
+		else
+		{
+			return $app->forbidden();
+		}
 	});
 
 	// Video upload page
