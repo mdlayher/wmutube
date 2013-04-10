@@ -277,7 +277,7 @@
 			if (!isset($this->videos))
 			{
 				// Get videos associated with this user
-				$this->videos = video::fetch_videos("userid", $this->id);
+				$this->videos = video::filter_videos("userid", $this->id);
 			}
 
 			return $this->videos;
