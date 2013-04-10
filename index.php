@@ -213,11 +213,21 @@
 		$session_user = session_user();
 		if ($session_user->has_permission(role::INSTRUCTOR))
 		{
+			// Check for user's videos
+			$videos = $session_user->get_videos();
+
+			// Ensure user has videos, redirect to create if not
+			if (empty($videos))
+			{
+				$app->response()->redirect("./create");
+				return;
+			}
+
 			// Pull standard render variables, render create page
 			$std = std_render();
 			return $app->render("myvideos.php", $std += array(
 				"page_title" => TITLE_PREFIX . "My Videos",
-				"videos" => $session_user->get_videos(),
+				"videos" => $videos,
 			));
 		}
 		else
