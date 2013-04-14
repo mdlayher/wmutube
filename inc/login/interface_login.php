@@ -1,15 +1,6 @@
 <?php
 	// interface_login.php - Khan Academy Workflow, 2/12/13
 	// PHP interface and class for implementation of strategy pattern for user login
-	//
-	// changelog:
-	//
-	// 3/6/13 MDL:
-	//	- added __toString() to identify login strategies
-	// 2/27/13 MDL:
-	//	- changed input to array
-	// 2/12/13 MDL:
-	//	- initial code
 
 	error_reporting(E_ALL);
 

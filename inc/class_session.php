@@ -1,14 +1,6 @@
 <?php
 	// class_session_compat.php - Khan Academy Workflow, 3/21/13
 	// PHP class which handles sessions using cache + database
-	// Note: this class for compatibility with PHP5.3
-	//
-	// changelog:
-	//
-	// 3/28/13 MDL:
-	//	- encrypt session data using crypto class
-	// 3/23/13 MDL:
-	//	- initial code
 
 	error_reporting(E_ALL);
 

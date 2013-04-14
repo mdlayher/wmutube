@@ -1,11 +1,6 @@
 <?php
 	// class_cache.php - Khan Academy Workflow, 3/3/13
 	// PHP class which abstracts cache functionality into simple, efficient, and re-usable methods
-	//
-	// changelog:
-	//
-	// 3/3/13 MDL:
-	//	- initial code
 
 	error_reporting(E_ALL);
 

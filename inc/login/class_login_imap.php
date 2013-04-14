@@ -2,14 +2,6 @@
 	// class_login_imap.php - Khan Academy Workflow, 3/3/13
 	// PHP class which provides experimental IMAP login for strategy pattern authentication
 	// Note: IMAP login is terribly slow on password failure.  Need to research this.
-	//
-	// changelog:
-	//
-	// 3/6/13 MDL:
-	//	- set default host constant
-	//	- added slow login on password failure warning
-	// 3/3/13 MDL:
-	//	- initial code
 
 	error_reporting(E_ALL);
 

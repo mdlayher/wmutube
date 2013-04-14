@@ -1,17 +1,6 @@
 <?php
 	// class_config.php - Khan Academy Workflow, 2/19/13
 	// PHP class which handles all configuration for the application
-	//
-	// changelog:
-	//
-	// 3/7/13 MDL:
-	//	- added wildcard match (e.g. login* for login subsystem)
-	// 2/27/13 MDL:
-	//	- added ability to load array of source files
-	// 2/26/13 MDL:
-	//	- added question and answer classes
-	// 2/19/13 MDL:
-	//	- initial code
 
 	error_reporting(E_ALL);
 
@@ -26,9 +15,6 @@
 
 		// Memcache toggle
 		const MEMCACHE = 1;
-
-		// Profiler toggle
-		const PROFILER = 0;
 
 		// Project title
 		const PROJECT_TITLE = "WMUtube";
@@ -45,8 +31,17 @@
 		// Session name
 		const SESSION_NAME = "wmutube_session";
 
+		// PASSWORDS AND KEYS - - - - - - - - - - - - - - -
+		// All should be changed on deployment
+
+		// Database password, for all database class interactions
+		const DB_PASSWORD = "tJEbu66lTpNbY%1w,aRy1SmUl2PK4pIG";
+
 		// View key, to protect against pages being loaded outside of framework
 		const VIEW_KEY = "2Mg!Nz0qR5cLd)7,HBc73+z>UuE0.ggS";
+
+		// Cipher key, for use in crypto class
+		const CIPHER_KEY = "8dJH7n3A6hIWt0JQ9uDZuxTsuUMJqL3u";
 
 		// Array of source files to quickly load
 		protected static $SOURCE_FILES = array(
@@ -63,7 +58,6 @@
 			"login_ssh" => "/login/class_login_ssh.php",
 			"login_wavebox" => "/login/class_login_wavebox.php",
 			"password" => "/login/password.php",
-			"profiler" => "/etc/class_profiler.php",
 			"question" => "/model/class_question.php",
 			"role" => "/model/class_role.php",
 			"session" => "/class_session.php",

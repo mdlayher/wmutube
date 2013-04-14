@@ -1,13 +1,6 @@
 <?php
 	// class_login_ldap.php - Khan Academy Workflow, 3/3/13
 	// PHP class which provides experimental LDAP login for strategy pattern authentication
-	//
-	// changelog:
-	//
-	// 3/6/13 MDL:
-	//	- set default host constant
-	// 3/3/13 MDL:
-	//	- initial code
 
 	error_reporting(E_ALL);
 

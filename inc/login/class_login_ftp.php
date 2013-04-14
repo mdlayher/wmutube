@@ -1,13 +1,6 @@
 <?php
 	// class_login_ftp.php - Khan Academy Workflow, 3/4/13
 	// PHP class which provides FTP login for strategy pattern authentication
-	//
-	// changelog:
-	//
-	// 3/6/13 MDL:
-	//	- set default host constant
-	// 3/4/13 MDL:
-	//	- initial code
 
 	error_reporting(E_ALL);
 

@@ -1,20 +1,11 @@
 <?php
 	// class_course.php - Khan Academy Workflow, 2/11/13
 	// PHP class which contains storage and manipulation for course objects
-	//
-	// changelog:
-	//
-	// 3/20/13 MDL:
-	//	- added to_array(), to_json()
-	// 2/19/13 MDL:
-	//	- added year and term fields for finer granularity in courses
-	// 2/11/13 MDL:
-	//	- initial code - copied from class_course and tweaked
 
 	error_reporting(E_ALL);
 
 	require_once __DIR__ . "/../class_config.php";
-	config::load("database");
+	config::load(array("database"));
 
 	class course
 	{

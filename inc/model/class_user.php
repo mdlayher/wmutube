@@ -1,27 +1,6 @@
 <?php
 	// class_user.php - Khan Academy Workflow, 2/5/13
 	// PHP class which contains storage and manipulation for user objects
-	//
-	// changelog:
-	//
-	// 3/20/13 MDL:
-	//	- added to_array(), to help with JSON encoding
-	// 3/7/13 MDL:
-	//	- query optimizations
-	// 2/27/13 MDL:
-	//	- added filter_users(), enabled fetch_users() to accept values array for fine-grained output
-	//	- added fetching of associated videos for a user
-	// 2/26/13 MDL:
-	//	- set login_db() as default login method
-	// 2/11/13 MDL:
-	//	- added database sanity checks to object methods
-	//	- added selftest() function for checking all class functionality
-	// 2/7/13 MDL:
-	//	- can now get_user() or fetch_users() by allowed unique keys, both return proper object or list
-	// 2/6/13 MDL:
-	//	- finalization of methods
-	// 2/5/13 MDL:
-	//	- initial code
 
 	error_reporting(E_ALL);
 
@@ -296,8 +275,6 @@
 		{
 
 		}
-
-		// PRIVATE METHODS - - - - - - - - - - - - - - - - - - -
 
 		// PUBLIC METHODS - - - - - - - - - - - - - - - - - - - -
 

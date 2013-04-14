@@ -1,20 +1,11 @@
 <?php
 	// class_answer.php - Khan Academy Workflow, 2/26/13
 	// PHP class which contains storage and manipulation for answer objects
-	//
-	// changelog:
-	//
-	// 3/20/13 MDL:
-	//	- added to_array(), to_json()
-	// 3/6/13 MDL:
-	//	- typo fix
-	// 2/26/13 MDL:
-	//	- initial code
 
 	error_reporting(E_ALL);
 
 	require_once __DIR__ . "/../class_config.php";
-	config::load("database");
+	config::load(array("database"));
 
 	class answer
 	{

@@ -1,24 +1,6 @@
 <?php
 	// class_video.php - Khan Academy Workflow, 2/11/13
 	// PHP class which contains storage and manipulation for video objects
-	//
-	// changelog:
-	//
-	// 3/20/13 MDL:
-	//	- added to_array(), to_json()
-	// 3/7/13 MDL:
-	//	- query optimizations
-	// 2/27/13 MDL:
-	//	- added filter_videos(), enabled fetch_videos() to accept values array for fine-grained output
-	//	- added associated course and user object fetching for videos
-	// 2/26/13 MDL:
-	//	- added question fetching ability
-	// 2/11/13 MDL:
-	//	- ported database sanity checks from class_user
-	//	- added selftest() for checking all class functionality
-	//	- minor tweaks and testing
-	// 2/11/13 EJL:
-	//	- initial code - copied from class_user and tweaked
 
 	error_reporting(E_ALL);
 
@@ -206,8 +188,6 @@
 		{
 
 		}
-
-		// PRIVATE METHODS - - - - - - - - - - - - - - - - - - -
 
 		// PUBLIC METHODS - - - - - - - - - - - - - - - - - - - -
 

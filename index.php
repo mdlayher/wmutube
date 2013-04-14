@@ -1,15 +1,6 @@
 <?php
 	// index.php - Khan Academy Workflow, 3/20/13
 	// PHP router using Slim microframework to handle all routing of HTTP calls within the application
-	//
-	// changelog:
-	//
-	// 3/27/13 MDL:
-	//	- lots of changes past few days, working sessions, login, etc.
-	// 3/23/13 MDL:
-	//	- unified endpoint return data
-	// 3/20/13 MDL:
-	//	- initial code
 
 	error_reporting(E_ALL);
 

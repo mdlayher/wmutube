@@ -1,13 +1,6 @@
 <?php
 	// class_question.php - Khan Academy Workflow, 2/26/13
 	// PHP class which contains storage and manipulation for question objects
-	//
-	// changelog:
-	//
-	// 3/20/13 MDL:
-	//	- added to_array(), to_json()
-	// 2/26/13 MDL:
-	//	- initial code
 
 	error_reporting(E_ALL);
 

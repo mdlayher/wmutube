@@ -1,19 +1,6 @@
 <?php
 	// class_login_db.php - Khan Academy Workflow, 2/12/13
 	// PHP class which provides database driven login for strategy pattern authentication
-	//
-	// changelog:
-	//
-	// 3/2/13 MDL:
-	//	- improvements to password hashing, resistance to timing attacks, rehash if needed
-	// 2/28/13 MDL:
-	//	- initial impementation of bcrypt password hash verification!
-	// 2/27/13 MDL:
-	//	- renamed to login_db
-	// 2/19/13 MDL:
-	//	- initial stub code
-	// 2/12/13 MDL:
-	//	- initial code
 
 	error_reporting(E_ALL);
 

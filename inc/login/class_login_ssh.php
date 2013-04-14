@@ -1,17 +1,6 @@
 <?php
 	// class_login_ssh.php - Khan Academy Workflow, 2/27/13
 	// PHP class which provides SSH key login for strategy pattern authentication
-	//
-	// changelog:
-	//
-	// 3/6/13 MDL:
-	//	- set default host constant
-	// 3/3/13 MDL:
-	//	- ignore PHP warnings on unsuccessful login
-	//	- added password login, can be enabled on a per-host basis
-	// 2/27/13 MDL:
-	//	- initial code
-	//	- IT WORKS!!
 
 	error_reporting(E_ALL);
 

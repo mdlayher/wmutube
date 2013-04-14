@@ -1,11 +1,6 @@
 <?php
 	// class_role.php - Khan Academy Workflow, 3/6/13
 	// PHP class which contains storage and manipulation for role objects
-	//
-	// changelog:
-	//
-	// 3/6/13 MDL:
-	//	- initial code
 
 	error_reporting(E_ALL);
 

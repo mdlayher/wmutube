@@ -1,11 +1,6 @@
 <?php
 	// class_crypto.php - Khan Academy Workflow, 3/28/13
 	// PHP class which is used to encrypt and decrypt data, primarily for sessions
-	//
-	// changelog:
-	//
-	// 3/28/13 MDL:
-	//	- initial code
 
 	error_reporting(E_ALL);
 
@@ -18,7 +13,7 @@
 		// Encryption settings
 		const CIPHER = MCRYPT_RIJNDAEL_256;
 		const CIPHER_MODE = MCRYPT_MODE_CBC;
-		const CIPHER_KEY = "8dJH7n3A6hIWt0JQ9uDZuxTsuUMJqL3u";
+		const CIPHER_KEY = config::CIPHER_KEY;
 
 		// PUBLIC METHODS - - - - - - - - - - - - - - - - 
 
