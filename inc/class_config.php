@@ -31,6 +31,10 @@
 		// Session name
 		const SESSION_NAME = "wmutube_session";
 
+		// Database configuration
+		const DB_NAME = "wmutube";
+		const DB_USER = "wmutube";
+
 		// PASSWORDS AND KEYS - - - - - - - - - - - - - - -
 		// All should be changed on deployment
 

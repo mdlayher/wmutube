@@ -15,8 +15,8 @@
 		// Database connection parameters
 		const DB_SERVER = "mysql";
 		const DB_HOST = "localhost";
-		const DATABASE = "wmutube";
-		const DB_USER = "wmutube";
+		const DATABASE = config::DB_NAME;
+		const DB_USER = config::DB_USER;
 		const DB_PASSWORD = config::DB_PASSWORD;
 		// Default result fetch type
 		const DB_FETCH = PDO::FETCH_ASSOC;
