@@ -192,7 +192,7 @@
 	// Permission: Instructor+
 
 	// My videos page
-	$app->get("/myvideos", function() use ($app)
+	$app->get("/manage", function() use ($app)
 	{
 		// Ensure user is logged in
 		if (!logged_in())
@@ -207,17 +207,10 @@
 			// Check for user's videos
 			$videos = $session_user->get_videos();
 
-			// Ensure user has videos, redirect to create if not
-			if (empty($videos))
-			{
-				$app->response()->redirect("./create");
-				return;
-			}
-
 			// Pull standard render variables, render create page
 			$std = std_render();
-			return $app->render("myvideos.php", $std += array(
-				"page_title" => TITLE_PREFIX . "My Videos",
+			return $app->render("manage.php", $std += array(
+				"page_title" => TITLE_PREFIX . "Manage",
 				"videos" => $videos,
 			));
 		}
