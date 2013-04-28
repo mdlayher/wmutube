@@ -207,11 +207,12 @@
 			// Check for user's videos
 			$videos = $session_user->get_videos();
 
-			// Pull a list of courses if user can manage those (Administrator+)
+			// Pull a list of courses and subjects if user can manage those (Administrator+)
 			$courses = null;
 			if ($session_user->has_permission(role::ADMINISTRATOR))
 			{
 				$courses = course::fetch_courses();
+				$subjects = course::valid_subjects();
 			}
 
 			// Pull standard render variables, render create page
@@ -220,6 +221,7 @@
 				"page_title" => TITLE_PREFIX . "Manage",
 				"videos" => $videos,
 				"courses" => $courses,
+				"subjects" => $subjects,
 			));
 		}
 		else

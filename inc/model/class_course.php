@@ -23,6 +23,23 @@
 			"subject" => true,
 		);
 
+		// List of subjects and departments in system
+		protected static $DEPARTMENTS = array(
+			"AE" => "Aeronautical Engineering",
+			"BIOS" => "Biological Sciences",
+			"CCE" => "Civial & Construction Engineering",
+			"CHEG" => "Chemical Engineering",
+			"CHEM" => "Chemistry",
+			"CS" => "Computer Science",
+			"ECE" => "Electrical & Computer Engineering",
+			"GEOS" => "Geosciences",
+			"MATH" => "Mathematics",
+			"ME" => "Mechanical Engineering",
+			"MISC" => "Miscellaneous",
+			"PHYS" => "Physics",
+			"STAT" => "Statistics",
+		);
+
 
 		// INSTANCE VARIABLES - - - - - - - - - - - - - - - - - -
 
@@ -235,25 +252,9 @@
 		// Return mapped subject to department name
 		public function get_department()
 		{
-			$departments = array(
-				"AE" => "Aeronautical Engineering",
-				"BIOS" => "Biological Sciences",
-				"CCE" => "Civial & Construction Engineering",
-				"CHEG" => "Chemical Engineering",
-				"CHEM" => "Chemistry",
-				"CS" => "Computer Science",
-				"ECE" => "Electrical & Computer Engineering",
-				"GEOS" => "Geosciences",
-				"MATH" => "Mathematics",
-				"ME" => "Mechanical Engineering",
-				"MISC" => "Miscellaneous",
-				"PHYS" => "Physics",
-				"STAT" => "Statistics",
-			);
-
-			if (array_key_exists($this->subject, $departments))
+			if (array_key_exists($this->subject, self::$DEPARTMENTS))
 			{
-				return $departments[$this->subject];
+				return self::$DEPARTMENTS[$this->subject];
 			}
 
 			return null;
@@ -409,7 +410,7 @@
 			}
 		}
 
-		// Create a list of subjects
+		// Create a list of subjects for which courses exist
 		public static function fetch_subjects()
 		{
 			// Get subject list
@@ -423,6 +424,19 @@
 			}
 
 			return $list;
+		}
+
+		// Create a list of valid subjects
+		public static function valid_subjects()
+		{
+			// Build list
+			$subjects = array();
+			foreach (array_keys(self::$DEPARTMENTS) as $d)
+			{
+				$subjects[] = $d;
+			}
+
+			return $subjects;
 		}
 	
 		// Selftest function for debugging
