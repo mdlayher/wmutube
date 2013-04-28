@@ -34,18 +34,10 @@
 		<header>User Management</header>
 		<div>
 			<div>
-				<label for='username' class='stack'>User lookup</label> 
+				<label for='username' class='stack'>Username</label> 
 				<input id='username' class='stack' type='text' length='20'>
-				<input type='submit'>
-			</div>
-			<div class="hidden">
-				<ul>
-					<li><div>jdw8256</div><div><a href='#' title='Disable this user'>Disable</a></div></li>
-					<li><div>jdw8256</div><div><a href='#' title='Disable this user'>Disable</a></div></li>
-					<li><div>jdw8256</div><div><a href='#' title='Disable this user'>Disable</a></div></li>
-					<li><div>jdw8256</div><div><a href='#' title='Disable this user'>Disable</a></div></li>
-					<li><div>jdw8256</div><div><a href='#' title='Disable this user'>Disable</a></div></li>
-				</ul>
+				<input id="user_enable_submit" type="submit" value="Enable">
+				<input id="user_disable_submit" type='submit' value="Disable">
 			</div>
 		</div>
 	</div>
@@ -73,7 +65,10 @@
 		?>
 		<div>
 			<label for='course_add_text'>Add course</label>
-			<input id='course_add_text' type='text' length='20' id='add_dept'>
+			<input id='course_add_number' placeholder="Course number" type='number' min="1000" max="9999" length='20' id='add_dept' required>
+			<input id='course_add_title' placeholder="Course Title" type='text' length='20' required>
+			<input id='course_add_subject' placeholder="Subject" type='text' length='20' id='add_dept' required>
+
 			<input id='course_add_submit' type='submit'>
 		</div>
 	</div>

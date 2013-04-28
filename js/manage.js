@@ -47,17 +47,32 @@ var manage = (function () {
 		});
 
 		$("#course_add_submit").click(function (data) {
-			var $add = $("#course_add_text");
-			if ($add.val().length > 0) {
-				$.post("/ajax/courses/add/" + $add.val(), function (data) {
-					var resp = JSON.parse(data);
-					if (resp["success"] == true) {
-						// add this to the course delete select box
-						$("#course_delete_select").append("<option>" + $add.val() + "</option>");
-						$add.val("");
-					}
-				});
+
+			var num = $("#course_add_number")[0];
+			var title = $("#course_add_title")[0];
+			var subject = $("#course_add_subject")[0];
+			
+			// validate the form
+			if (!(num.checkValidity() && title.checkValidity() && subject.checkValidity())) {
+				return;
 			}
+
+			theObj = {
+				"number": parseInt($(num).val()),
+				"title": $(title).val(),
+				"subject": $(subject).val()
+			};
+
+			console.log(JSON.stringify(theObj));
+
+			$.post("/wmutube/ajax/course/create", "courseInfo=" + JSON.stringify(theObj), function (data) {
+				var resp = JSON.parse(data);
+				if (resp["success"] == true) {
+					$(num).val("");
+					$(title).val("");
+					$(subject).val("");
+				}
+			});
 		});
 
 		$("#dept_add_submit").click(function (data) {
