@@ -170,7 +170,7 @@
 
 				// Check for success
 				if ($success)
-				{	
+				{
 					// Set course's ID from database return (last insert ID)
 					$this->id = $success;
 				}

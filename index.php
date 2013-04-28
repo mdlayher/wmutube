@@ -631,7 +631,7 @@
 		$course_obj = json_decode($app->request()->post("courseInfo"));
 
 		// Create a course using info
-		$course = course::create_course(date('Y'), "ALL", $course_obj->subject, (int)$course_obj->number, $course_obj->title);
+		$course = course::create_course((int)date("Y"), "ALL", $course_obj->subject, (int)$course_obj->number, $course_obj->title);
 		if (!$course->set_course())
 		{
 			echo json_status("failed to create course");
