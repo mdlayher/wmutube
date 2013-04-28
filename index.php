@@ -687,6 +687,86 @@
 		return;
 	});
 
+	// Enable a user
+	$app->post("/ajax/user/enable", function() use ($app)
+	{
+		// Ensure course is logged in
+		if (!logged_in())
+		{
+			echo json_status("403 Forbidden");
+			$app->halt(403);
+			return;
+		}
+
+		// Get session user, permission check (Administrator+)
+		$session_user = session_user();
+		if (!$session_user->has_permission(role::ADMINISTRATOR))
+		{
+			echo json_status("403 Forbidden");
+			$app->halt(403);
+			return;
+		}
+
+		// Fetch requested user by username, check if exists
+		$user = user::get_user($app->request()->post("username"), "username");
+		if (!$user)
+		{
+			echo json_status("404 Not Found");
+			$app->halt(404);
+			return;
+		}
+
+		// Enable user
+		$user->set_enabled(true);
+		if (!$user->set_user())
+		{
+			echo json_encode(array("success" => false));
+		}
+
+		echo json_encode(array("success" => true));
+		return;
+	});
+
+	// Disable a user
+	$app->post("/ajax/user/disable", function() use ($app)
+	{
+		// Ensure course is logged in
+		if (!logged_in())
+		{
+			echo json_status("403 Forbidden");
+			$app->halt(403);
+			return;
+		}
+
+		// Get session user, permission check (Administrator+)
+		$session_user = session_user();
+		if (!$session_user->has_permission(role::ADMINISTRATOR))
+		{
+			echo json_status("403 Forbidden");
+			$app->halt(403);
+			return;
+		}
+
+		// Fetch requested user by username, check if exists
+		$user = user::get_user($app->request()->post("username"), "username");
+		if (!$user)
+		{
+			echo json_status("404 Not Found");
+			$app->halt(404);
+			return;
+		}
+
+		// Disable user
+		$user->set_enabled(false);
+		if (!$user->set_user())
+		{
+			echo json_encode(array("success" => false));
+		}
+
+		echo json_encode(array("success" => true));
+		return;
+	});
+
 	// AJAX METADATA - - - - - - - - - - - - - - - - - - - -
 
 	// Fetch course information by subject and number
