@@ -188,7 +188,7 @@
 		}
 
 		// Flatten relevant information fields of question from object to array
-		public function to_array()
+		public function to_array($user_answers = false)
 		{
 			// Gather basic data
 			$data = array(
@@ -205,13 +205,26 @@
 			}
 			$data["answers"] = $answers;
 
+			// If requested, add user answers
+			if ($user_answers)
+			{
+				$results = database::query("SELECT * FROM useranswers WHERE questionid=?;", $this->id);
+
+				$ua = array();
+				foreach ($results as $a)
+				{
+					$ua[] = $a;
+				}
+				$data["user_answers"] = $ua;
+			}
+
 			return $data;
 		}
 
 		// Export question to_array() data as JSON
-		public function to_json()
+		public function to_json($user_answers = false)
 		{
-			return json_encode($this->to_array());
+			return json_encode($this->to_array($user_answers));
 		}
 
 		// STATIC METHODS - - - - - - - - - - - - - - - - - - - -
@@ -260,7 +273,7 @@
 			$results = database::query("SELECT id FROM questions WHERE videoid=? ORDER BY id ASC;", $videoid);
 
 			if ($results)
-			{	
+			{
 				// Generate list of question objects
 				$questions = array();
 				for ($i = 0; $i < count($results); $i++)

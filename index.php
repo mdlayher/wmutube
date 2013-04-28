@@ -846,6 +846,41 @@
 		}
 	});
 
+	// Fetch all user answers relevant to a question
+	$app->get("/ajax/question/responses(/(:id))", function($id) use ($app)
+	{
+		// Ensure course is logged in
+		if (!logged_in())
+		{
+			echo json_status("403 Forbidden");
+			$app->halt(403);
+			return;
+		}
+
+		// Get session user, permission check (Instructor+)
+		$session_user = session_user();
+		if (!$session_user->has_permission(role::INSTRUCTOR))
+		{
+			echo json_status("403 Forbidden");
+			$app->halt(403);
+			return;
+		}
+
+		// Grab question from ID
+		$question = question::get_question($id);
+		if (!$question)
+		{
+			echo json_status("404 Not Found");
+			$app->halt(404);
+			return;
+		}
+
+		// Grab JSON with user responses
+		$responses = $question->to_json(true);
+		echo $responses;
+		return;
+	});
+
 	// Fetch user information by field and value
 	$app->get("/ajax/user(/(:field(/(:value))))", function($field = "id", $value = null) use ($app)
 	{
