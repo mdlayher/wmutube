@@ -236,9 +236,19 @@
 		public function get_department()
 		{
 			$departments = array(
+				"AE" => "Aeronautical Engineering",
+				"BIOS" => "Biological Sciences",
+				"CCE" => "Civial & Construction Engineering",
+				"CHEG" => "Chemical Engineering",
+				"CHEM" => "Chemistry",
 				"CS" => "Computer Science",
+				"ECE" => "Electrical & Computer Engineering",
+				"GEOS" => "Geosciences",
 				"MATH" => "Mathematics",
-				"MISC" => "Miscellaneous"
+				"ME" => "Mechanical Engineering",
+				"MISC" => "Miscellaneous",
+				"PHYS" => "Physics",
+				"STAT" => "Statistics",
 			);
 
 			if (array_key_exists($this->subject, $departments))
