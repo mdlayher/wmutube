@@ -687,8 +687,8 @@
 		return;
 	});
 
-	// Enable/disable a user
-	$user_enable = function($enable = true) use ($app)
+	// Enable a user
+	$app->post("/ajax/user/enable", function() use ($app)
 	{
 		// Ensure course is logged in
 		if (!logged_in())
@@ -725,8 +725,8 @@
 			return;
 		}
 
-		// Enable or disable user
-		$user->set_enabled($enable);
+		// Enable user
+		$user->set_enabled(true);
 		if (!$user->set_user())
 		{
 			echo json_encode(array("success" => false));
@@ -734,9 +734,56 @@
 
 		echo json_encode(array("success" => true));
 		return;
-	};
-	$app->post("/ajax/user/enable", $user_enable(true));
-	$app->post("/ajax/user/disable", $user_enable(false));
+	});
+
+	// Disable a user
+	$app->post("/ajax/user/disable", function() use ($app)
+	{
+		// Ensure course is logged in
+		if (!logged_in())
+		{
+			echo json_status("403 Forbidden");
+			$app->halt(403);
+			return;
+		}
+
+		// Get session user, permission check (Administrator+)
+		$session_user = session_user();
+		if (!$session_user->has_permission(role::ADMINISTRATOR))
+		{
+			echo json_status("403 Forbidden");
+			$app->halt(403);
+			return;
+		}
+
+		// Check input ID
+		$id = (int)$app->request()->post("id");
+		if (!is_int($id))
+		{
+			echo json_status("404 Not Found");
+			$app->halt(404);
+			return;
+		}
+
+		// Fetch requested user by ID, check if exists
+		$user = user::get_user($id);
+		if (!$user)
+		{
+			echo json_status("404 Not Found");
+			$app->halt(404);
+			return;
+		}
+
+		// Disable user
+		$user->set_enabled(false);
+		if (!$user->set_user())
+		{
+			echo json_encode(array("success" => false));
+		}
+
+		echo json_encode(array("success" => true));
+		return;
+	});
 
 	// AJAX METADATA - - - - - - - - - - - - - - - - - - - -
 
