@@ -23,8 +23,6 @@
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
 	<script src="<?= $root_uri ?>/js/jquery.transit.min.js" type="text/javascript"></script>
 	<script src="<?= $root_uri ?>/js/login.js" type="text/javascript"></script>
-	<script src="<?= $root_uri ?>/js/drawer.js" type="text/javascript"></script>
-	<!--<script type="text/javascript">| document.write('</' + 'script>')</script>-->
 	<title><?= $page_title ?></title>
 </head>
 <body>
@@ -86,7 +84,4 @@
 			?>
 		</div>
 	</div>
-</div>
-<div id="browse_drawer">
-	<a href="/video" title="videos">Videos!</a>
 </div>
