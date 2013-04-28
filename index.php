@@ -207,11 +207,19 @@
 			// Check for user's videos
 			$videos = $session_user->get_videos();
 
+			// Pull a list of courses if user can manage those (Administrator+)
+			$courses = null;
+			if ($session_user->has_permission(role::ADMINISTRATOR))
+			{
+				$courses = course::fetch_courses();
+			}
+
 			// Pull standard render variables, render create page
 			$std = std_render();
 			return $app->render("manage.php", $std += array(
 				"page_title" => TITLE_PREFIX . "Manage",
 				"videos" => $videos,
+				"courses" => $courses,
 			));
 		}
 		else
@@ -594,6 +602,88 @@
 
 		// Return question hint
 		echo json_encode(array("hint" => $question->get_hint()));
+		return;
+	});
+
+	// AJAX MANAGEMENT OPERATIONS - - - - - - - - - - - - -
+
+	// Create a course
+	$app->post("/ajax/course/create", function() use ($app)
+	{
+		// Ensure user is logged in
+		if (!logged_in())
+		{
+			echo json_status("403 Forbidden");
+			$app->halt(403);
+			return;
+		}
+
+		// Get session user, permission check (Administrator+)
+		$session_user = session_user();
+		if (!$session_user->has_permission(role::ADMINISTRATOR))
+		{
+			echo json_status("403 Forbidden");
+			$app->halt(403);
+			return;
+		}
+
+		// Grab all posted course info
+		$course_obj = json_decode($app->request()->post("courseInfo"));
+
+		// Create a course using info
+		$course = course::create_course(date('Y'), "ALL", $course_obj->subject, (int)$course_obj->number, $course_obj->title);
+		if (!$course->set_course())
+		{
+			echo json_status("failed to create course");
+			return;
+		}
+
+		echo json_encode(array("success" => true));
+		return;
+	});
+
+	// Delete a course
+	$app->post("/ajax/course/delete", function() use ($app)
+	{
+		// Ensure course is logged in
+		if (!logged_in())
+		{
+			echo json_status("403 Forbidden");
+			$app->halt(403);
+			return;
+		}
+
+		// Get session user, permission check (Administrator+)
+		$session_user = session_user();
+		if (!$session_user->has_permission(role::ADMINISTRATOR))
+		{
+			echo json_status("403 Forbidden");
+			$app->halt(403);
+			return;
+		}
+
+		// Check input ID
+		$id = (int)$app->request()->post("id");
+		if (!is_int($id))
+		{
+			echo json_status("404 Not Found");
+			$app->halt(404);
+			return;
+		}
+
+		// Fetch requested course by ID, check if exists
+		$course = course::get_course($id);
+		if (!$course)
+		{
+			echo json_status("404 Not Found");
+			$app->halt(404);
+			return;
+		}
+
+		// Delete course
+		$course->delete_course();
+
+		echo json_encode(array("success" => true));
 		return;
 	});
 

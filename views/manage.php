@@ -25,8 +25,11 @@
 	</div>
 	<?php
 		}
-	?>
 
+		// User and Course management are Administrator+
+		if ($session_user->has_permission(role::ADMINISTRATOR))
+		{
+	?>
 	<div class="site-section videos_list centered_on_page">
 		<header>User Management</header>
 		<div>
@@ -46,25 +49,37 @@
 			</div>
 		</div>
 	</div>
-
 	<div class="site-section videos_list centered_on_page">
 		<header>Course Management</header>
+		<?php
+			// Check if courses exist
+			if (!empty($courses))
+			{
+		?>
 		<div>
-			<label for='course_delete_select'>Delete course</label>
+			<label for='course_delete_select'>Delete Course</label>
 			<select id='course_delete_select'>
-				<option data-course_id="14">Math</option>
-				<option data-course_id="15">Science</option>
-				<option data-course_id="16">CS</option>
+			<?php
+				foreach ($courses as $c)
+				{
+					printf("<option data-course_id=\"%s\">%s%s - %s</option>\n", $c->get_id(), $c->get_subject(), $c->get_number(), $c->get_title());
+				}
+			?>
 			</select>
 			<input id='course_delete_submit' type='submit'>
 		</div>
-		
+		<?php
+			}
+		?>
 		<div>
 			<label for='course_add_text'>Add course</label>
 			<input id='course_add_text' type='text' length='20' id='add_dept'>
 			<input id='course_add_submit' type='submit'>
 		</div>
 	</div>
+	<?php
+		}
+	?>
 </div>
 <?php
 	require_once "footer.inc.php";
