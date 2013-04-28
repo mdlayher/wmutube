@@ -20,24 +20,11 @@ var manage = (function () {
 			});
 		});
 
-		$("#dept_delete_submit").click(function () {
-			var $del = $($("#dept_delete_select").find(":selected").first());
-			var id = $del.attr("data-dept_id");
-			if (id !== undefined) {
-				$.post("/ajax/departments/delete/" + id, function (data) {
-					var resp = JSON.parse(data);
-					if (resp["success"] == true) {
-						$del.remove();
-					}
-				});
-			}
-		});
-
 		$("#course_delete_submit").click(function () {
 			var $del = $($("#course_delete_select").find(":selected").first());
 			var id = $del.attr("data-course_id");
 			if (id !== undefined) {
-				$.post("/ajax/courses/delete/" + id, function (data) {
+				$.post("/wmutube/ajax/course/delete", "id=" + id, function (data) {
 					var resp = JSON.parse(data);
 					if (resp["success"] == true) {
 						$del.remove();
@@ -73,20 +60,6 @@ var manage = (function () {
 					$(subject).val("");
 				}
 			});
-		});
-
-		$("#dept_add_submit").click(function (data) {
-			var $add = $("#dept_add_text");
-			if ($add.val().length > 0) {
-				$.post("/ajax/departments/add/" + $add.val(), function (data) {
-					var resp = JSON.parse(data);
-					if (resp["success"] == true) {
-						// add this to the course delete select box
-						$("#dept_delete_select").append("<option>" + $add.val() + "</option>");
-						$add.val("");
-					}
-				});
-			}
 		});
 	});
 })();
