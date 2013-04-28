@@ -213,6 +213,10 @@
 				$ua = array();
 				foreach ($results as $a)
 				{
+					// Grab user object and include
+					$user = user::get_user($a["userid"]);
+					$a["user"] = $user->to_array();
+
 					$ua[] = $a;
 				}
 				$data["user_answers"] = $ua;
