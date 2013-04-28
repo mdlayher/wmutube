@@ -11,11 +11,20 @@ var manage = (function () {
 			$(this).parent().parent().remove();
 		});
 
-		$("#user_lookup_submit").click(function () {
-			$.post("/ajax/users/find/" + $("#user_lookup_text").val(), function (data) {
+		$("#user_enable_submit").click(function () {
+			$.post("/wmutube/ajax/user/enable" + $("#username").val(), function (data) {
 				var resp = JSON.parse(data);
 				if (resp["success"] == true) {
-					// add users to the dom
+					$("#username").val("");	
+				}
+			});
+		});
+
+		$("#user_disable_submit").click(function () {
+			$.post("/wmutube/ajax/user/disable" + $("#username").val(), function (data) {
+				var resp = JSON.parse(data);
+				if (resp["success"] == true) {
+					$("#username").val("");					
 				}
 			});
 		});
