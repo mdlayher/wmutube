@@ -6,18 +6,26 @@
 <script src="<?= $root_uri ?>/js/manage.js" type="text/javascript"></script>
 <div id="body_container">
 	<span id="error"></span>
+	<?php
+		// Check if user has videos to display
+		if (!empty($videos))
+		{
+	?>
 	<div class='site-section videos_list centered_on_page'>
 		<header>My Videos</header>
 		<ul>
 			<?php
 				// Iterate over the video list and display it appropriately
-				foreach($videos as $video)
+				foreach ($videos as $video)
 				{
 					printf("<li><div><a href='%s/watch/%d' title='%s'>%s</a></div><div><a href='#' class='delete_video' title='Delete this video'>Delete</a></div></li>\n", $root_uri, $video->get_id(), $video->get_title(), $video->get_title());
 				}
 			?>
 		</ul>
 	</div>
+	<?php
+		}
+	?>
 
 	<div class="site-section videos_list centered_on_page">
 		<header>User Management</header>
@@ -36,25 +44,6 @@
 					<li><div>jdw8256</div><div><a href='#' title='Disable this user'>Disable</a></div></li>
 				</ul>
 			</div>
-		</div>
-	</div>
-
-	<div class="site-section videos_list centered_on_page">
-		<header>Department Management</header>
-		<div>
-			<label for='dept_delete_select'>Delete department</label>
-			<select id='dept_delete_select'>
-				<option data-dept_id="14">Math</option>
-				<option data-dept_id="15">Science</option>
-				<option data-dept_id="16">CS</option>
-			</select>
-			<input id="dept_delete_submit" type='submit'>
-		</div>
-		
-		<div>
-			<label for='dept_add_text'>Add department</label>
-			<input id='dept_add_text' type='text' length='20' id='add_dept'>
-			<input id='dept_add_submit' type='submit'>
 		</div>
 	</div>
 
