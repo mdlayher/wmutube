@@ -707,17 +707,8 @@
 			return;
 		}
 
-		// Check input ID
-		$id = (int)$app->request()->post("id");
-		if (!is_int($id))
-		{
-			echo json_status("404 Not Found");
-			$app->halt(404);
-			return;
-		}
-
-		// Fetch requested user by ID, check if exists
-		$user = user::get_user($id);
+		// Fetch requested user by username, check if exists
+		$user = user::get_user($app->request()->post("username"), "username");
 		if (!$user)
 		{
 			echo json_status("404 Not Found");
@@ -756,17 +747,8 @@
 			return;
 		}
 
-		// Check input ID
-		$id = (int)$app->request()->post("id");
-		if (!is_int($id))
-		{
-			echo json_status("404 Not Found");
-			$app->halt(404);
-			return;
-		}
-
-		// Fetch requested user by ID, check if exists
-		$user = user::get_user($id);
+		// Fetch requested user by username, check if exists
+		$user = user::get_user($app->request()->post("username"), "username");
 		if (!$user)
 		{
 			echo json_status("404 Not Found");
