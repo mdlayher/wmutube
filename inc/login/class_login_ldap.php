@@ -81,33 +81,48 @@
 				$ldapdn = sprintf(self::$HOSTS[$host]["dn"], $username);
 
 				// Attempt to bind to LDAP server using credentials
-				$success = @ldap_bind($ldap, $ldapdn, $password);
+				$bind = @ldap_bind($ldap, $ldapdn, $password);
+				if (!$bind)
+				{
+					return false;
+				}
+
+				// Set filter to gather information about this user
+				$filter = sprintf(self::$HOSTS[$host]["filter"], $username);
+
+				// Query LDAP for information about this user
+				$search = ldap_search($ldap, $ldapdn, $filter, self::$HOSTS[$host]["attributes"]);
+				$query_result = ldap_first_entry($ldap, $search);
+
+				// Check for query result, meaning matching user
+				if (!isset($query_result))
+				{
+					return false;
+				}
+
+				// Get LDAP DN (could be different than username), attempt to bind to LDAP server using credentials
+				$ldapdn = ldap_get_dn($ldap, $query_result);
+				$bind = @ldap_bind($ldap, $ldapdn, $password);
+				if (!$bind)
+				{
+					return false;
+				}
 
 				// See if user already exists in database
 				$user = user::get_user($username, "username");
 
 				// Check for successful bind, but user not in database
-				if ($success && !$user)
+				if ($bind && !$user)
 				{
+					// Ensure user sync is allowed
 					if (!self::$HOSTS[$host]["sync"])
 					{
 						trigger_error("login_ldap->authenticate() user sync disallowed for host '" . $host . "'", E_USER_WARNING);
 						return false;
 					}
 
-					// Set filter to gather information about this user
-					$filter = sprintf(self::$HOSTS[$host]["filter"], $username);
-
-					// Query LDAP for information about this user
-					$search = ldap_read($ldap, $ldapdn, $filter, self::$HOSTS[$host]["attributes"]);
+					// Read user's LDAP entries
 					$query_result = ldap_get_entries($ldap, $search);
-
-					// Check for query result
-					if (!isset($query_result[0]))
-					{
-						trigger_error("login_ldap->authenticate() failed to query LDAP for user '" . $username . "'", E_USER_WARNING);
-						return false;
-					}
 
 					// Iterate query results to grab firstname, lastname, email address
 					$user = array();
@@ -134,7 +149,7 @@
 
 				// Disconnect from LDAP server, return authentication status
 				ldap_unbind($ldap);
-				return $success;
+				return $bind;
 			}
 			else
 			{
