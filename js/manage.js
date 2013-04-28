@@ -12,7 +12,7 @@ var manage = (function () {
 		});
 
 		$("#user_enable_submit").click(function () {
-			$.post("/wmutube/ajax/user/enable" + $("#username").val(), function (data) {
+			$.post("/wmutube/ajax/user/enable", "username=" + $("#username").val(), function (data) {
 				var resp = JSON.parse(data);
 				if (resp["success"] == true) {
 					$("#username").val("");	
@@ -21,7 +21,7 @@ var manage = (function () {
 		});
 
 		$("#user_disable_submit").click(function () {
-			$.post("/wmutube/ajax/user/disable" + $("#username").val(), function (data) {
+			$.post("/wmutube/ajax/user/disable", "username=" + $("#username").val(), function (data) {
 				var resp = JSON.parse(data);
 				if (resp["success"] == true) {
 					$("#username").val("");					
