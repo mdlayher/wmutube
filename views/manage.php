@@ -64,10 +64,21 @@
 			}
 		?>
 		<div>
-			<label for='course_add_text'>Add course</label>
-			<input id='course_add_number' placeholder="Course number" type='number' min="1000" max="9999" size="100" id='add_dept' required>
-			<input id='course_add_title' placeholder="Course Title" type='text' size='30' required>
-			<input id='course_add_subject' placeholder="Subject" type='text' size='30' id='add_dept' required>
+			<label for='course_add_text'>Add Course</label>
+			<select id='course_add_subject' placeholder="Subject" length="5" required>
+				<?php
+					// Check if subjects exist
+					if (!empty($subjects))
+					{
+						foreach ($subjects as $s)
+						{
+							printf("<option>%s</option>\n", $s);
+						}
+					}
+				?>
+			</select>
+			<input id='course_add_number' placeholder="Course Number" type='number' min="1000" max="9999" length='20' id='add_dept' required>
+			<input id='course_add_title' placeholder="Course Title" type='text' length='20' required>
 
 			<input id='course_add_submit' type='submit'>
 		</div>
