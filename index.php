@@ -882,7 +882,7 @@
 			$questions = array();
 			foreach ($video->get_questions() as $q)
 			{
-				$questions[] = $q->to_array(true);
+				$questions[] = $q->to_array(true, true);
 			}
 
 			// Overwrite questions, send JSON

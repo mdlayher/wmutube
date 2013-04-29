@@ -188,7 +188,7 @@
 		}
 
 		// Flatten relevant information fields of question from object to array
-		public function to_array($user_answers = false)
+		public function to_array($user_answers = false, $correct = false)
 		{
 			// Gather basic data
 			$data = array(
@@ -201,7 +201,15 @@
 			$answers = array();
 			foreach (answer::fetch_answers($this->id) as $a)
 			{
-				$answers[] = $a->to_array();
+				$answer_array = $a->to_array();
+
+				// Add correct if requested
+				if ($correct)
+				{
+					$answer_array["correct"] = $a->get_correct();
+				}
+
+				$answers[] = $answer_array;
 			}
 			$data["answers"] = $answers;
 
