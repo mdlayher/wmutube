@@ -18,7 +18,7 @@
 				// Iterate over the video list and display it appropriately
 				foreach ($videos as $video)
 				{
-					printf("<li><div><a href='%s/watch/%d' title='%s'>%s</a></div><div><a href='#' class='delete_video' title='Delete this video'>Delete</a></div></li>\n", $root_uri, $video->get_id(), $video->get_title(), $video->get_title());
+					printf("<li data-video_id='%d'><div><a href='%s/watch/%d' title='%s'>%s</a></div><div><a href='#' class='show_results'>Show quiz results</a> <a href='#' class='delete_video' title='Delete this video'>Delete</a></div></li>\n", $video->get_id(), $root_uri, $video->get_id(), $video->get_title(), $video->get_title());
 				}
 			?>
 		</ul>
@@ -64,22 +64,10 @@
 			}
 		?>
 		<div>
-			<label for='course_add_text'>Add Course</label>
-			<select id='course_add_subject' placeholder="Subject" length="5" required>
-			<option></option>
-			<?php
-				// Check if subjects exist
-				if (!empty($subjects))
-				{
-					foreach ($subjects as $s)
-					{
-						printf("<option>%s</option>\n", $s);
-					}
-				}
-			?>
-			</select>
-			<input id='course_add_number' placeholder="Course Number" type='number' min="1000" max="9999" length='20' id='add_dept' required>
-			<input id='course_add_title' placeholder="Course Title" type='text' length='20' required>
+			<label for='course_add_text'>Add course</label>
+			<input id='course_add_number' placeholder="Course number" type='number' min="1000" max="9999" size="100" id='add_dept' required>
+			<input id='course_add_title' placeholder="Course Title" type='text' size='30' required>
+			<input id='course_add_subject' placeholder="Subject" type='text' size='30' id='add_dept' required>
 
 			<input id='course_add_submit' type='submit'>
 		</div>

@@ -52,3 +52,41 @@
 	font-size: .7em;
 	padding-left: 5px;
 }
+
+.videos_list table
+{
+	display: none;
+	border: none;
+	width: 70%;
+	margin: 10px;
+}
+
+.videos_list thead
+{
+	font-weight: bold;
+	text-decoration: underline;
+}
+
+.videos_list .question_text {
+	font-size: 1.2em;
+	text-decoration: none !important;
+}
+
+.videos_list td {
+	width: 33%;
+}
+
+.videos_list td:nth-child(3)
+{
+	width: 34%;
+}
+
+.Correct
+{
+	color: green;
+}
+
+.Incorrect
+{
+	color: red;
+}

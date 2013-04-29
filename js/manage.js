@@ -70,5 +70,66 @@ var manage = (function () {
 				}
 			});
 		});
+
+		$(".show_results").click(function () {
+
+			var top = $(this).parent().parent();
+
+			// if there's already a table, toggle it and return
+			var table = top.find("table");
+			if (table.length > 0) {
+				if (table.first().css("display") != "none") {
+					table.hide();
+					$(this).text("Show quiz results");
+				} else {
+					table.slideDown();
+					$(this).text("Hide quiz results");
+				}
+
+				return;
+			}
+
+			$.get("/wmutube/ajax/video/responses/" + $(top).attr("data-video_id"), function (data) {
+				var resp = JSON.parse(data);
+				console.log(resp);
+
+				// for each question
+				$.each(resp["questions"], function (index, item) {
+					var answers = item["user_answers"];
+					var correctAnswerId;
+
+					// find the correct answer
+					$.each(item.answers, function (index, item) {
+						if (item.correct == "1") {
+							correctAnswerId = item.id;
+							console.log("Correct answer is: " + correctAnswerId);
+							return false;
+						}
+					});
+
+					// append results to the dom for this question
+					if (item.user_answers.length > 0) {
+						// append the top of the table
+						top.append("<table><thead><tr><td class='question_text' colspan='3'>" + item.text + "</td></tr><tr><td>Student</td><td>Submitted on</td><td>Correct</td></tr></thead><tbody></tbody></table>");
+						$tbody = $($(top).find("tbody")[index]);
+						$.each(item.user_answers, function (index, item) {
+							var timestamp = new Date(parseInt(item.timestamp) * 1000);
+							var date = timestamp.getMonth() + "/" + timestamp.getDate() + "/" + timestamp.getFullYear();
+							var correct = "Incorrect";
+							console.log(item.user.firstname + " " + item.user.lastname);
+							if (item.answerid == correctAnswerId) {
+								correct = "Correct";
+							}
+							$tbody.append("<tr><td>" + item.user.firstname + " " + item.user.lastname + "</td><td>" + date + "</td><td class='" + correct + " + '>" + correct + "</td></tr>");
+						});
+					} else {
+						// top.append("There are no responses yet.");
+					}
+
+					top.find("table").slideDown();
+					console.log(item["user_answers"]);
+				});
+			});
+		});
 	});
 })();
