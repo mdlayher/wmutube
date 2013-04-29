@@ -875,16 +875,23 @@
 			return;
 		}
 
-		// Add questions to array
-		$questions = array();
-		foreach ($video->get_questions() as $q)
-		{
-			$questions[] = $q->to_array(true);
-		}
-
-		// Overwrite questions, send JSON
+		// Add questions to array, if available
 		$video_array = $video->to_array();
-		$video_array["questions"] = $questions;
+		try
+		{
+			$questions = array();
+			foreach ($video->get_questions() as $q)
+			{
+				$questions[] = $q->to_array(true);
+			}
+
+			// Overwrite questions, send JSON
+			$video_array["questions"] = $questions;
+		}
+		catch (\Exception $e)
+		{
+
+		}
 
 		echo json_encode($video_array);
 		return;
