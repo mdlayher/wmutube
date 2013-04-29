@@ -846,8 +846,8 @@
 		}
 	});
 
-	// Fetch all user answers relevant to a question
-	$app->get("/ajax/question/responses(/(:id))", function($id) use ($app)
+	// Fetch all user answers relevant to a video
+	$app->get("/ajax/video/responses/:id", function($id) use ($app)
 	{
 		// Ensure course is logged in
 		if (!logged_in())
@@ -866,18 +866,27 @@
 			return;
 		}
 
-		// Grab question from ID
-		$question = question::get_question($id);
-		if (!$question)
+		// Grab video by ID
+		$video = video::get_video($id);
+		if (!$video)
 		{
 			echo json_status("404 Not Found");
 			$app->halt(404);
 			return;
 		}
 
-		// Grab JSON with user responses
-		$responses = $question->to_json(true);
-		echo $responses;
+		// Add questions to array
+		$questions = array();
+		foreach ($video->get_questions() as $q)
+		{
+			$questions[] = $q->to_array(true);
+		}
+
+		// Overwrite questions, send JSON
+		$video_array = $video->to_array();
+		$video_array["questions"] = $questions;
+
+		echo json_encode($video_array);
 		return;
 	});
 
