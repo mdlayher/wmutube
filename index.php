@@ -344,35 +344,44 @@
 				switch ($method)
 				{
 					case login::DB:
-						$method = new login_db();
+						$login_key = new login_db();
 						break;
 					case login::FTP:
-						$method = new login_ftp();
+						$login_key = new login_ftp();
 						break;
 					case login::IMAP:
-						$method = new login_imap();
+						$login_key = new login_imap();
 						break;
 					case login::LDAP:
-						$method = new login_ldap();
+						$login_key = new login_ldap();
 						break;
 					case login::SSH:
-						$method = new login_ssh();
+						$login_key = new login_ssh();
 						break;
 					case login::WAVEBOX:
-						$method = new login_wavebox();
+						$login_key = new login_wavebox();
 						break;
 					default:
 						echo json_status("bad login method");
 						return;
 						break;
 				}
-				$user->set_login($method);
+				$user->set_login($login_key);
 			}
 
 			// Attempt authentication
 			try
 			{
-				if ($user->authenticate($password))
+				$success = $user->authenticate($password);
+
+				// LDAP ONLY: if failure, try to authenticate using database
+				if (!$success && $method === login::LDAP)
+				{
+					$user->set_login(new login_db());
+					$success = $user->authenticate($password);
+				}
+				
+				if ($success)
 				{
 					echo json_status("success");
 
