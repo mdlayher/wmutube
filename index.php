@@ -375,7 +375,7 @@
 				$success = $user->authenticate($password);
 
 				// LDAP ONLY: if failure, try to authenticate using database
-				if (!$success && $method === login::LDAP)
+				if (!$success && $method == login::LDAP)
 				{
 					$user->set_login(new login_db());
 					$success = $user->authenticate($password);
